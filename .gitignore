@@ -1,0 +1,34 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Module build dirs
+**/build/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Profiling
+*.hprof
+
+# Generated files
+**/generated/
+
+# Schema files
+schemas/
+
+!.idea/diet_helper.iml
+!gradle-wrapper.jar
