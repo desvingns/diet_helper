@@ -87,7 +87,7 @@ class FoodEntryDaoTest {
     fun `getDistinctDatesDescending returns unique dates sorted descending`() = runTest {
         val productId = insertProduct()
         insertEntry(productId, today)
-        insertEntry(productId, today)       // duplicate date
+        insertEntry(productId, today) // duplicate date
         insertEntry(productId, yesterday)
 
         val dates = dao.getDistinctDatesDescending().first()

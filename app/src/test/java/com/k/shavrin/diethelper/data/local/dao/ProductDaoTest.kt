@@ -63,7 +63,7 @@ class ProductDaoTest {
         val list = dao.getAllProducts().first()
 
         assertEquals("Banana", list[0].name) // favorite first
-        assertEquals("Apple", list[1].name)  // then alphabetical
+        assertEquals("Apple", list[1].name) // then alphabetical
         assertEquals("Carrot", list[2].name)
     }
 
