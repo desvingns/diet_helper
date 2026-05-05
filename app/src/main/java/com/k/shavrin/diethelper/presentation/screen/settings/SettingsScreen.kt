@@ -44,6 +44,31 @@ fun SettingsScreen(
         return
     }
 
+    SettingsContent(
+        state = state,
+        onCaloriesChange = viewModel::onCaloriesChange,
+        onProteinMinChange = viewModel::onProteinMinChange,
+        onProteinMaxChange = viewModel::onProteinMaxChange,
+        onFatMinChange = viewModel::onFatMinChange,
+        onFatMaxChange = viewModel::onFatMaxChange,
+        onCarbsMinChange = viewModel::onCarbsMinChange,
+        onCarbsMaxChange = viewModel::onCarbsMaxChange,
+        onSave = viewModel::save
+    )
+}
+
+@Composable
+fun SettingsContent(
+    state: SettingsUiState,
+    onCaloriesChange: (String) -> Unit,
+    onProteinMinChange: (String) -> Unit,
+    onProteinMaxChange: (String) -> Unit,
+    onFatMinChange: (String) -> Unit,
+    onFatMaxChange: (String) -> Unit,
+    onCarbsMinChange: (String) -> Unit,
+    onCarbsMaxChange: (String) -> Unit,
+    onSave: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,7 +83,7 @@ fun SettingsScreen(
 
         OutlinedTextField(
             value = state.calories,
-            onValueChange = viewModel::onCaloriesChange,
+            onValueChange = onCaloriesChange,
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Калории, ккал") },
             isError = state.caloriesError != null,
@@ -74,8 +99,8 @@ fun SettingsScreen(
             label = "Белки, г",
             minValue = state.proteinMin,
             maxValue = state.proteinMax,
-            onMinChange = viewModel::onProteinMinChange,
-            onMaxChange = viewModel::onProteinMaxChange,
+            onMinChange = onProteinMinChange,
+            onMaxChange = onProteinMaxChange,
             minError = state.proteinMinError,
             maxError = state.proteinMaxError
         )
@@ -84,8 +109,8 @@ fun SettingsScreen(
             label = "Жиры, г",
             minValue = state.fatMin,
             maxValue = state.fatMax,
-            onMinChange = viewModel::onFatMinChange,
-            onMaxChange = viewModel::onFatMaxChange,
+            onMinChange = onFatMinChange,
+            onMaxChange = onFatMaxChange,
             minError = state.fatMinError,
             maxError = state.fatMaxError
         )
@@ -94,14 +119,14 @@ fun SettingsScreen(
             label = "Углеводы, г",
             minValue = state.carbsMin,
             maxValue = state.carbsMax,
-            onMinChange = viewModel::onCarbsMinChange,
-            onMaxChange = viewModel::onCarbsMaxChange,
+            onMinChange = onCarbsMinChange,
+            onMaxChange = onCarbsMaxChange,
             minError = state.carbsMinError,
             maxError = state.carbsMaxError
         )
 
         Button(
-            onClick = viewModel::save,
+            onClick = onSave,
             modifier = Modifier.fillMaxWidth(),
             enabled = !state.isSaving
         ) { Text("Сохранить") }
