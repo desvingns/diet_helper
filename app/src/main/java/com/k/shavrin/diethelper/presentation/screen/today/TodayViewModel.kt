@@ -41,7 +41,7 @@ class TodayViewModel @Inject constructor(
             getEntriesForDay(date),
             getGoals()
         ) { entries, goals ->
-            val sections = MealType.values().associateWith { type ->
+            val sections = MealType.entries.associateWith { type ->
                 entries.filter { it.mealType == type }
             }
             val sectionCalories = sections.mapValues { (_, list) ->
