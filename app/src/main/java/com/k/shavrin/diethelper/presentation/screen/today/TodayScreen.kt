@@ -1,6 +1,9 @@
 package com.k.shavrin.diethelper.presentation.screen.today
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,11 +17,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -30,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -41,19 +46,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.presentation.components.DailySummaryCard
 import com.k.shavrin.diethelper.presentation.util.formatCalories
-import com.k.shavrin.diethelper.presentation.util.formatDate
 import com.k.shavrin.diethelper.presentation.util.formatGrams
 import com.k.shavrin.diethelper.presentation.util.formatIsoDate
 import com.k.shavrin.diethelper.presentation.util.formatMacro
+import com.k.shavrin.diethelper.presentation.util.formatWeekDateHeader
 import com.k.shavrin.diethelper.presentation.util.mealTypeLabel
+import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -71,8 +82,8 @@ fun TodayScreen(
         is TodayUiState.Error -> ErrorState(s.message)
         is TodayUiState.Success -> TodayContent(
             state = s,
-            onPreviousDay = viewModel::goToPreviousDay,
-            onNextDay = viewModel::goToNextDay,
+            onGoToDate = viewModel::goToDate,
+            onTodayClick = viewModel::goToToday,
             onAddTo = { mealType ->
                 onNavigateToProductSearch(formatIsoDate(s.date), mealType.name)
             },
@@ -88,8 +99,8 @@ fun TodayScreen(
 @Composable
 internal fun TodayContent(
     state: TodayUiState.Success,
-    onPreviousDay: () -> Unit,
-    onNextDay: () -> Unit,
+    onGoToDate: (LocalDate) -> Unit,
+    onTodayClick: () -> Unit,
     onAddTo: (MealType) -> Unit,
     onUpdateMultiplier: (FoodEntry, Float) -> Unit,
     onDelete: (FoodEntry) -> Unit,
@@ -97,13 +108,15 @@ internal fun TodayContent(
     readOnly: Boolean
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        DateHeader(
-            date = state.date,
-            canGoForward = state.canGoForward,
-            onPrevious = onPreviousDay,
-            onNext = onNextDay,
-            visibleNavigation = !readOnly
-        )
+        if (!readOnly) {
+            WeekDateHeader(
+                date = state.date,
+                weekStatuses = state.weekStatuses,
+                streak = state.streak,
+                onDateSelected = onGoToDate,
+                onTodayClick = onTodayClick
+            )
+        }
 
         LazyColumn(
             modifier = Modifier
@@ -168,39 +181,197 @@ internal fun TodayContent(
     }
 }
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-private fun DateHeader(
+internal fun WeekDateHeader(
     date: LocalDate,
-    canGoForward: Boolean,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit,
-    visibleNavigation: Boolean
+    weekStatuses: List<Pair<LocalDate, DayStatus>>,
+    streak: Int,
+    onDateSelected: (LocalDate) -> Unit,
+    onTodayClick: () -> Unit
 ) {
-    Row(
+    val today = LocalDate.now()
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        if (visibleNavigation) {
-            IconButton(onClick = onPrevious) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Предыдущий день")
+        // Top row: date title + "Сегодня" shortcut
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = formatWeekDateHeader(date),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.clickable { showDatePicker = true }
+            )
+            Text(
+                text = "Сегодня",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color(0xFF4CAF50),
+                    fontWeight = FontWeight.Medium
+                ),
+                modifier = Modifier.clickable { onTodayClick() }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Week row: 7 circles Mon–Sun
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            weekStatuses.forEach { (day, status) ->
+                WeekDayCircle(
+                    day = day,
+                    status = status,
+                    isSelected = day == date,
+                    isToday = day == today,
+                    onClick = { onDateSelected(day) }
+                )
             }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Streak row
+        val streakLabel = if (streak == 0) {
+            "Запишите еду, чтобы начать серию"
         } else {
-            Spacer(modifier = Modifier.height(48.dp))
+            "$streak дней подряд"
         }
         Text(
-            text = formatDate(date),
-            style = MaterialTheme.typography.titleLarge
+            text = "$streak 🔥 $streakLabel",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        if (visibleNavigation) {
-            IconButton(onClick = onNext, enabled = canGoForward) {
-                Icon(Icons.Filled.ArrowForward, contentDescription = "Следующий день")
+    }
+
+    if (showDatePicker) {
+        val todayMillis = today.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        val selectedMillis = date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedMillis,
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return utcTimeMillis <= todayMillis
+                }
             }
-        } else {
-            Spacer(modifier = Modifier.height(48.dp))
+        )
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    val ms = datePickerState.selectedDateMillis
+                    if (ms != null) {
+                        val selected = Instant.ofEpochMilli(ms).atZone(ZoneOffset.UTC).toLocalDate()
+                        onDateSelected(selected)
+                    }
+                    showDatePicker = false
+                }) { Text("Выбрать") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) { Text("Отмена") }
+            }
+        ) {
+            DatePicker(state = datePickerState)
         }
+    }
+}
+
+private val weekDayLetters = mapOf(
+    DayOfWeek.MONDAY to "П",
+    DayOfWeek.TUESDAY to "В",
+    DayOfWeek.WEDNESDAY to "С",
+    DayOfWeek.THURSDAY to "Ч",
+    DayOfWeek.FRIDAY to "Р",
+    DayOfWeek.SATURDAY to "С",
+    DayOfWeek.SUNDAY to "В"
+)
+
+private fun dayStatusCircleColor(status: DayStatus): Color = when (status) {
+    DayStatus.GREEN -> Color(0xFF4CAF50)
+    DayStatus.YELLOW -> Color(0xFFFFC107)
+    DayStatus.RED -> Color(0xFFF44336)
+    DayStatus.GRAY_LOGGED -> Color(0xFF9E9E9E)
+    DayStatus.FUTURE -> Color.Transparent
+}
+
+@Composable
+private fun WeekDayCircle(
+    day: LocalDate,
+    status: DayStatus,
+    isSelected: Boolean,
+    isToday: Boolean,
+    onClick: () -> Unit
+) {
+    val letter = weekDayLetters[day.dayOfWeek] ?: "?"
+    val circleColor = dayStatusCircleColor(status)
+    val ringColor = if (isToday) Color(0xFF4CAF50) else Color.White
+    val isFuture = status == DayStatus.FUTURE
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .then(
+                    if (isFuture) {
+                        Modifier
+                            .background(Color.Transparent)
+                            .border(1.dp, Color(0xFF9E9E9E), CircleShape)
+                    } else {
+                        Modifier.background(circleColor)
+                    }
+                )
+                .then(
+                    if (isSelected) {
+                        Modifier.border(2.dp, ringColor, CircleShape)
+                    } else {
+                        Modifier
+                    }
+                )
+                .clickable(onClick = onClick)
+        ) {
+            when (status) {
+                DayStatus.GREEN -> Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+                DayStatus.YELLOW -> Text(
+                    text = "!",
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                DayStatus.RED -> Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+                DayStatus.GRAY_LOGGED -> Unit
+                DayStatus.FUTURE -> Unit
+            }
+        }
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = letter,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
     }
 }
 

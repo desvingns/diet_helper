@@ -10,14 +10,14 @@ import com.k.shavrin.diethelper.domain.model.Product
 import com.k.shavrin.diethelper.domain.usecase.foodentry.CopyFoodEntryToDayUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.DeleteFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.GetFoodEntriesForDayUseCase
+import com.k.shavrin.diethelper.domain.usecase.foodentry.GetStreakUseCase
+import com.k.shavrin.diethelper.domain.usecase.foodentry.GetWeekDayStatusesUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.UpdateFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.goals.GetDailyGoalsUseCase
 import com.k.shavrin.diethelper.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -53,16 +53,17 @@ class TodayViewModelTest {
             getGoals = GetDailyGoalsUseCase(goalsRepo),
             updateEntryUseCase = UpdateFoodEntryUseCase(foodRepo),
             deleteEntryUseCase = DeleteFoodEntryUseCase(foodRepo),
-            copyEntryUseCase = CopyFoodEntryToDayUseCase(foodRepo)
+            copyEntryUseCase = CopyFoodEntryToDayUseCase(foodRepo),
+            getWeekDayStatuses = GetWeekDayStatusesUseCase(foodRepo, goalsRepo),
+            getStreak = GetStreakUseCase(foodRepo, goalsRepo)
         )
     }
 
     @Test
-    fun `initial state is today and cannot go forward`() = runTest {
+    fun `initial state is today`() = runTest {
         viewModel.uiState.test {
             val state = (skipUntilSuccess()) as TodayUiState.Success
             assertEquals(LocalDate.now(), state.date)
-            assertFalse(state.canGoForward)
             cancelAndConsumeRemainingEvents()
         }
     }
@@ -71,7 +72,6 @@ class TodayViewModelTest {
     fun `goToPreviousDay then goToNextDay returns to today`() = runTest {
         viewModel.goToPreviousDay()
         assertEquals(LocalDate.now().minusDays(1), viewModel.currentDate.value)
-        assertTrue(viewModel.uiState.value is TodayUiState.Loading || viewModel.uiState.value is TodayUiState.Success)
 
         viewModel.goToNextDay()
         assertEquals(LocalDate.now(), viewModel.currentDate.value)
@@ -80,6 +80,27 @@ class TodayViewModelTest {
     @Test
     fun `goToNextDay does not move past today`() = runTest {
         viewModel.goToNextDay()
+        assertEquals(LocalDate.now(), viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToDate changes current date`() = runTest {
+        val yesterday = LocalDate.now().minusDays(1)
+        viewModel.goToDate(yesterday)
+        assertEquals(yesterday, viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToDate does not allow future dates`() = runTest {
+        val tomorrow = LocalDate.now().plusDays(1)
+        viewModel.goToDate(tomorrow)
+        assertEquals(LocalDate.now(), viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToToday returns to today`() = runTest {
+        viewModel.goToPreviousDay()
+        viewModel.goToToday()
         assertEquals(LocalDate.now(), viewModel.currentDate.value)
     }
 

@@ -16,7 +16,6 @@ import com.k.shavrin.diethelper.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -48,17 +47,6 @@ class HistoryDayViewModelTest {
     @Test
     fun `initial state is Loading`() {
         assertTrue(createViewModel().uiState.value is TodayUiState.Loading)
-    }
-
-    @Test
-    fun `canGoForward is always false`() = runTest {
-        val vm = createViewModel()
-
-        vm.uiState.test {
-            val state = skipUntilSuccess() as TodayUiState.Success
-            assertFalse(state.canGoForward)
-            cancelAndConsumeRemainingEvents()
-        }
     }
 
     @Test
@@ -146,6 +134,97 @@ class HistoryDayViewModelTest {
         vm.uiState.test {
             val state = skipUntilSuccess() as TodayUiState.Success
             assertEquals(1500f, state.goals.calories, 0.001f)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    // product: protein=0.4, fat=0.4, carbs=14 per 100g; caloriesPer100g=52
+    // multiplier 1.0 → protein=0.4, fat=0.4, carbs=14, calories=52
+    // multiplier 2.0 → protein=0.8, fat=0.8, carbs=28, calories=104
+
+    @Test
+    fun `sectionProtein is zero for all meal types when no entries`() = runTest {
+        val vm = createViewModel()
+        vm.uiState.test {
+            val state = skipUntilSuccess() as TodayUiState.Success
+            MealType.values().forEach { mealType ->
+                assertEquals(0f, state.sectionProtein[mealType] ?: 0f, 0.001f)
+            }
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `sectionProtein sectionFat sectionCarbs are computed from multiplier`() = runTest {
+        // BREAKFAST: multiplier=1.0 → protein=0.4, fat=0.4, carbs=14
+        // LUNCH:     multiplier=2.0 → protein=0.8, fat=0.8, carbs=28
+        foodRepo.seed(
+            listOf(
+                FoodEntry(productId = 1, product = product, date = testDate, mealType = MealType.BREAKFAST, multiplier = 1f),
+                FoodEntry(productId = 1, product = product, date = testDate, mealType = MealType.LUNCH, multiplier = 2f)
+            )
+        )
+        val vm = createViewModel()
+        vm.uiState.test {
+            val state = skipUntilSuccess() as TodayUiState.Success
+            assertEquals(0.4f, state.sectionProtein[MealType.BREAKFAST] ?: 0f, 0.001f)
+            assertEquals(0.4f, state.sectionFat[MealType.BREAKFAST] ?: 0f, 0.001f)
+            assertEquals(14f, state.sectionCarbs[MealType.BREAKFAST] ?: 0f, 0.001f)
+            assertEquals(0.8f, state.sectionProtein[MealType.LUNCH] ?: 0f, 0.001f)
+            assertEquals(0.8f, state.sectionFat[MealType.LUNCH] ?: 0f, 0.001f)
+            assertEquals(28f, state.sectionCarbs[MealType.LUNCH] ?: 0f, 0.001f)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `sectionProtein accumulates across multiple entries in the same meal`() = runTest {
+        // Two BREAKFAST entries, each multiplier=1.0 → protein=0.4+0.4=0.8
+        foodRepo.seed(
+            listOf(
+                FoodEntry(productId = 1, product = product, date = testDate, mealType = MealType.BREAKFAST, multiplier = 1f),
+                FoodEntry(productId = 1, product = product, date = testDate, mealType = MealType.BREAKFAST, multiplier = 1f)
+            )
+        )
+        val vm = createViewModel()
+        vm.uiState.test {
+            val state = skipUntilSuccess() as TodayUiState.Success
+            assertEquals(0.8f, state.sectionProtein[MealType.BREAKFAST] ?: 0f, 0.001f)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `sectionCalories matches calories computed from entries`() = runTest {
+        // DINNER: multiplier=2.0, caloriesPer100g=52 → 52*2=104 kcal
+        foodRepo.seed(
+            listOf(
+                FoodEntry(productId = 1, product = product, date = testDate, mealType = MealType.DINNER, multiplier = 2f)
+            )
+        )
+        val vm = createViewModel()
+        vm.uiState.test {
+            val state = skipUntilSuccess() as TodayUiState.Success
+            assertEquals(104f, state.sectionCalories[MealType.DINNER] ?: 0f, 0.001f)
+            assertEquals(0f, state.sectionCalories[MealType.BREAKFAST] ?: 0f, 0.001f)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `macros for other dates do not bleed into section maps`() = runTest {
+        val otherDate = testDate.plusDays(5)
+        foodRepo.seed(
+            listOf(
+                FoodEntry(productId = 1, product = product, date = testDate, mealType = MealType.SNACK, multiplier = 1f),
+                FoodEntry(productId = 1, product = product, date = otherDate, mealType = MealType.SNACK, multiplier = 10f)
+            )
+        )
+        val vm = createViewModel(testDate)
+        vm.uiState.test {
+            val state = skipUntilSuccess() as TodayUiState.Success
+            // Only the testDate entry (multiplier=1.0) should contribute
+            assertEquals(0.4f, state.sectionProtein[MealType.SNACK] ?: 0f, 0.001f)
             cancelAndConsumeRemainingEvents()
         }
     }

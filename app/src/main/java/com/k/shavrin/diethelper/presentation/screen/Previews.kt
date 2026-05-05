@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.DailySummary
+import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.HistoryItem
 import com.k.shavrin.diethelper.domain.model.MealType
@@ -41,9 +42,11 @@ private fun TodayScreenPreview() {
     val sectionProtein = sections.mapValues { (_, list) -> list.sumOf { (it.product.proteinPer100g * it.multiplier).toDouble() }.toFloat() }
     val sectionFat = sections.mapValues { (_, list) -> list.sumOf { (it.product.fatPer100g * it.multiplier).toDouble() }.toFloat() }
     val sectionCarbs = sections.mapValues { (_, list) -> list.sumOf { (it.product.carbsPer100g * it.multiplier).toDouble() }.toFloat() }
+    val weekStatuses = (0..6).map { i ->
+        date.with(java.time.DayOfWeek.MONDAY).plusDays(i.toLong()) to DayStatus.GRAY_LOGGED
+    }
     val state = TodayUiState.Success(
         date = date,
-        canGoForward = false,
         sections = sections,
         sectionCalories = sectionCalories,
         sectionProtein = sectionProtein,
@@ -55,13 +58,15 @@ private fun TodayScreenPreview() {
             proteinMin = 120f, proteinMax = 180f,
             fatMin = 55f, fatMax = 80f,
             carbsMin = 200f, carbsMax = 280f
-        )
+        ),
+        weekStatuses = weekStatuses,
+        streak = 3
     )
     DietHelperTheme {
         Surface { TodayContent(
             state = state,
-            onPreviousDay = {},
-            onNextDay = {},
+            onGoToDate = {},
+            onTodayClick = {},
             onAddTo = {},
             onUpdateMultiplier = { _, _ -> },
             onDelete = {},

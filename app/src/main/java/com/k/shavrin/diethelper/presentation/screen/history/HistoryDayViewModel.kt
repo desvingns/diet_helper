@@ -49,14 +49,15 @@ class HistoryDayViewModel @Inject constructor(
         }
         TodayUiState.Success(
             date = date,
-            canGoForward = false,
             sections = sections,
             sectionCalories = sectionCalories,
             sectionProtein = sectionProtein,
             sectionFat = sectionFat,
             sectionCarbs = sectionCarbs,
             summary = entries.toSummary(),
-            goals = goals
+            goals = goals,
+            weekStatuses = emptyList(),
+            streak = 0
         ) as TodayUiState
     }.stateIn(
         scope = viewModelScope,

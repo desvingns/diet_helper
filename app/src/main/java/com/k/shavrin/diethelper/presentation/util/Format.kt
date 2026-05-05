@@ -8,6 +8,32 @@ import kotlin.math.roundToInt
 
 private val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale("ru"))
 private val isoDateFormatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+private val ruLocale = Locale("ru")
+
+private val dayOfWeekNames = mapOf(
+    java.time.DayOfWeek.MONDAY to "Понедельник",
+    java.time.DayOfWeek.TUESDAY to "Вторник",
+    java.time.DayOfWeek.WEDNESDAY to "Среда",
+    java.time.DayOfWeek.THURSDAY to "Четверг",
+    java.time.DayOfWeek.FRIDAY to "Пятница",
+    java.time.DayOfWeek.SATURDAY to "Суббота",
+    java.time.DayOfWeek.SUNDAY to "Воскресенье"
+)
+
+private val monthGenitiveNames = mapOf(
+    1 to "января",
+    2 to "февраля",
+    3 to "марта",
+    4 to "апреля",
+    5 to "мая",
+    6 to "июня",
+    7 to "июля",
+    8 to "августа",
+    9 to "сентября",
+    10 to "октября",
+    11 to "ноября",
+    12 to "декабря"
+)
 
 fun formatDate(date: LocalDate): String = date.format(dateFormatter)
 
@@ -37,4 +63,10 @@ fun mealTypeLabel(mealType: MealType): String = when (mealType) {
     MealType.LUNCH -> "Обед"
     MealType.DINNER -> "Ужин"
     MealType.SNACK -> "Перекус"
+}
+
+fun formatWeekDateHeader(date: LocalDate): String {
+    val dayName = dayOfWeekNames[date.dayOfWeek] ?: ""
+    val monthName = monthGenitiveNames[date.monthValue] ?: ""
+    return "$dayName, $monthName ${date.dayOfMonth}"
 }

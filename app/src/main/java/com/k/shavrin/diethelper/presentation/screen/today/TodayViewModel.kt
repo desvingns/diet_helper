@@ -8,6 +8,8 @@ import com.k.shavrin.diethelper.domain.usecase.foodentry.CopyFoodEntryToDayUseCa
 import com.k.shavrin.diethelper.domain.usecase.foodentry.DeleteFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.GetDailySummaryUseCase.Companion.toSummary
 import com.k.shavrin.diethelper.domain.usecase.foodentry.GetFoodEntriesForDayUseCase
+import com.k.shavrin.diethelper.domain.usecase.foodentry.GetStreakUseCase
+import com.k.shavrin.diethelper.domain.usecase.foodentry.GetWeekDayStatusesUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.UpdateFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.goals.GetDailyGoalsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +31,9 @@ class TodayViewModel @Inject constructor(
     private val getGoals: GetDailyGoalsUseCase,
     private val updateEntryUseCase: UpdateFoodEntryUseCase,
     private val deleteEntryUseCase: DeleteFoodEntryUseCase,
-    private val copyEntryUseCase: CopyFoodEntryToDayUseCase
+    private val copyEntryUseCase: CopyFoodEntryToDayUseCase,
+    private val getWeekDayStatuses: GetWeekDayStatusesUseCase,
+    private val getStreak: GetStreakUseCase
 ) : ViewModel() {
 
     private val _currentDate = MutableStateFlow(LocalDate.now())
@@ -39,8 +43,10 @@ class TodayViewModel @Inject constructor(
     val uiState: StateFlow<TodayUiState> = _currentDate.flatMapLatest { date ->
         combine(
             getEntriesForDay(date),
-            getGoals()
-        ) { entries, goals ->
+            getGoals(),
+            getWeekDayStatuses(date),
+            getStreak()
+        ) { entries, goals, weekStatuses, streak ->
             val sections = MealType.entries.associateWith { type ->
                 entries.filter { it.mealType == type }
             }
@@ -58,14 +64,15 @@ class TodayViewModel @Inject constructor(
             }
             TodayUiState.Success(
                 date = date,
-                canGoForward = date.isBefore(LocalDate.now()),
                 sections = sections,
                 sectionCalories = sectionCalories,
                 sectionProtein = sectionProtein,
                 sectionFat = sectionFat,
                 sectionCarbs = sectionCarbs,
                 summary = entries.toSummary(),
-                goals = goals
+                goals = goals,
+                weekStatuses = weekStatuses,
+                streak = streak
             ) as TodayUiState
         }
     }.stateIn(
@@ -73,6 +80,16 @@ class TodayViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = TodayUiState.Loading
     )
+
+    fun goToDate(date: LocalDate) {
+        if (!date.isAfter(LocalDate.now())) {
+            _currentDate.value = date
+        }
+    }
+
+    fun goToToday() {
+        _currentDate.value = LocalDate.now()
+    }
 
     fun goToPreviousDay() {
         _currentDate.value = _currentDate.value.minusDays(1)

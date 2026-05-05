@@ -55,8 +55,8 @@ fun HistoryDayScreen(
                 is TodayUiState.Error -> ErrorState(s.message)
                 is TodayUiState.Success -> TodayContent(
                     state = s,
-                    onPreviousDay = {},
-                    onNextDay = {},
+                    onGoToDate = {},
+                    onTodayClick = {},
                     onAddTo = {},
                     onUpdateMultiplier = { _, _ -> },
                     onDelete = {},
