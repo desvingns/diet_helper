@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.roundToInt
 
-private val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale("ru"))
-private val isoDateFormatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 private val ruLocale = Locale("ru")
+private val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", ruLocale)
+private val isoDateFormatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
 private val dayOfWeekNames = mapOf(
     java.time.DayOfWeek.MONDAY to "Понедельник",

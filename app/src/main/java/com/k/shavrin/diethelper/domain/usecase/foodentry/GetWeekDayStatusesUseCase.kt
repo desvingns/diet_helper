@@ -38,10 +38,7 @@ class GetWeekDayStatusesUseCase @Inject constructor(
             goals: DailyGoals
         ): DayStatus {
             val today = LocalDate.now()
-
-            if (day.isAfter(today)) {
-                return DayStatus.FUTURE
-            }
+            if (day.isAfter(today)) return DayStatus.FUTURE
 
             val summary = entries.toSummary()
             val calories = summary.totalCalories
@@ -49,29 +46,24 @@ class GetWeekDayStatusesUseCase @Inject constructor(
             val fat = summary.totalFat
             val carbs = summary.totalCarbs
 
-            if (calories < goals.calories * 0.30f) {
-                return DayStatus.GRAY_LOGGED
-            }
+            if (calories < goals.calories * 0.30f) return DayStatus.GRAY_LOGGED
 
             val isGreen = calories < goals.calories &&
                 protein >= goals.proteinMin && protein <= goals.proteinMax &&
                 fat >= goals.fatMin && fat <= goals.fatMax &&
                 carbs >= goals.carbsMin && carbs <= goals.carbsMax
 
-            if (isGreen) {
-                return DayStatus.GREEN
-            }
-
-            val isYellow = calories < goals.calories * 1.25f &&
+            val isYellow = !isGreen &&
+                calories < goals.calories * 1.25f &&
                 protein >= goals.proteinMin * 0.75f && protein <= goals.proteinMax * 1.25f &&
                 fat >= goals.fatMin * 0.75f && fat <= goals.fatMax * 1.25f &&
                 carbs >= goals.carbsMin * 0.75f && carbs <= goals.carbsMax * 1.25f
 
-            if (isYellow) {
-                return DayStatus.YELLOW
+            return when {
+                isGreen -> DayStatus.GREEN
+                isYellow -> DayStatus.YELLOW
+                else -> DayStatus.RED
             }
-
-            return DayStatus.RED
         }
     }
 }

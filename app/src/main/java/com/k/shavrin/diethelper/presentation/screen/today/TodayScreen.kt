@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.k.shavrin.diethelper.presentation.screen.today
 
 import androidx.compose.foundation.ExperimentalFoundationApi
