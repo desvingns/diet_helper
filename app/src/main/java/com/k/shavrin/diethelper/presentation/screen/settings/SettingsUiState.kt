@@ -18,5 +18,6 @@ data class SettingsUiState(
     val isLoading: Boolean = true,
     val isSaving: Boolean = false,
     val justSaved: Boolean = false,
-    val showMacroCalorieWarningLow: Boolean = false
+    val showMacroCalorieWarningLow: Boolean = false,
+    val showMacroCalorieWarningHigh: Boolean = false
 )

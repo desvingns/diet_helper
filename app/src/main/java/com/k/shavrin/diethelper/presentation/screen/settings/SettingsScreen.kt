@@ -90,8 +90,17 @@ fun SettingsContent(
             supportingText = state.caloriesError?.let { msg -> { Text(msg) } },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true,
-            trailingIcon = if (state.showMacroCalorieWarningLow) {
-                { MacroCalorieWarningIcon("Калорий больше чем нижние границы БЖУ") }
+            trailingIcon = if (state.showMacroCalorieWarningLow || state.showMacroCalorieWarningHigh) {
+                {
+                    Row {
+                        if (state.showMacroCalorieWarningLow) {
+                            MacroCalorieWarningIcon("Калорий больше чем нижние границы БЖУ")
+                        }
+                        if (state.showMacroCalorieWarningHigh) {
+                            MacroCalorieWarningIcon("Максимальные БЖУ ниже калорийной цели")
+                        }
+                    }
+                }
             } else null
         )
 

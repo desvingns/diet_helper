@@ -121,20 +121,21 @@ class SettingsViewModelTest {
     }
 
     // setUp defaults: calories=2000, proteinMin=120, fatMin=55, carbsMin=200
-    // low sum = 120*4 + 200*4 + 55*9 = 480 + 800 + 495 = 1775
+    // low sum  = 120*4 + 200*4 + 55*9 = 480 + 800 + 495 = 1775
+    // high sum = 180*4 + 300*4 + 80*9 = 720 + 1200 + 720 = 2640
 
     @Test
-    fun `showMacroCalorieWarningLow true when min macros sum is below calories`() = runTest {
-        // 1775 < 3000
-        viewModel.onCaloriesChange("3000")
+    fun `showMacroCalorieWarningLow true when min macros sum exceeds calories`() = runTest {
+        // 1775 > 1000
+        viewModel.onCaloriesChange("1000")
 
         assertTrue(viewModel.state.value.showMacroCalorieWarningLow)
     }
 
     @Test
-    fun `showMacroCalorieWarningLow false when min macros sum equals or exceeds calories`() = runTest {
-        // 1775 >= 1000
-        viewModel.onCaloriesChange("1000")
+    fun `showMacroCalorieWarningLow false when min macros sum is below calories`() = runTest {
+        // 1775 < 3000
+        viewModel.onCaloriesChange("3000")
 
         assertFalse(viewModel.state.value.showMacroCalorieWarningLow)
     }
@@ -148,9 +149,40 @@ class SettingsViewModelTest {
 
     @Test
     fun `showMacroCalorieWarningLow false when proteinMin is not a valid number`() = runTest {
-        viewModel.onCaloriesChange("3000")
+        viewModel.onCaloriesChange("1000")
         viewModel.onProteinMinChange("abc")
 
         assertFalse(viewModel.state.value.showMacroCalorieWarningLow)
+    }
+
+    @Test
+    fun `showMacroCalorieWarningHigh true when max macros sum is below calories`() = runTest {
+        // 2640 < 3000
+        viewModel.onCaloriesChange("3000")
+
+        assertTrue(viewModel.state.value.showMacroCalorieWarningHigh)
+    }
+
+    @Test
+    fun `showMacroCalorieWarningHigh false when max macros sum equals or exceeds calories`() = runTest {
+        // 2640 >= 2000
+        viewModel.onCaloriesChange("2000")
+
+        assertFalse(viewModel.state.value.showMacroCalorieWarningHigh)
+    }
+
+    @Test
+    fun `showMacroCalorieWarningHigh false when calories field is not a valid number`() = runTest {
+        viewModel.onCaloriesChange("abc")
+
+        assertFalse(viewModel.state.value.showMacroCalorieWarningHigh)
+    }
+
+    @Test
+    fun `showMacroCalorieWarningHigh false when proteinMax is not a valid number`() = runTest {
+        viewModel.onCaloriesChange("3000")
+        viewModel.onProteinMaxChange("abc")
+
+        assertFalse(viewModel.state.value.showMacroCalorieWarningHigh)
     }
 }

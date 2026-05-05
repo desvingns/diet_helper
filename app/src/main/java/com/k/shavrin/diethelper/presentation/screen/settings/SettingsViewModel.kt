@@ -84,11 +84,17 @@ class SettingsViewModel @Inject constructor(
         val proMin = s.proteinMin.replace(',', '.').toFloatOrNull()
         val fatMin = s.fatMin.replace(',', '.').toFloatOrNull()
         val carMin = s.carbsMin.replace(',', '.').toFloatOrNull()
+        val proMax = s.proteinMax.replace(',', '.').toFloatOrNull()
+        val fatMax = s.fatMax.replace(',', '.').toFloatOrNull()
+        val carMax = s.carbsMax.replace(',', '.').toFloatOrNull()
 
         val warningLow = cal != null && proMin != null && fatMin != null && carMin != null &&
-                (proMin * 4f + carMin * 4f + fatMin * 9f) < cal
+                (proMin * 4f + carMin * 4f + fatMin * 9f) > cal
 
-        _state.update { it.copy(showMacroCalorieWarningLow = warningLow) }
+        val warningHigh = cal != null && proMax != null && fatMax != null && carMax != null &&
+                (proMax * 4f + carMax * 4f + fatMax * 9f) < cal
+
+        _state.update { it.copy(showMacroCalorieWarningLow = warningLow, showMacroCalorieWarningHigh = warningHigh) }
     }
 
     fun save() {
