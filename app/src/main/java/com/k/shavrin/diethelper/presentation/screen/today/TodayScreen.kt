@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
@@ -40,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -116,11 +118,17 @@ internal fun TodayContent(
             MealType.values().forEach { mealType ->
                 val entries = state.sections[mealType].orEmpty()
                 val sectionCalories = state.sectionCalories[mealType] ?: 0f
+                val sectionProtein = state.sectionProtein[mealType] ?: 0f
+                val sectionFat = state.sectionFat[mealType] ?: 0f
+                val sectionCarbs = state.sectionCarbs[mealType] ?: 0f
 
                 item(key = "header_${mealType.name}") {
                     SectionHeader(
                         mealType = mealType,
                         sectionCalories = sectionCalories,
+                        sectionProtein = sectionProtein,
+                        sectionFat = sectionFat,
+                        sectionCarbs = sectionCarbs,
                         showAdd = !readOnly,
                         onAdd = { onAddTo(mealType) }
                     )
@@ -200,6 +208,9 @@ private fun DateHeader(
 private fun SectionHeader(
     mealType: MealType,
     sectionCalories: Float,
+    sectionProtein: Float,
+    sectionFat: Float,
+    sectionCarbs: Float,
     showAdd: Boolean,
     onAdd: () -> Unit
 ) {
@@ -215,15 +226,32 @@ private fun SectionHeader(
                 text = mealTypeLabel(mealType),
                 style = MaterialTheme.typography.titleMedium
             )
-            Text(
-                text = formatCalories(sectionCalories),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = formatCalories(sectionCalories),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = "Б ${formatMacro(sectionProtein)} • " +
+                            "Ж ${formatMacro(sectionFat)} • " +
+                            "У ${formatMacro(sectionCarbs)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
         if (showAdd) {
             IconButton(onClick = onAdd) {
-                Icon(Icons.Filled.Add, contentDescription = "Добавить")
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Добавить",
+                    tint = Color(0xFF4CAF50),
+                    modifier = Modifier.size(28.dp)
+                )
             }
         }
     }

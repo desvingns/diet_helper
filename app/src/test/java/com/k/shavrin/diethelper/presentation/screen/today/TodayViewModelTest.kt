@@ -102,6 +102,31 @@ class TodayViewModelTest {
             cancelAndConsumeRemainingEvents()
         }
     }
+
+    @Test
+    fun `sectionProtein, sectionFat, sectionCarbs are computed from multiplier`() = runTest {
+        // product: protein=4, fat=1, carbs=20 per 100g
+        // breakfast: 1.0 multiplier → protein=4, fat=1, carbs=20
+        // lunch:     0.5 multiplier → protein=2, fat=0.5, carbs=10
+        val today = LocalDate.now()
+        foodRepo.seed(
+            listOf(
+                FoodEntry(productId = 1, product = product, date = today, mealType = MealType.BREAKFAST, multiplier = 1f),
+                FoodEntry(productId = 1, product = product, date = today, mealType = MealType.LUNCH, multiplier = 0.5f)
+            )
+        )
+
+        viewModel.uiState.test {
+            val state = (skipUntilSuccess()) as TodayUiState.Success
+            assertEquals(4f, state.sectionProtein[MealType.BREAKFAST] ?: 0f, 0.01f)
+            assertEquals(1f, state.sectionFat[MealType.BREAKFAST] ?: 0f, 0.01f)
+            assertEquals(20f, state.sectionCarbs[MealType.BREAKFAST] ?: 0f, 0.01f)
+            assertEquals(2f, state.sectionProtein[MealType.LUNCH] ?: 0f, 0.01f)
+            assertEquals(0.5f, state.sectionFat[MealType.LUNCH] ?: 0f, 0.01f)
+            assertEquals(10f, state.sectionCarbs[MealType.LUNCH] ?: 0f, 0.01f)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
 }
 
 private suspend fun <T> app.cash.turbine.ReceiveTurbine<T>.skipUntilSuccess(): T {

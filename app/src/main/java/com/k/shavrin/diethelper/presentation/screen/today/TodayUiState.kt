@@ -14,6 +14,9 @@ sealed interface TodayUiState {
         val canGoForward: Boolean,
         val sections: Map<MealType, List<FoodEntry>>,
         val sectionCalories: Map<MealType, Float>,
+        val sectionProtein: Map<MealType, Float>,
+        val sectionFat: Map<MealType, Float>,
+        val sectionCarbs: Map<MealType, Float>,
         val summary: DailySummary,
         val goals: DailyGoals
     ) : TodayUiState

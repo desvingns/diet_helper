@@ -47,11 +47,23 @@ class TodayViewModel @Inject constructor(
             val sectionCalories = sections.mapValues { (_, list) ->
                 list.toSummary().totalCalories
             }
+            val sectionProtein = sections.mapValues { (_, list) ->
+                list.sumOf { (it.product.proteinPer100g * it.multiplier).toDouble() }.toFloat()
+            }
+            val sectionFat = sections.mapValues { (_, list) ->
+                list.sumOf { (it.product.fatPer100g * it.multiplier).toDouble() }.toFloat()
+            }
+            val sectionCarbs = sections.mapValues { (_, list) ->
+                list.sumOf { (it.product.carbsPer100g * it.multiplier).toDouble() }.toFloat()
+            }
             TodayUiState.Success(
                 date = date,
                 canGoForward = date.isBefore(LocalDate.now()),
                 sections = sections,
                 sectionCalories = sectionCalories,
+                sectionProtein = sectionProtein,
+                sectionFat = sectionFat,
+                sectionCarbs = sectionCarbs,
                 summary = entries.toSummary(),
                 goals = goals
             ) as TodayUiState

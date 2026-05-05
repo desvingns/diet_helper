@@ -38,11 +38,17 @@ private fun TodayScreenPreview() {
     )
     val sections = MealType.values().associateWith { type -> entries.filter { it.mealType == type } }
     val sectionCalories = sections.mapValues { (_, list) -> list.sumOf { (it.product.caloriesPer100g * it.multiplier).toDouble() }.toFloat() }
+    val sectionProtein = sections.mapValues { (_, list) -> list.sumOf { (it.product.proteinPer100g * it.multiplier).toDouble() }.toFloat() }
+    val sectionFat = sections.mapValues { (_, list) -> list.sumOf { (it.product.fatPer100g * it.multiplier).toDouble() }.toFloat() }
+    val sectionCarbs = sections.mapValues { (_, list) -> list.sumOf { (it.product.carbsPer100g * it.multiplier).toDouble() }.toFloat() }
     val state = TodayUiState.Success(
         date = date,
         canGoForward = false,
         sections = sections,
         sectionCalories = sectionCalories,
+        sectionProtein = sectionProtein,
+        sectionFat = sectionFat,
+        sectionCarbs = sectionCarbs,
         summary = DailySummary(385f, 15.75f, 3.5f, 77f),
         goals = DailyGoals(
             calories = 2000f,
