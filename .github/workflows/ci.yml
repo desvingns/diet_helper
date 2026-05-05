@@ -30,6 +30,9 @@ jobs:
       - name: Run unit tests
         run: ./gradlew :app:testDebugUnitTest
 
+      - name: Verify screenshot tests
+        run: ./gradlew :app:verifyRoborazziDebug
+
       - name: Generate JaCoCo coverage report
         run: ./gradlew :app:jacocoUnitTestReport
 

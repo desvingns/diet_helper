@@ -119,6 +119,10 @@ dependencies {
     detektPlugins(libs.detekt.formatting)
 }
 
+roborazzi {
+    outputDir.set(file("src/test/snapshots"))
+}
+
 detekt {
     toolVersion = libs.versions.detekt.get()
     config.setFrom(rootProject.files("config/detekt/detekt.yml"))
