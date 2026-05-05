@@ -8,6 +8,7 @@ import com.k.shavrin.diethelper.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -117,5 +118,39 @@ class SettingsViewModelTest {
         viewModel.save()
 
         assertEquals(1800.5f, goalsRepo.current.calories, 0.001f)
+    }
+
+    // setUp defaults: calories=2000, proteinMin=120, fatMin=55, carbsMin=200
+    // low sum = 120*4 + 200*4 + 55*9 = 480 + 800 + 495 = 1775
+
+    @Test
+    fun `showMacroCalorieWarningLow true when min macros sum is below calories`() = runTest {
+        // 1775 < 3000
+        viewModel.onCaloriesChange("3000")
+
+        assertTrue(viewModel.state.value.showMacroCalorieWarningLow)
+    }
+
+    @Test
+    fun `showMacroCalorieWarningLow false when min macros sum equals or exceeds calories`() = runTest {
+        // 1775 >= 1000
+        viewModel.onCaloriesChange("1000")
+
+        assertFalse(viewModel.state.value.showMacroCalorieWarningLow)
+    }
+
+    @Test
+    fun `showMacroCalorieWarningLow false when calories field is not a valid number`() = runTest {
+        viewModel.onCaloriesChange("abc")
+
+        assertFalse(viewModel.state.value.showMacroCalorieWarningLow)
+    }
+
+    @Test
+    fun `showMacroCalorieWarningLow false when proteinMin is not a valid number`() = runTest {
+        viewModel.onCaloriesChange("3000")
+        viewModel.onProteinMinChange("abc")
+
+        assertFalse(viewModel.state.value.showMacroCalorieWarningLow)
     }
 }

@@ -39,35 +39,56 @@ class SettingsViewModel @Inject constructor(
                     isLoading = false
                 )
             }
+            computeMacroWarnings()
         }
     }
 
     fun onCaloriesChange(value: String) {
         _state.update { it.copy(calories = value, caloriesError = null, justSaved = false) }
+        computeMacroWarnings()
     }
 
     fun onProteinMinChange(value: String) {
         _state.update { it.copy(proteinMin = value, proteinMinError = null, proteinMaxError = null, justSaved = false) }
+        computeMacroWarnings()
     }
 
     fun onProteinMaxChange(value: String) {
         _state.update { it.copy(proteinMax = value, proteinMinError = null, proteinMaxError = null, justSaved = false) }
+        computeMacroWarnings()
     }
 
     fun onFatMinChange(value: String) {
         _state.update { it.copy(fatMin = value, fatMinError = null, fatMaxError = null, justSaved = false) }
+        computeMacroWarnings()
     }
 
     fun onFatMaxChange(value: String) {
         _state.update { it.copy(fatMax = value, fatMinError = null, fatMaxError = null, justSaved = false) }
+        computeMacroWarnings()
     }
 
     fun onCarbsMinChange(value: String) {
         _state.update { it.copy(carbsMin = value, carbsMinError = null, carbsMaxError = null, justSaved = false) }
+        computeMacroWarnings()
     }
 
     fun onCarbsMaxChange(value: String) {
         _state.update { it.copy(carbsMax = value, carbsMinError = null, carbsMaxError = null, justSaved = false) }
+        computeMacroWarnings()
+    }
+
+    private fun computeMacroWarnings() {
+        val s = _state.value
+        val cal = s.calories.replace(',', '.').toFloatOrNull()
+        val proMin = s.proteinMin.replace(',', '.').toFloatOrNull()
+        val fatMin = s.fatMin.replace(',', '.').toFloatOrNull()
+        val carMin = s.carbsMin.replace(',', '.').toFloatOrNull()
+
+        val warningLow = cal != null && proMin != null && fatMin != null && carMin != null &&
+                (proMin * 4f + carMin * 4f + fatMin * 9f) < cal
+
+        _state.update { it.copy(showMacroCalorieWarningLow = warningLow) }
     }
 
     fun save() {

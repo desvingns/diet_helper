@@ -17,5 +17,6 @@ data class SettingsUiState(
     val carbsMaxError: String? = null,
     val isLoading: Boolean = true,
     val isSaving: Boolean = false,
-    val justSaved: Boolean = false
+    val justSaved: Boolean = false,
+    val showMacroCalorieWarningLow: Boolean = false
 )
