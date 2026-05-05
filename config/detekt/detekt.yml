@@ -1,0 +1,72 @@
+complexity:
+  TooManyFunctions:
+    thresholdInClasses: 25
+    thresholdInObjects: 25
+    thresholdInInterfaces: 15
+  LongParameterList:
+    functionThreshold: 10
+    constructorThreshold: 10
+  LongMethod:
+    threshold: 120
+  ComplexCondition:
+    threshold: 8
+  CyclomaticComplexMethod:
+    threshold: 20
+  NestedBlockDepth:
+    threshold: 5
+
+naming:
+  FunctionNaming:
+    functionPattern: '^([a-z$][a-zA-Z0-9$]*)|(`.*`)$'
+    ignoreAnnotated:
+      - 'Composable'
+
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][_A-Z0-9]*|[A-Za-z][A-Za-z0-9]*'
+
+style:
+  MagicNumber:
+    active: false
+  MaxLineLength:
+    maxLineLength: 200
+    ignoreAnnotated:
+      - 'Composable'
+      - 'Preview'
+  WildcardImport:
+    active: false
+  UnusedPrivateMember:
+    ignoreAnnotated:
+      - 'Preview'
+  UnusedParameter:
+    ignoreAnnotated:
+      - 'Composable'
+  ReturnCount:
+    max: 4
+  ForbiddenComment:
+    active: true
+    comments:
+      - reason: "Use a TODO-tracker, not FIXME in code"
+        value: "FIXME:"
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+  SwallowedException:
+    active: false
+
+formatting:
+  active: true
+  android: true
+  autoCorrect: false
+  ArgumentListWrapping:
+    active: false
+  PropertyWrapping:
+    active: false
+  Wrapping:
+    active: false
+  MultiLineIfElse:
+    active: false
+  Indentation:
+    active: false
+  MaximumLineLength:
+    maxLineLength: 200

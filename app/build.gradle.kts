@@ -1,9 +1,13 @@
+import org.gradle.testing.jacoco.tasks.JacocoReport
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -33,6 +37,7 @@ android {
         }
         debug {
             isMinifyEnabled = false
+            enableUnitTestCoverage = true
         }
     }
 
@@ -47,6 +52,15 @@ android {
 
     buildFeatures {
         compose = true
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            all {
+                it.jvmArgs("-XX:+EnableDynamicAgentLoading")
+            }
+        }
     }
 
     packaging {
@@ -88,4 +102,59 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.turbine)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.androidx.room.testing)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.roborazzi.junit.rule)
+
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    detektPlugins(libs.detekt.formatting)
+}
+
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+    autoCorrect = false
+}
+
+tasks.register<JacocoReport>("jacocoUnitTestReport") {
+    dependsOn("testDebugUnitTest")
+    group = "reporting"
+    description = "Generate JaCoCo coverage report for unit tests"
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+
+    val excludes = listOf(
+        "**/R.class", "**/R\$*.class", "**/BuildConfig.class",
+        "**/Manifest*.*", "**/*Test*.*", "android/**/*.*",
+        "**/*Hilt_*", "**/hilt_aggregated_deps/**",
+        "**/Dagger*.*", "**/*_Factory.class",
+        "**/*_MembersInjector.class", "**/*MembersInjector\$*.*",
+        "**/DietHelperDatabase_Impl*", "**/*Dao_Impl*"
+    )
+
+    classDirectories.setFrom(
+        fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug")) {
+            exclude(excludes)
+        }
+    )
+    sourceDirectories.setFrom(layout.projectDirectory.dir("src/main/java"))
+    executionData.setFrom(
+        fileTree(layout.buildDirectory) {
+            include("outputs/unit_test_code_coverage/debugUnitTest/*.exec")
+        }
+    )
 }

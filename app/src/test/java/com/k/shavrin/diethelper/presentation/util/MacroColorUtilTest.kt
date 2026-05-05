@@ -1,6 +1,5 @@
 package com.k.shavrin.diethelper.presentation.util
 
-import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
