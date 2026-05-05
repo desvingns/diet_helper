@@ -30,7 +30,14 @@ class TodayViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val foodRepo = FakeFoodEntryRepository()
-    private val goalsRepo = FakeGoalsRepository(DailyGoals(2000f, 100f, 60f, 250f))
+    private val goalsRepo = FakeGoalsRepository(
+        DailyGoals(
+            calories = 2000f,
+            proteinMin = 80f, proteinMax = 120f,
+            fatMin = 50f, fatMax = 70f,
+            carbsMin = 200f, carbsMax = 300f
+        )
+    )
 
     private val product = Product(
         id = 1, name = "Гречка",

@@ -30,9 +30,12 @@ class SettingsViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     calories = goals.calories.roundToInt().toString(),
-                    protein = goals.protein.roundToInt().toString(),
-                    fat = goals.fat.roundToInt().toString(),
-                    carbs = goals.carbs.roundToInt().toString(),
+                    proteinMin = goals.proteinMin.roundToInt().toString(),
+                    proteinMax = goals.proteinMax.roundToInt().toString(),
+                    fatMin = goals.fatMin.roundToInt().toString(),
+                    fatMax = goals.fatMax.roundToInt().toString(),
+                    carbsMin = goals.carbsMin.roundToInt().toString(),
+                    carbsMax = goals.carbsMax.roundToInt().toString(),
                     isLoading = false
                 )
             }
@@ -43,42 +46,57 @@ class SettingsViewModel @Inject constructor(
         _state.update { it.copy(calories = value, caloriesError = null, justSaved = false) }
     }
 
-    fun onProteinChange(value: String) {
-        _state.update { it.copy(protein = value, proteinError = null, justSaved = false) }
+    fun onProteinMinChange(value: String) {
+        _state.update { it.copy(proteinMin = value, proteinMinError = null, proteinMaxError = null, justSaved = false) }
     }
 
-    fun onFatChange(value: String) {
-        _state.update { it.copy(fat = value, fatError = null, justSaved = false) }
+    fun onProteinMaxChange(value: String) {
+        _state.update { it.copy(proteinMax = value, proteinMinError = null, proteinMaxError = null, justSaved = false) }
     }
 
-    fun onCarbsChange(value: String) {
-        _state.update { it.copy(carbs = value, carbsError = null, justSaved = false) }
+    fun onFatMinChange(value: String) {
+        _state.update { it.copy(fatMin = value, fatMinError = null, fatMaxError = null, justSaved = false) }
+    }
+
+    fun onFatMaxChange(value: String) {
+        _state.update { it.copy(fatMax = value, fatMinError = null, fatMaxError = null, justSaved = false) }
+    }
+
+    fun onCarbsMinChange(value: String) {
+        _state.update { it.copy(carbsMin = value, carbsMinError = null, carbsMaxError = null, justSaved = false) }
+    }
+
+    fun onCarbsMaxChange(value: String) {
+        _state.update { it.copy(carbsMax = value, carbsMinError = null, carbsMaxError = null, justSaved = false) }
     }
 
     fun save() {
         val current = _state.value
         val cal = current.calories.replace(',', '.').toFloatOrNull()
-        val pro = current.protein.replace(',', '.').toFloatOrNull()
-        val fat = current.fat.replace(',', '.').toFloatOrNull()
-        val car = current.carbs.replace(',', '.').toFloatOrNull()
+        val proMin = current.proteinMin.replace(',', '.').toFloatOrNull()
+        val proMax = current.proteinMax.replace(',', '.').toFloatOrNull()
+        val fatMin = current.fatMin.replace(',', '.').toFloatOrNull()
+        val fatMax = current.fatMax.replace(',', '.').toFloatOrNull()
+        val carMin = current.carbsMin.replace(',', '.').toFloatOrNull()
+        val carMax = current.carbsMax.replace(',', '.').toFloatOrNull()
 
         val caloriesError = validatePositive(cal)
-        val proteinError = validatePositive(pro)
-        val fatError = validatePositive(fat)
-        val carbsError = validatePositive(car)
+        val (proteinMinError, proteinMaxError) = validateRange(proMin, proMax)
+        val (fatMinError, fatMaxError) = validateRange(fatMin, fatMax)
+        val (carbsMinError, carbsMaxError) = validateRange(carMin, carMax)
 
-        if (
-            caloriesError != null ||
-            proteinError != null ||
-            fatError != null ||
-            carbsError != null
+        if (caloriesError != null || proteinMinError != null || proteinMaxError != null ||
+            fatMinError != null || fatMaxError != null || carbsMinError != null || carbsMaxError != null
         ) {
             _state.update {
                 it.copy(
                     caloriesError = caloriesError,
-                    proteinError = proteinError,
-                    fatError = fatError,
-                    carbsError = carbsError
+                    proteinMinError = proteinMinError,
+                    proteinMaxError = proteinMaxError,
+                    fatMinError = fatMinError,
+                    fatMaxError = fatMaxError,
+                    carbsMinError = carbsMinError,
+                    carbsMaxError = carbsMaxError
                 )
             }
             return
@@ -89,9 +107,12 @@ class SettingsViewModel @Inject constructor(
             saveGoals(
                 DailyGoals(
                     calories = cal!!,
-                    protein = pro!!,
-                    fat = fat!!,
-                    carbs = car!!
+                    proteinMin = proMin!!,
+                    proteinMax = proMax!!,
+                    fatMin = fatMin!!,
+                    fatMax = fatMax!!,
+                    carbsMin = carMin!!,
+                    carbsMax = carMax!!
                 )
             )
             _state.update { it.copy(isSaving = false, justSaved = true) }
@@ -102,5 +123,13 @@ class SettingsViewModel @Inject constructor(
         value == null -> "Введите число"
         value <= 0f -> "Должно быть больше 0"
         else -> null
+    }
+
+    private fun validateRange(min: Float?, max: Float?): Pair<String?, String?> {
+        val minError = validatePositive(min)
+        val maxError = validatePositive(max)
+        if (minError != null || maxError != null) return minError to maxError
+        if (max!! <= min!!) return null to "Макс должен быть больше мин"
+        return null to null
     }
 }

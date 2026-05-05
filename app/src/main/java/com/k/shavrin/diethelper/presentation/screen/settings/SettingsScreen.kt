@@ -2,10 +2,13 @@ package com.k.shavrin.diethelper.presentation.screen.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -33,6 +36,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -51,35 +55,35 @@ fun SettingsScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true
         )
-        OutlinedTextField(
-            value = state.protein,
-            onValueChange = viewModel::onProteinChange,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Белки, г") },
-            isError = state.proteinError != null,
-            supportingText = state.proteinError?.let { msg -> { Text(msg) } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            singleLine = true
+
+        MacroRangeRow(
+            label = "Белки, г",
+            minValue = state.proteinMin,
+            maxValue = state.proteinMax,
+            onMinChange = viewModel::onProteinMinChange,
+            onMaxChange = viewModel::onProteinMaxChange,
+            minError = state.proteinMinError,
+            maxError = state.proteinMaxError
         )
-        OutlinedTextField(
-            value = state.fat,
-            onValueChange = viewModel::onFatChange,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Жиры, г") },
-            isError = state.fatError != null,
-            supportingText = state.fatError?.let { msg -> { Text(msg) } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            singleLine = true
+
+        MacroRangeRow(
+            label = "Жиры, г",
+            minValue = state.fatMin,
+            maxValue = state.fatMax,
+            onMinChange = viewModel::onFatMinChange,
+            onMaxChange = viewModel::onFatMaxChange,
+            minError = state.fatMinError,
+            maxError = state.fatMaxError
         )
-        OutlinedTextField(
-            value = state.carbs,
-            onValueChange = viewModel::onCarbsChange,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Углеводы, г") },
-            isError = state.carbsError != null,
-            supportingText = state.carbsError?.let { msg -> { Text(msg) } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            singleLine = true
+
+        MacroRangeRow(
+            label = "Углеводы, г",
+            minValue = state.carbsMin,
+            maxValue = state.carbsMax,
+            onMinChange = viewModel::onCarbsMinChange,
+            onMaxChange = viewModel::onCarbsMaxChange,
+            minError = state.carbsMinError,
+            maxError = state.carbsMaxError
         )
 
         Button(
@@ -93,6 +97,50 @@ fun SettingsScreen(
                 text = "Сохранено",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+private fun MacroRangeRow(
+    label: String,
+    minValue: String,
+    maxValue: String,
+    onMinChange: (String) -> Unit,
+    onMaxChange: (String) -> Unit,
+    minError: String?,
+    maxError: String?
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedTextField(
+                value = minValue,
+                onValueChange = onMinChange,
+                modifier = Modifier.weight(1f),
+                label = { Text("Мин") },
+                isError = minError != null,
+                supportingText = minError?.let { msg -> { Text(msg) } },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true
+            )
+            OutlinedTextField(
+                value = maxValue,
+                onValueChange = onMaxChange,
+                modifier = Modifier.weight(1f),
+                label = { Text("Макс") },
+                isError = maxError != null,
+                supportingText = maxError?.let { msg -> { Text(msg) } },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true
             )
         }
     }

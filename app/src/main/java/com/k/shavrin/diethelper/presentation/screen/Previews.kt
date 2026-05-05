@@ -44,7 +44,12 @@ private fun TodayScreenPreview() {
         sections = sections,
         sectionCalories = sectionCalories,
         summary = DailySummary(385f, 15.75f, 3.5f, 77f),
-        goals = DailyGoals(2000f, 150f, 67f, 250f)
+        goals = DailyGoals(
+            calories = 2000f,
+            proteinMin = 120f, proteinMax = 180f,
+            fatMin = 55f, fatMax = 80f,
+            carbsMin = 200f, carbsMax = 280f
+        )
     )
     DietHelperTheme {
         Surface { TodayContent(
@@ -68,7 +73,12 @@ private fun DailySummaryCardPreview() {
         Surface {
             DailySummaryCard(
                 summary = DailySummary(1500f, 100f, 50f, 180f),
-                goals = DailyGoals(2000f, 150f, 67f, 250f)
+                goals = DailyGoals(
+                    calories = 2000f,
+                    proteinMin = 120f, proteinMax = 180f,
+                    fatMin = 55f, fatMax = 80f,
+                    carbsMin = 200f, carbsMax = 280f
+                )
             )
         }
     }

@@ -14,11 +14,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.DailySummary
+import com.k.shavrin.diethelper.presentation.util.caloriesProgressColor
 import com.k.shavrin.diethelper.presentation.util.formatCalories
 import com.k.shavrin.diethelper.presentation.util.formatMacro
+import com.k.shavrin.diethelper.presentation.util.macroProgressColor
 
 @Composable
 fun DailySummaryCard(
@@ -39,31 +42,31 @@ fun DailySummaryCard(
             )
             NutrientProgress(
                 label = "Калории",
-                actual = summary.totalCalories,
-                goal = goals.calories,
+                progress = if (goals.calories > 0f) (summary.totalCalories / goals.calories).coerceIn(0f, 1f) else 0f,
+                color = caloriesProgressColor(summary.totalCalories, goals.calories),
                 actualLabel = formatCalories(summary.totalCalories),
                 goalLabel = formatCalories(goals.calories)
             )
             NutrientProgress(
                 label = "Белки",
-                actual = summary.totalProtein,
-                goal = goals.protein,
+                progress = if (goals.proteinMax > 0f) (summary.totalProtein / goals.proteinMax).coerceIn(0f, 1f) else 0f,
+                color = macroProgressColor(summary.totalProtein, goals.proteinMin, goals.proteinMax),
                 actualLabel = formatMacro(summary.totalProtein),
-                goalLabel = formatMacro(goals.protein)
+                goalLabel = "${formatMacro(goals.proteinMin)}–${formatMacro(goals.proteinMax)}"
             )
             NutrientProgress(
                 label = "Жиры",
-                actual = summary.totalFat,
-                goal = goals.fat,
+                progress = if (goals.fatMax > 0f) (summary.totalFat / goals.fatMax).coerceIn(0f, 1f) else 0f,
+                color = macroProgressColor(summary.totalFat, goals.fatMin, goals.fatMax),
                 actualLabel = formatMacro(summary.totalFat),
-                goalLabel = formatMacro(goals.fat)
+                goalLabel = "${formatMacro(goals.fatMin)}–${formatMacro(goals.fatMax)}"
             )
             NutrientProgress(
                 label = "Углеводы",
-                actual = summary.totalCarbs,
-                goal = goals.carbs,
+                progress = if (goals.carbsMax > 0f) (summary.totalCarbs / goals.carbsMax).coerceIn(0f, 1f) else 0f,
+                color = macroProgressColor(summary.totalCarbs, goals.carbsMin, goals.carbsMax),
                 actualLabel = formatMacro(summary.totalCarbs),
-                goalLabel = formatMacro(goals.carbs)
+                goalLabel = "${formatMacro(goals.carbsMin)}–${formatMacro(goals.carbsMax)}"
             )
         }
     }
@@ -72,12 +75,11 @@ fun DailySummaryCard(
 @Composable
 private fun NutrientProgress(
     label: String,
-    actual: Float,
-    goal: Float,
+    progress: Float,
+    color: Color,
     actualLabel: String,
     goalLabel: String
 ) {
-    val progress = if (goal > 0f) (actual / goal).coerceIn(0f, 1f) else 0f
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -94,7 +96,9 @@ private fun NutrientProgress(
             progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(6.dp)
+                .height(6.dp),
+            color = color,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant
         )
         Spacer(modifier = Modifier.height(0.dp))
     }
