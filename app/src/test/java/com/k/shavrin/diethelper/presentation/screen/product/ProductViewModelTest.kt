@@ -6,9 +6,13 @@ import com.k.shavrin.diethelper.data.FakeFoodEntryRepository
 import com.k.shavrin.diethelper.data.FakeProductRepository
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.domain.model.Product
+import com.k.shavrin.diethelper.data.FakeSavedMealRepository
 import com.k.shavrin.diethelper.domain.usecase.foodentry.AddFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.product.SearchProductsUseCase
 import com.k.shavrin.diethelper.domain.usecase.product.ToggleFavoriteUseCase
+import com.k.shavrin.diethelper.domain.usecase.savedmeal.AddSavedMealEntriesUseCase
+import com.k.shavrin.diethelper.domain.usecase.savedmeal.DeleteSavedMealUseCase
+import com.k.shavrin.diethelper.domain.usecase.savedmeal.GetSavedMealsUseCase
 import com.k.shavrin.diethelper.presentation.navigation.Routes
 import com.k.shavrin.diethelper.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,17 +36,25 @@ class ProductViewModelTest {
     private val testDate: LocalDate = LocalDate.of(2025, 3, 15)
     private val testMealType: MealType = MealType.LUNCH
 
-    private fun createViewModel(): ProductViewModel = ProductViewModel(
-        savedStateHandle = SavedStateHandle(
-            mapOf(
-                Routes.ARG_DATE to testDate.toString(),
-                Routes.ARG_MEAL_TYPE to testMealType.name
-            )
-        ),
-        searchProductsUseCase = SearchProductsUseCase(productRepo),
-        toggleFavoriteUseCase = ToggleFavoriteUseCase(productRepo),
-        addFoodEntryUseCase = AddFoodEntryUseCase(foodRepo)
-    )
+    private val savedMealRepo = FakeSavedMealRepository()
+
+    private fun createViewModel(): ProductViewModel {
+        val addFoodEntryUseCase = AddFoodEntryUseCase(foodRepo)
+        return ProductViewModel(
+            savedStateHandle = SavedStateHandle(
+                mapOf(
+                    Routes.ARG_DATE to testDate.toString(),
+                    Routes.ARG_MEAL_TYPE to testMealType.name
+                )
+            ),
+            searchProductsUseCase = SearchProductsUseCase(productRepo),
+            toggleFavoriteUseCase = ToggleFavoriteUseCase(productRepo),
+            addFoodEntryUseCase = addFoodEntryUseCase,
+            getSavedMealsUseCase = GetSavedMealsUseCase(savedMealRepo),
+            deleteSavedMealUseCase = DeleteSavedMealUseCase(savedMealRepo),
+            addSavedMealEntriesUseCase = AddSavedMealEntriesUseCase(addFoodEntryUseCase)
+        )
+    }
 
     private val apple = Product(id = 1, name = "Apple", caloriesPer100g = 52f, proteinPer100g = 0.3f, fatPer100g = 0.2f, carbsPer100g = 14f)
     private val banana = Product(id = 2, name = "Banana", caloriesPer100g = 89f, proteinPer100g = 1.1f, fatPer100g = 0.3f, carbsPer100g = 23f)

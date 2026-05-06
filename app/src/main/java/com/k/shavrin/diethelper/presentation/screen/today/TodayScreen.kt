@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -41,8 +42,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,7 +63,9 @@ import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.presentation.components.DailySummaryCard
+import com.k.shavrin.diethelper.presentation.util.ClipboardSnapshot
 import com.k.shavrin.diethelper.presentation.util.formatCalories
+import com.k.shavrin.diethelper.presentation.util.formatDate
 import com.k.shavrin.diethelper.presentation.util.formatGrams
 import com.k.shavrin.diethelper.presentation.util.formatIsoDate
 import com.k.shavrin.diethelper.presentation.util.formatMacro
@@ -92,6 +97,10 @@ fun TodayScreen(
             onUpdateMultiplier = viewModel::updateMultiplier,
             onDelete = viewModel::deleteEntry,
             onCopyToDay = viewModel::copyEntryToDay,
+            onCopyMeal = viewModel::copyMeal,
+            onPasteMeal = viewModel::pasteMeal,
+            onClearClipboard = viewModel::clearClipboard,
+            onSaveMeal = viewModel::saveMeal,
             readOnly = false
         )
     }
@@ -107,8 +116,25 @@ internal fun TodayContent(
     onUpdateMultiplier: (FoodEntry, Float) -> Unit,
     onDelete: (FoodEntry) -> Unit,
     onCopyToDay: (FoodEntry, LocalDate) -> Unit,
+    onCopyMeal: (MealType) -> Unit = {},
+    onPasteMeal: (MealType) -> Unit = {},
+    onClearClipboard: () -> Unit = {},
+    onSaveMeal: (String, MealType) -> Unit = { _, _ -> },
     readOnly: Boolean
 ) {
+    val expandedSections = remember { mutableStateMapOf<MealType, Boolean>() }
+
+    LaunchedEffect(state.sections) {
+        MealType.entries.forEach { type ->
+            if (expandedSections[type] == null) {
+                expandedSections[type] = state.sections[type]?.isNotEmpty() == true
+            }
+        }
+    }
+
+    var saveMealDialogForType by remember { mutableStateOf<MealType?>(null) }
+    var pasteMealDialogForType by remember { mutableStateOf<MealType?>(null) }
+
     Column(modifier = Modifier.fillMaxSize()) {
         if (!readOnly) {
             WeekDateHeader(
@@ -136,6 +162,7 @@ internal fun TodayContent(
                 val sectionProtein = state.sectionProtein[mealType] ?: 0f
                 val sectionFat = state.sectionFat[mealType] ?: 0f
                 val sectionCarbs = state.sectionCarbs[mealType] ?: 0f
+                val isExpanded = expandedSections[mealType] ?: false
 
                 item(key = "header_${mealType.name}") {
                     SectionHeader(
@@ -144,31 +171,49 @@ internal fun TodayContent(
                         sectionProtein = sectionProtein,
                         sectionFat = sectionFat,
                         sectionCarbs = sectionCarbs,
+                        entryCount = entries.size,
+                        isExpanded = isExpanded,
                         showAdd = !readOnly,
-                        onAdd = { onAddTo(mealType) }
+                        hasClipboard = state.clipboard != null,
+                        onToggleExpand = {
+                            expandedSections[mealType] = !(expandedSections[mealType] ?: false)
+                        },
+                        onAdd = { onAddTo(mealType) },
+                        onPasteClick = { pasteMealDialogForType = mealType }
                     )
                 }
 
-                if (entries.isEmpty()) {
-                    item(key = "empty_${mealType.name}") {
-                        Text(
-                            text = "Пока пусто",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 4.dp)
-                        )
-                    }
-                } else {
-                    items(entries, key = { "entry_${it.id}" }) { entry ->
-                        FoodEntryRow(
-                            entry = entry,
-                            readOnly = readOnly,
-                            onUpdateMultiplier = { newMul -> onUpdateMultiplier(entry, newMul) },
-                            onDelete = { onDelete(entry) },
-                            onCopyToDay = { date -> onCopyToDay(entry, date) }
-                        )
+                if (isExpanded) {
+                    if (entries.isEmpty()) {
+                        item(key = "empty_${mealType.name}") {
+                            Text(
+                                text = "Пока пусто",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 4.dp)
+                            )
+                        }
+                    } else {
+                        items(entries, key = { "entry_${it.id}" }) { entry ->
+                            FoodEntryRow(
+                                entry = entry,
+                                readOnly = readOnly,
+                                onUpdateMultiplier = { newMul -> onUpdateMultiplier(entry, newMul) },
+                                onDelete = { onDelete(entry) },
+                                onCopyToDay = { date -> onCopyToDay(entry, date) }
+                            )
+                        }
+                        if (!readOnly) {
+                            item(key = "actions_${mealType.name}") {
+                                MealActionBar(
+                                    onCopyMeal = { onCopyMeal(mealType) },
+                                    onSaveMeal = { saveMealDialogForType = mealType }
+                                )
+                            }
+                        }
                     }
                 }
+
                 item(key = "divider_${mealType.name}") {
                     HorizontalDivider()
                 }
@@ -181,6 +226,132 @@ internal fun TodayContent(
             }
         }
     }
+
+    saveMealDialogForType?.let { mealType ->
+        SaveMealDialog(
+            mealLabel = mealTypeLabel(mealType),
+            onDismiss = { saveMealDialogForType = null },
+            onConfirm = { name ->
+                onSaveMeal(name, mealType)
+                saveMealDialogForType = null
+            }
+        )
+    }
+
+    pasteMealDialogForType?.let { targetMealType ->
+        val snapshot = state.clipboard
+        if (snapshot != null) {
+            PasteMealDialog(
+                snapshot = snapshot,
+                onPaste = {
+                    onPasteMeal(targetMealType)
+                    pasteMealDialogForType = null
+                },
+                onDismiss = { pasteMealDialogForType = null },
+                onClearClipboard = {
+                    onClearClipboard()
+                    pasteMealDialogForType = null
+                }
+            )
+        } else {
+            pasteMealDialogForType = null
+        }
+    }
+}
+
+@Composable
+private fun MealActionBar(
+    onCopyMeal: () -> Unit,
+    onSaveMeal: () -> Unit
+) {
+    HorizontalDivider()
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        TextButton(onClick = onCopyMeal) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = null,
+                tint = Color(0xFF4CAF50),
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = "Копировать",
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
+        TextButton(onClick = onSaveMeal) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = null,
+                tint = Color(0xFF4CAF50),
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = "Сохранить еду",
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun SaveMealDialog(
+    mealLabel: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    val isValid = name.isNotBlank()
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Сохранить «$mealLabel»") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Название") },
+                singleLine = true,
+                isError = !isValid && name.isNotEmpty()
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { if (isValid) onConfirm(name.trim()) },
+                enabled = isValid
+            ) { Text("Сохранить") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Отмена") }
+        }
+    )
+}
+
+@Composable
+private fun PasteMealDialog(
+    snapshot: ClipboardSnapshot,
+    onPaste: () -> Unit,
+    onDismiss: () -> Unit,
+    onClearClipboard: () -> Unit
+) {
+    val label = "${mealTypeLabel(snapshot.sourceMealType)} ${formatDate(snapshot.sourceDate)}"
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Вставить приём пищи") },
+        text = { Text("Вставить «$label»?") },
+        confirmButton = {
+            TextButton(onClick = onPaste) { Text("Да") }
+        },
+        dismissButton = {
+            Row {
+                TextButton(onClick = onClearClipboard) { Text("Очистить буфер") }
+                TextButton(onClick = onDismiss) { Text("Нет") }
+            }
+        }
+    )
 }
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -384,21 +555,36 @@ private fun SectionHeader(
     sectionProtein: Float,
     sectionFat: Float,
     sectionCarbs: Float,
+    entryCount: Int,
+    isExpanded: Boolean,
     showAdd: Boolean,
-    onAdd: () -> Unit
+    hasClipboard: Boolean,
+    onToggleExpand: () -> Unit,
+    onAdd: () -> Unit,
+    onPasteClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onToggleExpand)
             .padding(top = 4.dp, bottom = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = mealTypeLabel(mealType),
-                style = MaterialTheme.typography.titleMedium
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = mealTypeLabel(mealType),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                if (!isExpanded && entryCount > 0) {
+                    Text(
+                        text = " · $entryCount шт",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -418,6 +604,16 @@ private fun SectionHeader(
             }
         }
         if (showAdd) {
+            if (hasClipboard) {
+                IconButton(onClick = onPasteClick) {
+                    Icon(
+                        imageVector = Icons.Filled.ContentPaste,
+                        contentDescription = "Вставить",
+                        tint = Color(0xFF4CAF50),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
             IconButton(onClick = onAdd) {
                 Icon(
                     imageVector = Icons.Filled.Add,

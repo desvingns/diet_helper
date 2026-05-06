@@ -8,6 +8,8 @@ import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.domain.model.Product
+import com.k.shavrin.diethelper.data.FakeSavedMealRepository
+import com.k.shavrin.diethelper.domain.usecase.foodentry.AddFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.CopyFoodEntryToDayUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.DeleteFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.GetFoodEntriesForDayUseCase
@@ -15,6 +17,8 @@ import com.k.shavrin.diethelper.domain.usecase.foodentry.GetStreakUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.GetWeekDayStatusesUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.UpdateFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.goals.GetDailyGoalsUseCase
+import com.k.shavrin.diethelper.domain.usecase.savedmeal.SaveMealUseCase
+import com.k.shavrin.diethelper.presentation.util.InMemoryMealClipboard
 import com.k.shavrin.diethelper.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -58,7 +62,10 @@ class TodayViewModelTest {
             deleteEntryUseCase = DeleteFoodEntryUseCase(foodRepo),
             copyEntryUseCase = CopyFoodEntryToDayUseCase(foodRepo),
             getWeekDayStatuses = GetWeekDayStatusesUseCase(foodRepo, goalsRepo),
-            getStreak = GetStreakUseCase(foodRepo, goalsRepo)
+            getStreak = GetStreakUseCase(foodRepo, goalsRepo),
+            addFoodEntryUseCase = AddFoodEntryUseCase(foodRepo),
+            saveMealUseCase = SaveMealUseCase(FakeSavedMealRepository()),
+            clipboard = InMemoryMealClipboard()
         )
     }
 

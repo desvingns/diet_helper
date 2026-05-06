@@ -16,24 +16,32 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +51,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.domain.model.Product
+import com.k.shavrin.diethelper.domain.model.SavedMeal
 import com.k.shavrin.diethelper.presentation.screen.today.ErrorState
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
 import com.k.shavrin.diethelper.presentation.util.formatCalories
@@ -59,6 +68,7 @@ fun ProductSearchScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val query by viewModel.searchQuery.collectAsState()
+    var selectedTab by remember { mutableIntStateOf(0) }
 
     Scaffold(
         topBar = {
@@ -72,34 +82,64 @@ fun ProductSearchScreen(
             )
         }
     ) { padding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
-            OutlinedTextField(
-                value = query,
-                onValueChange = viewModel::setQuery,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                placeholder = { Text("Название продукта") },
-                singleLine = true,
-                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) }
-            )
-
-            when (val s = state) {
-                ProductUiState.Loading -> LoadingState()
-                is ProductUiState.Error -> ErrorState(s.message)
-                is ProductUiState.Success -> ProductSearchContent(
-                    state = s,
-                    onProductClick = { product ->
-                        // dialog handled via remembered state inside the row
-                    },
-                    onToggleFavorite = viewModel::toggleFavorite,
-                    onAddEntry = { product, grams ->
-                        viewModel.addEntry(product, grams, onNavigateBack)
-                    },
-                    onAddNewProduct = onNavigateToAddProduct
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            TabRow(selectedTabIndex = selectedTab) {
+                Tab(
+                    selected = selectedTab == 0,
+                    onClick = { selectedTab = 0 },
+                    text = { Text("Продукты") }
                 )
+                Tab(
+                    selected = selectedTab == 1,
+                    onClick = { selectedTab = 1 },
+                    text = { Text("Сохранённые") }
+                )
+            }
+
+            when (selectedTab) {
+                0 -> {
+                    OutlinedTextField(
+                        value = query,
+                        onValueChange = viewModel::setQuery,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        placeholder = { Text("Название продукта") },
+                        singleLine = true,
+                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) }
+                    )
+
+                    when (val s = state) {
+                        ProductUiState.Loading -> LoadingState()
+                        is ProductUiState.Error -> ErrorState(s.message)
+                        is ProductUiState.Success -> ProductSearchContent(
+                            state = s,
+                            onProductClick = {},
+                            onToggleFavorite = viewModel::toggleFavorite,
+                            onAddEntry = { product, grams ->
+                                viewModel.addEntry(product, grams, onNavigateBack)
+                            },
+                            onAddNewProduct = onNavigateToAddProduct
+                        )
+                    }
+                }
+                1 -> {
+                    when (val s = state) {
+                        ProductUiState.Loading -> LoadingState()
+                        is ProductUiState.Error -> ErrorState(s.message)
+                        is ProductUiState.Success -> SavedMealsContent(
+                            savedMeals = s.savedMeals,
+                            onMealClick = { meal ->
+                                viewModel.addSavedMealEntries(meal, onNavigateBack)
+                            },
+                            onDeleteMeal = viewModel::deleteSavedMeal
+                        )
+                    }
+                }
             }
         }
     }
@@ -159,6 +199,115 @@ private fun ProductSearchContent(
                 selected = null
             }
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SavedMealsContent(
+    savedMeals: List<SavedMeal>,
+    onMealClick: (SavedMeal) -> Unit,
+    onDeleteMeal: (SavedMeal) -> Unit
+) {
+    if (savedMeals.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(
+                text = "Нет сохранённых приёмов",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        return
+    }
+
+    var mealToDelete by remember { mutableStateOf<SavedMeal?>(null) }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 4.dp)
+    ) {
+        items(savedMeals, key = { it.id }) { meal ->
+            SavedMealRow(
+                meal = meal,
+                onClick = { onMealClick(meal) },
+                onSwipeToDelete = { mealToDelete = meal }
+            )
+            HorizontalDivider()
+        }
+    }
+
+    mealToDelete?.let { meal ->
+        AlertDialog(
+            onDismissRequest = { mealToDelete = null },
+            title = { Text("Удалить приём?") },
+            text = { Text("Приём «${meal.name}» будет удалён без возможности восстановления.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDeleteMeal(meal)
+                    mealToDelete = null
+                }) { Text("Удалить") }
+            },
+            dismissButton = {
+                TextButton(onClick = { mealToDelete = null }) { Text("Отмена") }
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SavedMealRow(
+    meal: SavedMeal,
+    onClick: () -> Unit,
+    onSwipeToDelete: () -> Unit
+) {
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { value ->
+            if (value == SwipeToDismissBoxValue.EndToStart) {
+                onSwipeToDelete()
+            }
+            false
+        }
+    )
+
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromStartToEnd = false,
+        enableDismissFromEndToStart = true,
+        backgroundContent = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Удалить",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = meal.name,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "${meal.items.size} продуктов",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }
 

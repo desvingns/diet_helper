@@ -5,6 +5,7 @@ import com.k.shavrin.diethelper.domain.model.DailySummary
 import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
+import com.k.shavrin.diethelper.presentation.util.ClipboardSnapshot
 import java.time.LocalDate
 
 sealed interface TodayUiState {
@@ -20,7 +21,8 @@ sealed interface TodayUiState {
         val summary: DailySummary,
         val goals: DailyGoals,
         val weekStatuses: List<Pair<LocalDate, DayStatus>>,
-        val streak: Int
+        val streak: Int,
+        val clipboard: ClipboardSnapshot? = null
     ) : TodayUiState
 
     data class Error(val message: String) : TodayUiState

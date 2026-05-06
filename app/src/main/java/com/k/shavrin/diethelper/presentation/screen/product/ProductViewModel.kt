@@ -6,9 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.domain.model.Product
+import com.k.shavrin.diethelper.domain.model.SavedMeal
 import com.k.shavrin.diethelper.domain.usecase.foodentry.AddFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.product.SearchProductsUseCase
 import com.k.shavrin.diethelper.domain.usecase.product.ToggleFavoriteUseCase
+import com.k.shavrin.diethelper.domain.usecase.savedmeal.AddSavedMealEntriesUseCase
+import com.k.shavrin.diethelper.domain.usecase.savedmeal.DeleteSavedMealUseCase
+import com.k.shavrin.diethelper.domain.usecase.savedmeal.GetSavedMealsUseCase
 import com.k.shavrin.diethelper.presentation.navigation.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,9 +21,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -30,7 +34,10 @@ class ProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val searchProductsUseCase: SearchProductsUseCase,
     private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
-    private val addFoodEntryUseCase: AddFoodEntryUseCase
+    private val addFoodEntryUseCase: AddFoodEntryUseCase,
+    private val getSavedMealsUseCase: GetSavedMealsUseCase,
+    private val deleteSavedMealUseCase: DeleteSavedMealUseCase,
+    private val addSavedMealEntriesUseCase: AddSavedMealEntriesUseCase
 ) : ViewModel() {
 
     private val date: LocalDate = LocalDate.parse(
@@ -47,14 +54,18 @@ class ProductViewModel @Inject constructor(
     val uiState: StateFlow<ProductUiState> = _searchQuery
         .debounce { value -> if (value.isEmpty()) 0L else 300L }
         .flatMapLatest { query ->
-            searchProductsUseCase(query).map { products ->
+            combine(
+                searchProductsUseCase(query),
+                getSavedMealsUseCase()
+            ) { products, savedMeals ->
                 ProductUiState.Success(
                     date = date,
                     mealType = mealType,
                     query = query,
                     products = products,
                     hasExactMatch = query.isNotBlank() &&
-                            products.any { it.name.equals(query.trim(), ignoreCase = true) }
+                            products.any { it.name.equals(query.trim(), ignoreCase = true) },
+                    savedMeals = savedMeals
                 ) as ProductUiState
             }
         }
@@ -85,6 +96,19 @@ class ProductViewModel @Inject constructor(
                     multiplier = grams / 100f
                 )
             )
+            onComplete()
+        }
+    }
+
+    fun deleteSavedMeal(meal: SavedMeal) {
+        viewModelScope.launch {
+            deleteSavedMealUseCase(meal.id)
+        }
+    }
+
+    fun addSavedMealEntries(meal: SavedMeal, onComplete: () -> Unit) {
+        viewModelScope.launch {
+            addSavedMealEntriesUseCase(meal, date, mealType)
             onComplete()
         }
     }

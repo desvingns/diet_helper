@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.k.shavrin.diethelper.data.local.DietHelperDatabase
 import com.k.shavrin.diethelper.data.local.dao.FoodEntryDao
 import com.k.shavrin.diethelper.data.local.dao.ProductDao
+import com.k.shavrin.diethelper.data.local.dao.SavedMealDao
 import com.k.shavrin.diethelper.data.local.dao.WeightEntryDao
 import dagger.Module
 import dagger.Provides
@@ -27,6 +28,7 @@ object DatabaseModule {
             DietHelperDatabase::class.java,
             DietHelperDatabase.NAME
         )
+            .addMigrations(DietHelperDatabase.MIGRATION_1_2)
             .fallbackToDestructiveMigration()
             .build()
 
@@ -44,4 +46,9 @@ object DatabaseModule {
     @Singleton
     fun provideWeightEntryDao(database: DietHelperDatabase): WeightEntryDao =
         database.weightEntryDao()
+
+    @Provides
+    @Singleton
+    fun provideSavedMealDao(database: DietHelperDatabase): SavedMealDao =
+        database.savedMealDao()
 }
