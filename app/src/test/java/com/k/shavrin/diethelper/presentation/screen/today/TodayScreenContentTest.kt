@@ -1,8 +1,8 @@
 package com.k.shavrin.diethelper.presentation.screen.today
 
-import androidx.compose.ui.test.assertDoesNotExist
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.DailySummary
@@ -222,8 +222,8 @@ class TodayScreenContentTest {
                 )
             }
         }
-        // At least one "Пока пусто" placeholder should be visible since all sections are empty
-        composeTestRule.onNodeWithText("Пока пусто").assertIsDisplayed()
+        // All 4 sections are empty — at least one placeholder should be displayed
+        composeTestRule.onAllNodesWithText("Пока пусто")[0].assertIsDisplayed()
     }
 
     // ── WeekDateHeader: week row contains 7 day circles (day-of-month labels) ─

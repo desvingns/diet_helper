@@ -97,4 +97,76 @@ class GetStreakUseCaseTest {
             cancelAndConsumeRemainingEvents()
         }
     }
+
+    @Test
+    fun `streak is 1 when only yesterday is logged and today is not`() = runTest {
+        val today = LocalDate.now()
+        foodRepo.seed(listOf(entryFor(today.minusDays(1))))
+        useCase().test {
+            assertEquals(1, awaitItem())
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `streak does not count today when today calories are below threshold`() = runTest {
+        val today = LocalDate.now()
+        // Low-calorie product: 100 kcal * 1 = 100 < 600 threshold
+        val lowProduct = Product(
+            id = 2, name = "Малокалорийный",
+            caloriesPer100g = 100f,
+            proteinPer100g = 1f, fatPer100g = 1f, carbsPer100g = 5f
+        )
+        val lowEntry = FoodEntry(
+            productId = 2, product = lowProduct, date = today,
+            mealType = MealType.BREAKFAST, multiplier = 1f
+        )
+        // yesterday is logged above threshold, today is below threshold
+        foodRepo.seed(listOf(entryFor(today.minusDays(1)), lowEntry))
+        useCase().test {
+            // yesterday contributes streak=1, today does NOT add because 100 < 600
+            assertEquals(1, awaitItem())
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `streak adds today when today calories exactly meet threshold`() = runTest {
+        val today = LocalDate.now()
+        // 600 kcal exactly = 2000 * 0.30 → threshold met
+        val thresholdProduct = Product(
+            id = 3, name = "Граница",
+            caloriesPer100g = 600f,
+            proteinPer100g = 5f, fatPer100g = 5f, carbsPer100g = 20f
+        )
+        val thresholdEntry = FoodEntry(
+            productId = 3, product = thresholdProduct, date = today,
+            mealType = MealType.BREAKFAST, multiplier = 1f
+        )
+        foodRepo.seed(listOf(thresholdEntry))
+        useCase().test {
+            assertEquals(1, awaitItem())
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `streak is zero when yesterday calories are below threshold and today is empty`() = runTest {
+        val today = LocalDate.now()
+        val lowProduct = Product(
+            id = 2, name = "Малокалорийный",
+            caloriesPer100g = 100f,
+            proteinPer100g = 1f, fatPer100g = 1f, carbsPer100g = 5f
+        )
+        val lowEntry = FoodEntry(
+            productId = 2, product = lowProduct, date = today.minusDays(1),
+            mealType = MealType.BREAKFAST, multiplier = 1f
+        )
+        // yesterday below threshold, today empty → streak = 0
+        foodRepo.seed(listOf(lowEntry))
+        useCase().test {
+            assertEquals(0, awaitItem())
+            cancelAndConsumeRemainingEvents()
+        }
+    }
 }
