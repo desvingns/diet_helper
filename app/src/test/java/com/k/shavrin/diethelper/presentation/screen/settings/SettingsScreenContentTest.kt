@@ -3,6 +3,7 @@ package com.k.shavrin.diethelper.presentation.screen.settings
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import com.k.shavrin.diethelper.presentation.theme.DietHelperTheme
 import org.junit.Rule
@@ -158,5 +159,107 @@ class SettingsScreenContentTest {
             }
         }
         composeTestRule.onNodeWithText("Сохранено").assertDoesNotExist()
+    }
+
+    // ── warning icon regression ──────────────────────────────────────────────
+
+    @Test
+    fun `warning icon is present when showMacroCalorieWarningLow is true`() {
+        val state = defaultState().copy(showMacroCalorieWarningLow = true)
+        composeTestRule.setContent {
+            DietHelperTheme {
+                SettingsContent(
+                    state = state,
+                    onCaloriesChange = {},
+                    onProteinMinChange = {},
+                    onProteinMaxChange = {},
+                    onFatMinChange = {},
+                    onFatMaxChange = {},
+                    onCarbsMinChange = {},
+                    onCarbsMaxChange = {},
+                    onSave = {}
+                )
+            }
+        }
+        composeTestRule
+            .onNodeWithContentDescription("Калорий больше чем нижние границы БЖУ")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun `warning icon is present when showMacroCalorieWarningHigh is true`() {
+        val state = defaultState().copy(showMacroCalorieWarningHigh = true)
+        composeTestRule.setContent {
+            DietHelperTheme {
+                SettingsContent(
+                    state = state,
+                    onCaloriesChange = {},
+                    onProteinMinChange = {},
+                    onProteinMaxChange = {},
+                    onFatMinChange = {},
+                    onFatMaxChange = {},
+                    onCarbsMinChange = {},
+                    onCarbsMaxChange = {},
+                    onSave = {}
+                )
+            }
+        }
+        composeTestRule
+            .onNodeWithContentDescription("Максимальные БЖУ ниже калорийной цели")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun `both warning icons are present when both warning flags are true`() {
+        val state = defaultState().copy(
+            showMacroCalorieWarningLow = true,
+            showMacroCalorieWarningHigh = true
+        )
+        composeTestRule.setContent {
+            DietHelperTheme {
+                SettingsContent(
+                    state = state,
+                    onCaloriesChange = {},
+                    onProteinMinChange = {},
+                    onProteinMaxChange = {},
+                    onFatMinChange = {},
+                    onFatMaxChange = {},
+                    onCarbsMinChange = {},
+                    onCarbsMaxChange = {},
+                    onSave = {}
+                )
+            }
+        }
+        composeTestRule
+            .onNodeWithContentDescription("Калорий больше чем нижние границы БЖУ")
+            .assertIsDisplayed()
+        composeTestRule
+            .onNodeWithContentDescription("Максимальные БЖУ ниже калорийной цели")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun `no warning icons when both warning flags are false`() {
+        composeTestRule.setContent {
+            DietHelperTheme {
+                SettingsContent(
+                    state = defaultState(),
+                    onCaloriesChange = {},
+                    onProteinMinChange = {},
+                    onProteinMaxChange = {},
+                    onFatMinChange = {},
+                    onFatMaxChange = {},
+                    onCarbsMinChange = {},
+                    onCarbsMaxChange = {},
+                    onSave = {}
+                )
+            }
+        }
+        composeTestRule
+            .onNodeWithContentDescription("Калорий больше чем нижние границы БЖУ")
+            .assertDoesNotExist()
+        composeTestRule
+            .onNodeWithContentDescription("Максимальные БЖУ ниже калорийной цели")
+            .assertDoesNotExist()
     }
 }

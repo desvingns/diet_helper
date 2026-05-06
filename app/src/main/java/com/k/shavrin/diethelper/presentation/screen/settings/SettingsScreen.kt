@@ -1,5 +1,8 @@
 package com.k.shavrin.diethelper.presentation.screen.settings
 
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.foundation.MutatePriority
+import androidx.compose.foundation.MutatorMutex
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,17 +24,22 @@ import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.rememberTooltipState
+import androidx.compose.material3.TooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
+import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeout
 
 @Composable
 fun SettingsScreen(
@@ -152,8 +160,56 @@ fun SettingsContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+private fun rememberLongTooltipState(
+    durationMs: Long = 10_000L
+): TooltipState = remember(durationMs) { LongTooltipState(durationMs) }
+
+/**
+ * Custom [TooltipState] that keeps the tooltip visible for [durationMs] milliseconds.
+ * The default M3 [TooltipState] uses [BasicTooltipDefaults.TooltipDuration] (~1500ms);
+ * this class overrides [show] to use a configurable timeout instead.
+ */
+@Stable
+@OptIn(ExperimentalMaterial3Api::class)
+private class LongTooltipState(
+    private val durationMs: Long,
+    private val mutatorMutex: MutatorMutex = MutatorMutex()
+) : TooltipState {
+    override val transition = MutableTransitionState(false)
+    override val isVisible: Boolean get() = transition.currentState || transition.targetState
+    override val isPersistent: Boolean = false
+
+    private var job: CancellableContinuation<Unit>? = null
+
+    override suspend fun show(mutatePriority: MutatePriority) {
+        val cancellableShow: suspend () -> Unit = {
+            suspendCancellableCoroutine { continuation ->
+                transition.targetState = true
+                job = continuation
+            }
+        }
+        mutatorMutex.mutate(mutatePriority) {
+            try {
+                withTimeout(durationMs) { cancellableShow() }
+            } finally {
+                dismiss()
+            }
+        }
+    }
+
+    override fun dismiss() {
+        transition.targetState = false
+    }
+
+    override fun onDispose() {
+        job?.cancel()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 private fun MacroCalorieWarningIcon(tooltipText: String) {
-    val tooltipState = rememberTooltipState()
+    val tooltipState = rememberLongTooltipState(durationMs = 10_000L)
     val scope = rememberCoroutineScope()
     TooltipBox(
         positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
