@@ -142,6 +142,7 @@ class TodayViewModel @Inject constructor(
                     entry.copy(id = 0, date = _currentDate.value, mealType = targetMealType)
                 )
             }
+            clipboard.clear()
         }
     }
 

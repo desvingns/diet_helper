@@ -254,6 +254,37 @@ class TodayViewModelTest {
     }
 
     @Test
+    fun `pasteMeal clears clipboard after paste`() = runTest {
+        val today = LocalDate.now()
+        val clipboard = InMemoryMealClipboard()
+        clipboard.copy(
+            com.k.shavrin.diethelper.presentation.util.ClipboardSnapshot(
+                entries = listOf(
+                    FoodEntry(productId = 1, product = product, date = today, mealType = MealType.BREAKFAST, multiplier = 1f)
+                ),
+                sourceMealType = MealType.BREAKFAST,
+                sourceDate = today
+            )
+        )
+        val vm = TodayViewModel(
+            getEntriesForDay = GetFoodEntriesForDayUseCase(foodRepo),
+            getGoals = GetDailyGoalsUseCase(goalsRepo),
+            updateEntryUseCase = UpdateFoodEntryUseCase(foodRepo),
+            deleteEntryUseCase = DeleteFoodEntryUseCase(foodRepo),
+            copyEntryUseCase = CopyFoodEntryToDayUseCase(foodRepo),
+            getWeekDayStatuses = GetWeekDayStatusesUseCase(foodRepo, goalsRepo),
+            getStreak = GetStreakUseCase(foodRepo, goalsRepo),
+            addFoodEntryUseCase = AddFoodEntryUseCase(foodRepo),
+            saveMealUseCase = SaveMealUseCase(FakeSavedMealRepository()),
+            clipboard = clipboard
+        )
+
+        vm.pasteMeal(MealType.LUNCH)
+
+        assertEquals(null, clipboard.state.value)
+    }
+
+    @Test
     fun `streak increases with consecutive qualifying days`() = runTest {
         val streakProduct = Product(
             id = 2, name = "Серия",
