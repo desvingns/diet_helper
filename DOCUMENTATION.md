@@ -21,6 +21,8 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 | `Product` | id, name, calories, protein, fat, carbs (per 100g), isFavorite | Room (`products`) |
 | `FoodEntry` | id, productId, date (LocalDate), weightGrams, mealType | Room (`food_entries`) |
 | `WeightEntry` | id, date (LocalDate), weightKg | Room (`weight_entries`) |
+| `SavedMeal` | id, name, createdAt (LocalDateTime) | Room (`saved_meals`) |
+| `SavedMealItem` | id, mealId, productId, weightGrams, mealType | Room (`saved_meal_items`) |
 | `DailyGoals` | calories, proteinMin/Max, fatMin/Max, carbsMin/Max | DataStore Preferences |
 | `DailySummary` | totalCalories, totalProtein, totalFat, totalCarbs | Computed (not stored) |
 | `MealType` | BREAKFAST, LUNCH, DINNER, SNACK | Enum |
@@ -40,7 +42,12 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 
 **Key behaviours:**
 - Shows `DailySummaryCard` at the top with total calories and macro progress bars.
-- Lists all food entries for today grouped implicitly (no explicit meal grouping UI).
+- Food entries grouped by `MealType` (Breakfast, Lunch, Dinner, Snack); each meal section is collapsible/expandable.
+- Wide-hitbox meal section header for easy toggling.
+- Bottom action bar appears when a meal section is expanded: Copy, Paste, Save buttons.
+  - **Copy:** stores meal items to in-memory clipboard (`InMemoryMealClipboard` singleton).
+  - **Paste:** adds clipboard items as new entries for the same meal type.
+  - **Save:** persists meal items to Room as a new `SavedMeal`.
 - FAB opens the Products screen to add a new entry.
 - Calories/macros turn red when they exceed the daily goal.
 - Empty state shown when no entries exist for today.
@@ -48,7 +55,7 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 - `StreakRow` shows consecutive logged days counted backward from today.
 - ViewModel exposes `goToDate(date)` and `goToToday()` to change the displayed date.
 
-**UiState fields (Success):** `date`, `sections`, `sectionCalories/Protein/Fat/Carbs`, `summary`, `goals`, `weekStatuses`, `streak`
+**UiState fields (Success):** `date`, `sections`, `sectionCalories/Protein/Fat/Carbs`, `summary`, `goals`, `weekStatuses`, `streak`, `clipboard` (in-memory paste state)
 
 ---
 
@@ -57,13 +64,15 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 **Purpose:** Search and select a product to log as a food entry.
 
 **Key behaviours:**
-- Search bar filters products by name (case-insensitive, COLLATE NOCASE in DB).
-- Results sorted: favorites first, then alphabetically.
-- Tapping a product opens a bottom sheet / dialog to input weight (grams) and meal type.
-- Star icon toggles `isFavorite` immediately (no save button needed).
+- Tab bar with two tabs: "Products" (search) and "Saved Meals".
+- **Products tab:** Search bar filters products by name (case-insensitive, COLLATE NOCASE in DB).
+  - Results sorted: favorites first, then alphabetically.
+  - Tapping a product opens a bottom sheet / dialog to input weight (grams) and meal type.
+  - Star icon toggles `isFavorite` immediately (no save button needed).
+- **Saved Meals tab:** Lists all saved meals from Room; tapping a saved meal opens a dialog to add all items to today's entries.
 - FAB navigates to Add Product screen.
 
-**UiState fields:** `query`, `products`, `isLoading`
+**UiState fields:** `query`, `products`, `isLoading`, `savedMeals`, `selectedTabIndex`
 
 ---
 
@@ -177,6 +186,8 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 | Iter 2 | JaCoCo via `enableUnitTestCoverage = true` + custom task | AGP 8.x no longer exposes exec files automatically; custom task points to correct path |
 | Iter 4 | `DayStatus` computed in use-case layer, not ViewModel | Keeps presentation layer free of calorie-threshold logic; thresholds are testable in isolation |
 | Iter 4 | `GetStreakUseCase` walks 90 days back at most | Practical upper bound avoids unbounded DB scan; streak display does not need longer history |
+| Iter 5 | `InMemoryMealClipboard` singleton for copy/paste | Transient clipboard for meal sections; lost on app exit (safe, no persistence overhead) |
+| Iter 5 | DB version 1→2 with migration to `saved_meals` and `saved_meal_items` tables | Enables meal persistence feature without breaking existing user data |
 
 ---
 
@@ -214,3 +225,12 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 - feat: `GetStreakUseCase` — reactive `Flow<Int>` counting consecutive logged days (up to 90 days back)
 - feat: `WeekDateHeader` + `WeekDayCircle` + `StreakRow` composables replace the plain date header on Today screen
 - feat: `formatWeekDateHeader` added to `Format.kt` (Russian day-of-week + genitive month)
+
+### Iteration 5 — Meal Copy/Paste/Save
+- feat: `SavedMeal` and `SavedMealItem` domain models; `SavedMealRepository` with CRUD use cases
+- feat: Room DB migration (v1→2) creates `saved_meals` and `saved_meal_items` tables
+- feat: `InMemoryMealClipboard` singleton for transient meal clipboard (copy/paste per session)
+- feat: Today screen meal sections now collapsible with wide-hitbox headers
+- feat: Bottom action bar per expanded meal section (Copy/Paste/Save buttons)
+- feat: Products screen new "Saved Meals" tab; selecting a saved meal adds all items to today's entries
+- feat: `TodayViewModel` exposes `copyMeal`, `pasteMeal`, `clearClipboard`, `saveMeal` actions

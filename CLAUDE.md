@@ -17,32 +17,35 @@ Learning project: Clean Architecture + Compose + Hilt + Room.
 ## Architecture (Clean Architecture)
 ```
 domain/
-  model/          — pure Kotlin data classes (Product, FoodEntry, WeightEntry, DailyGoals, DailySummary, HistoryItem, MealType, DayStatus)
-  repository/     — interfaces (ProductRepository, FoodEntryRepository, WeightRepository, GoalsRepository)
+  model/          — pure Kotlin data classes (Product, FoodEntry, WeightEntry, SavedMeal, SavedMealItem, DailyGoals, DailySummary, HistoryItem, MealType, DayStatus)
+  repository/     — interfaces (ProductRepository, FoodEntryRepository, WeightRepository, SavedMealRepository, GoalsRepository)
   usecase/        — one class per use case, grouped by feature
+    savedmeal/    — GetSavedMealsUseCase, SaveMealUseCase, DeleteSavedMealUseCase, AddSavedMealEntriesUseCase
 data/
   local/
-    entity/       — Room entities (ProductEntity, FoodEntryEntity, FoodEntryWithProduct, WeightEntryEntity)
-    dao/          — DAOs (ProductDao, FoodEntryDao, WeightEntryDao)
+    entity/       — Room entities (ProductEntity, FoodEntryEntity, FoodEntryWithProduct, WeightEntryEntity, SavedMealEntity, SavedMealItemEntity, SavedMealWithItems, SavedMealItemWithProduct)
+    dao/          — DAOs (ProductDao, FoodEntryDao, WeightEntryDao, SavedMealDao)
     converter/    — Converters.kt: LocalDate → Long epochDay via TypeConverter
-    DietHelperDatabase.kt
+    DietHelperDatabase.kt (v2)
     GoalsDataSource.kt  — DataStore wrapper
     DatabaseSeeder.kt   — seed data on first launch
-  mapper/         — entity ↔ domain mappers
-  repository/     — *Impl classes
+  mapper/         — entity ↔ domain mappers (SavedMealMapper)
+  repository/     — *Impl classes (SavedMealRepositoryImpl)
 di/               — Hilt modules (DatabaseModule, DataStoreModule, RepositoryModule)
 presentation/
   navigation/     — Routes, BottomNavItem, AppNavHost
   screen/         — today, product, history, weight, settings (each: Screen + ViewModel + UiState)
   components/     — shared composables (DailySummaryCard)
   theme/          — Color, Type, Theme
-  util/           — Format.kt
+  util/           — Format.kt, InMemoryMealClipboard.kt
 ```
 
 ## Key Technical Decisions
 - `DailyGoals` stored in **DataStore Preferences**, not Room
 - `LocalDate` → `Long` (epochDay) via Room `TypeConverter`
 - `FoodEntryWithProduct` uses `@Transaction + @Relation` for reactive join
+- `SavedMeal` → `SavedMealItem` via 1:N Room relation; queries reactive via `@Transaction`
+- `InMemoryMealClipboard` transient (lost on app exit); no persistence overhead
 - Single-activity app, Navigation Compose with bottom nav
 - ViewModels injected via `hiltViewModel()`
 
