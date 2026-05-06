@@ -25,6 +25,7 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 | `DailySummary` | totalCalories, totalProtein, totalFat, totalCarbs | Computed (not stored) |
 | `MealType` | BREAKFAST, LUNCH, DINNER, SNACK | Enum |
 | `HistoryItem` | date, summary, entryCount | Computed from FoodEntry |
+| `DayStatus` | FUTURE, GRAY_LOGGED, GREEN, YELLOW, RED | Computed enum — diet quality for one day |
 
 **Key relationship:** `FoodEntry` → `Product` via `productId` (FK with CASCADE DELETE).
 `FoodEntryWithProduct` is a Room `@Relation` join used for reactive UI queries.
@@ -43,8 +44,11 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 - FAB opens the Products screen to add a new entry.
 - Calories/macros turn red when they exceed the daily goal.
 - Empty state shown when no entries exist for today.
+- `WeekDateHeader` shows the current day name + date and a row of 7 `WeekDayCircle` items (Mon–Sun) coloured by `DayStatus`.
+- `StreakRow` shows consecutive logged days counted backward from today.
+- ViewModel exposes `goToDate(date)` and `goToToday()` to change the displayed date.
 
-**UiState fields:** `entries`, `summary`, `goals`, `isLoading`
+**UiState fields (Success):** `date`, `sections`, `sectionCalories/Protein/Fat/Carbs`, `summary`, `goals`, `weekStatuses`, `streak`
 
 ---
 
@@ -171,6 +175,8 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 | Iter 2 | `SettingsContent` extracted from `SettingsScreen` | `hiltViewModel()` inside a composable blocks direct Compose testing; stateless Content composable is testable without Hilt |
 | Iter 2 | Roborazzi snapshots in `src/test/snapshots/` | Default `build/` output is git-ignored; committing baselines enables regression detection in CI |
 | Iter 2 | JaCoCo via `enableUnitTestCoverage = true` + custom task | AGP 8.x no longer exposes exec files automatically; custom task points to correct path |
+| Iter 4 | `DayStatus` computed in use-case layer, not ViewModel | Keeps presentation layer free of calorie-threshold logic; thresholds are testable in isolation |
+| Iter 4 | `GetStreakUseCase` walks 90 days back at most | Practical upper bound avoids unbounded DB scan; streak display does not need longer history |
 
 ---
 
@@ -201,3 +207,10 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 - `/dh` orchestrator command replaces `new_dh` skill
 - `dh-developer`, `dh-tester`, `dh-runner`, `dh-docs` sub-agents
 - `DOCUMENTATION.md` created as live product documentation
+
+### Iteration 4 — Week Header and Streak
+- feat: `DayStatus` enum (FUTURE / GRAY_LOGGED / GREEN / YELLOW / RED) added to domain model
+- feat: `GetWeekDayStatusesUseCase` — reactive `Flow<List<Pair<LocalDate, DayStatus>>>` for Mon–Sun of the displayed week
+- feat: `GetStreakUseCase` — reactive `Flow<Int>` counting consecutive logged days (up to 90 days back)
+- feat: `WeekDateHeader` + `WeekDayCircle` + `StreakRow` composables replace the plain date header on Today screen
+- feat: `formatWeekDateHeader` added to `Format.kt` (Russian day-of-week + genitive month)
