@@ -177,7 +177,7 @@ private class LongTooltipState(
 ) : TooltipState {
     override val transition = MutableTransitionState(false)
     override val isVisible: Boolean get() = transition.currentState || transition.targetState
-    override val isPersistent: Boolean = false
+    override val isPersistent: Boolean = true
 
     private var job: CancellableContinuation<Unit>? = null
 
