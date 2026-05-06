@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.k.shavrin.diethelper.data.FakeFoodEntryRepository
 import com.k.shavrin.diethelper.data.FakeProductRepository
+import com.k.shavrin.diethelper.data.FakeSavedMealRepository
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.domain.model.Product
-import com.k.shavrin.diethelper.data.FakeSavedMealRepository
 import com.k.shavrin.diethelper.domain.usecase.foodentry.AddFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.product.SearchProductsUseCase
 import com.k.shavrin.diethelper.domain.usecase.product.ToggleFavoriteUseCase

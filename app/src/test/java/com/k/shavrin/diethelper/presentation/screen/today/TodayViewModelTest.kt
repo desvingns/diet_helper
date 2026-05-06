@@ -3,12 +3,12 @@ package com.k.shavrin.diethelper.presentation.screen.today
 import app.cash.turbine.test
 import com.k.shavrin.diethelper.data.FakeFoodEntryRepository
 import com.k.shavrin.diethelper.data.FakeGoalsRepository
+import com.k.shavrin.diethelper.data.FakeSavedMealRepository
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.domain.model.Product
-import com.k.shavrin.diethelper.data.FakeSavedMealRepository
 import com.k.shavrin.diethelper.domain.usecase.foodentry.AddFoodEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.CopyFoodEntryToDayUseCase
 import com.k.shavrin.diethelper.domain.usecase.foodentry.DeleteFoodEntryUseCase

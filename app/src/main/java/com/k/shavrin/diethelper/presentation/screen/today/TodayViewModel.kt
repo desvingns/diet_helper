@@ -31,6 +31,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("LongParameterList")
 class TodayViewModel @Inject constructor(
     private val getEntriesForDay: GetFoodEntriesForDayUseCase,
     private val getGoals: GetDailyGoalsUseCase,

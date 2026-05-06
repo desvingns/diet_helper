@@ -2,7 +2,6 @@ package com.k.shavrin.diethelper.domain.usecase
 
 import app.cash.turbine.test
 import com.k.shavrin.diethelper.data.FakeSavedMealRepository
-import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.domain.model.Product
 import com.k.shavrin.diethelper.domain.model.SavedMealItem
 import com.k.shavrin.diethelper.domain.usecase.savedmeal.SaveMealUseCase

@@ -97,14 +97,23 @@ fun TodayScreen(
             onUpdateMultiplier = viewModel::updateMultiplier,
             onDelete = viewModel::deleteEntry,
             onCopyToDay = viewModel::copyEntryToDay,
-            onCopyMeal = viewModel::copyMeal,
-            onPasteMeal = viewModel::pasteMeal,
-            onClearClipboard = viewModel::clearClipboard,
-            onSaveMeal = viewModel::saveMeal,
+            mealCallbacks = MealCallbacks(
+                onCopyMeal = viewModel::copyMeal,
+                onPasteMeal = viewModel::pasteMeal,
+                onClearClipboard = viewModel::clearClipboard,
+                onSaveMeal = viewModel::saveMeal
+            ),
             readOnly = false
         )
     }
 }
+
+internal data class MealCallbacks(
+    val onCopyMeal: (MealType) -> Unit = {},
+    val onPasteMeal: (MealType) -> Unit = {},
+    val onClearClipboard: () -> Unit = {},
+    val onSaveMeal: (String, MealType) -> Unit = { _, _ -> }
+)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -116,10 +125,7 @@ internal fun TodayContent(
     onUpdateMultiplier: (FoodEntry, Float) -> Unit,
     onDelete: (FoodEntry) -> Unit,
     onCopyToDay: (FoodEntry, LocalDate) -> Unit,
-    onCopyMeal: (MealType) -> Unit = {},
-    onPasteMeal: (MealType) -> Unit = {},
-    onClearClipboard: () -> Unit = {},
-    onSaveMeal: (String, MealType) -> Unit = { _, _ -> },
+    mealCallbacks: MealCallbacks = MealCallbacks(),
     readOnly: Boolean
 ) {
     val expandedSections = remember { mutableStateMapOf<MealType, Boolean>() }
@@ -127,7 +133,7 @@ internal fun TodayContent(
     LaunchedEffect(state.sections) {
         MealType.entries.forEach { type ->
             if (expandedSections[type] == null) {
-                expandedSections[type] = state.sections[type]?.isNotEmpty() == true
+                expandedSections[type] = true
             }
         }
     }
@@ -158,65 +164,30 @@ internal fun TodayContent(
         ) {
             MealType.values().forEach { mealType ->
                 val entries = state.sections[mealType].orEmpty()
-                val sectionCalories = state.sectionCalories[mealType] ?: 0f
-                val sectionProtein = state.sectionProtein[mealType] ?: 0f
-                val sectionFat = state.sectionFat[mealType] ?: 0f
-                val sectionCarbs = state.sectionCarbs[mealType] ?: 0f
                 val isExpanded = expandedSections[mealType] ?: false
 
-                item(key = "header_${mealType.name}") {
-                    SectionHeader(
-                        mealType = mealType,
-                        sectionCalories = sectionCalories,
-                        sectionProtein = sectionProtein,
-                        sectionFat = sectionFat,
-                        sectionCarbs = sectionCarbs,
-                        entryCount = entries.size,
-                        isExpanded = isExpanded,
-                        showAdd = !readOnly,
-                        hasClipboard = state.clipboard != null,
-                        onToggleExpand = {
-                            expandedSections[mealType] = !(expandedSections[mealType] ?: false)
-                        },
-                        onAdd = { onAddTo(mealType) },
-                        onPasteClick = { pasteMealDialogForType = mealType }
-                    )
-                }
-
-                if (isExpanded) {
-                    if (entries.isEmpty()) {
-                        item(key = "empty_${mealType.name}") {
-                            Text(
-                                text = "Пока пусто",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 4.dp)
-                            )
-                        }
-                    } else {
-                        items(entries, key = { "entry_${it.id}" }) { entry ->
-                            FoodEntryRow(
-                                entry = entry,
-                                readOnly = readOnly,
-                                onUpdateMultiplier = { newMul -> onUpdateMultiplier(entry, newMul) },
-                                onDelete = { onDelete(entry) },
-                                onCopyToDay = { date -> onCopyToDay(entry, date) }
-                            )
-                        }
-                        if (!readOnly) {
-                            item(key = "actions_${mealType.name}") {
-                                MealActionBar(
-                                    onCopyMeal = { onCopyMeal(mealType) },
-                                    onSaveMeal = { saveMealDialogForType = mealType }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                item(key = "divider_${mealType.name}") {
-                    HorizontalDivider()
-                }
+                mealSection(
+                    lazyScope = this,
+                    mealType = mealType,
+                    entries = entries,
+                    sectionCalories = state.sectionCalories[mealType] ?: 0f,
+                    sectionProtein = state.sectionProtein[mealType] ?: 0f,
+                    sectionFat = state.sectionFat[mealType] ?: 0f,
+                    sectionCarbs = state.sectionCarbs[mealType] ?: 0f,
+                    isExpanded = isExpanded,
+                    readOnly = readOnly,
+                    hasClipboard = state.clipboard != null,
+                    onToggleExpand = {
+                        expandedSections[mealType] = !(expandedSections[mealType] ?: false)
+                    },
+                    onAddTo = onAddTo,
+                    onUpdateMultiplier = onUpdateMultiplier,
+                    onDelete = onDelete,
+                    onCopyToDay = onCopyToDay,
+                    onPasteClick = { pasteMealDialogForType = mealType },
+                    onCopyMeal = mealCallbacks.onCopyMeal,
+                    onSaveMeal = { saveMealDialogForType = mealType }
+                )
             }
 
             item(key = "summary") {
@@ -232,7 +203,7 @@ internal fun TodayContent(
             mealLabel = mealTypeLabel(mealType),
             onDismiss = { saveMealDialogForType = null },
             onConfirm = { name ->
-                onSaveMeal(name, mealType)
+                mealCallbacks.onSaveMeal(name, mealType)
                 saveMealDialogForType = null
             }
         )
@@ -244,18 +215,95 @@ internal fun TodayContent(
             PasteMealDialog(
                 snapshot = snapshot,
                 onPaste = {
-                    onPasteMeal(targetMealType)
+                    mealCallbacks.onPasteMeal(targetMealType)
                     pasteMealDialogForType = null
                 },
                 onDismiss = { pasteMealDialogForType = null },
                 onClearClipboard = {
-                    onClearClipboard()
+                    mealCallbacks.onClearClipboard()
                     pasteMealDialogForType = null
                 }
             )
         } else {
             pasteMealDialogForType = null
         }
+    }
+}
+
+@Suppress("LongParameterList")
+@OptIn(ExperimentalFoundationApi::class)
+private fun mealSection(
+    lazyScope: androidx.compose.foundation.lazy.LazyListScope,
+    mealType: MealType,
+    entries: List<FoodEntry>,
+    sectionCalories: Float,
+    sectionProtein: Float,
+    sectionFat: Float,
+    sectionCarbs: Float,
+    isExpanded: Boolean,
+    readOnly: Boolean,
+    hasClipboard: Boolean,
+    onToggleExpand: () -> Unit,
+    onAddTo: (MealType) -> Unit,
+    onUpdateMultiplier: (FoodEntry, Float) -> Unit,
+    onDelete: (FoodEntry) -> Unit,
+    onCopyToDay: (FoodEntry, LocalDate) -> Unit,
+    onPasteClick: () -> Unit,
+    onCopyMeal: (MealType) -> Unit,
+    onSaveMeal: () -> Unit
+) {
+    lazyScope.item(key = "header_${mealType.name}") {
+        SectionHeader(
+            mealType = mealType,
+            macros = SectionMacros(
+                calories = sectionCalories,
+                protein = sectionProtein,
+                fat = sectionFat,
+                carbs = sectionCarbs
+            ),
+            entryCount = entries.size,
+            isExpanded = isExpanded,
+            showAdd = !readOnly,
+            hasClipboard = hasClipboard,
+            onToggleExpand = onToggleExpand,
+            onAdd = { onAddTo(mealType) },
+            onPasteClick = onPasteClick
+        )
+    }
+
+    if (isExpanded) {
+        if (entries.isEmpty()) {
+            lazyScope.item(key = "empty_${mealType.name}") {
+                Text(
+                    text = "Пока пусто",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 4.dp)
+                )
+            }
+        } else {
+            lazyScope.items(entries, key = { "entry_${it.id}" }) { entry ->
+                FoodEntryRow(
+                    entry = entry,
+                    readOnly = readOnly,
+                    onUpdateMultiplier = { newMul -> onUpdateMultiplier(entry, newMul) },
+                    onDelete = { onDelete(entry) },
+                    onCopyToDay = { date -> onCopyToDay(entry, date) }
+                )
+            }
+            if (!readOnly) {
+                lazyScope.item(key = "actions_${mealType.name}") {
+                    MealActionBar(
+                        onCopyMeal = { onCopyMeal(mealType) },
+                        onSaveMeal = onSaveMeal
+                    )
+                }
+            }
+        }
+    }
+
+    lazyScope.item(key = "divider_${mealType.name}") {
+        HorizontalDivider()
     }
 }
 
@@ -548,13 +596,17 @@ private fun WeekDayCircle(
     }
 }
 
+private data class SectionMacros(
+    val calories: Float,
+    val protein: Float,
+    val fat: Float,
+    val carbs: Float
+)
+
 @Composable
 private fun SectionHeader(
     mealType: MealType,
-    sectionCalories: Float,
-    sectionProtein: Float,
-    sectionFat: Float,
-    sectionCarbs: Float,
+    macros: SectionMacros,
     entryCount: Int,
     isExpanded: Boolean,
     showAdd: Boolean,
@@ -590,14 +642,14 @@ private fun SectionHeader(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = formatCalories(sectionCalories),
+                    text = formatCalories(macros.calories),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Б ${formatMacro(sectionProtein)} • " +
-                            "Ж ${formatMacro(sectionFat)} • " +
-                            "У ${formatMacro(sectionCarbs)}",
+                    text = "Б ${formatMacro(macros.protein)} • " +
+                            "Ж ${formatMacro(macros.fat)} • " +
+                            "У ${formatMacro(macros.carbs)}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
