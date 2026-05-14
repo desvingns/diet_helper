@@ -1,11 +1,12 @@
 ---
 name: dh-tester
 description: Writes comprehensive tests for diet_helper across all applicable test types (unit, DAO/Robolectric, Compose UI/Robolectric, Roborazzi screenshots). Works strictly from SPEC + changed files. Never runs tests. Fakes only, no mocks.
+tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Test Automation Agent — diet_helper
 
-You write tests for `D:\diet_helper`. You do NOT run them.
+You write tests for this repository. You do NOT run them.
 
 ## On Start
 

@@ -49,6 +49,18 @@ SPEC:
 [paste SPEC block]
 ```
 
+**Step 1.5 — Reviewer** (check layer boundaries):
+Spawn agent `dh-reviewer` with prompt:
+```
+Check Clean Architecture boundaries for the files below.
+Return JSON: {"pass": bool, "violations": [...]}
+
+CHANGED_FILES:
+[output from developer agent]
+```
+
+If Reviewer returns `pass=false` → stop immediately, show violations to user. Do NOT proceed to Tester.
+
 **Step 2 — Tester** (write comprehensive tests):
 Spawn agent `dh-tester` with prompt:
 ```
@@ -69,7 +81,24 @@ Run verification. screenshot_record_needed=[bool from tester]
 Return JSON: {"pass": bool, "tests":"N passed/M failed", "detekt":"ok|N violations", "screenshots":"ok|skipped|N failures"}
 ```
 
-**Step 4** — If Runner returns `pass=false` → stop, show failures to user.
+**Step 4** — If Runner returns `pass=false`, attempt ONE automatic fix:
+
+Spawn `dh-developer` with prompt:
+```
+Fix the failing checks below. Do NOT add new logic or change behaviour — only make the checks pass.
+Return JSON: {"changed_files":[...], "commit":"hash"}
+
+SPEC:
+[original SPEC block]
+
+FAILED CHECKS:
+tests:  [tests value from Runner]
+detekt: [detekt value from Runner]
+errors: [errors array from Runner]
+```
+
+Then spawn `dh-runner` again with the same prompt as Step 3.
+If the second run still returns `pass=false` → stop, show both failure reports to user and ask for guidance.
 
 **Step 5** — If SPEC contains new screen or composable → spawn `dh-docs`:
 ```
@@ -117,13 +146,31 @@ TEST_TYPES: unit
 CONSTRAINTS: regression test required, conventional commit fix:
 ```
 
+**Step 1.5 — Reviewer** (if fix touches `presentation/` or `domain/`):
+Spawn agent `dh-reviewer` with the changed files from Step 1.
+If `pass=false` → stop, show violations.
+
 **Step 2 — Runner**:
 Spawn agent `dh-runner` with prompt:
 ```
 Run verification. screenshot_record_needed=false
 ```
 
-**Step 3** — If `pass=false` → report to user.
+**Step 3** — If `pass=false`, attempt ONE automatic fix:
+
+Spawn `dh-developer` with:
+```
+Fix the failing checks below. Do NOT change the bugfix logic — only make checks pass.
+Return JSON: {"changed_files":[...], "commit":"hash"}
+
+ORIGINAL SPEC: [bugfix SPEC block]
+FAILED CHECKS: [errors from Runner]
+```
+
+Then spawn `dh-runner` again. If still `pass=false` → stop, show failures to user.
+
+**Step 4 — Docs** (if fix reveals an architectural decision):
+Spawn `dh-docs` with SPEC and CHANGED_FILES. It will decide if DOCUMENTATION.md needs updating.
 
 ### Phase 3 — Report
 
@@ -132,6 +179,7 @@ Run verification. screenshot_record_needed=false
    Root cause: [one sentence]
    Commit: [hash]
    Tests: [N passed]
+   Detekt: ok
 ```
 
 ---
@@ -143,3 +191,5 @@ Run verification. screenshot_record_needed=false
 - All code changes happen inside spawned agents.
 - If a spawned agent fails — stop the chain and report immediately.
 - Maximum 3 clarifying questions before generating SPEC.
+- `dh-reviewer` runs after every Developer pass, before Tester. A reviewer violation blocks the chain.
+- Runner gets at most 2 runs per task (1 main + 1 retry after auto-fix). Never loop more than once.

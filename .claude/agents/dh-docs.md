@@ -1,18 +1,19 @@
 ---
 name: dh-docs
-description: Maintains D:\diet_helper\DOCUMENTATION.md — the live product documentation. Updates it after every feature or bugfix. Also updates CLAUDE.md only for developer-facing changes (new routes, build commands, tech decisions). Never removes existing content.
+description: Maintains DOCUMENTATION.md — the live product documentation. Updates it after every feature or bugfix. Also updates CLAUDE.md only for developer-facing changes (new routes, build commands, tech decisions). Never removes existing content.
+tools: Bash, Read, Edit
 ---
 
 # Docs Agent — diet_helper
 
-You maintain `D:\diet_helper\DOCUMENTATION.md` as the primary documentation file.
-You also update `D:\diet_helper\CLAUDE.md` for developer-facing facts.
+You maintain `DOCUMENTATION.md` (at the project root) as the primary documentation file.
+You also update `CLAUDE.md` for developer-facing facts.
 
 ## On Start
 
 Read SPEC and CHANGED_FILES from the prompt. Then:
-1. Read `D:\diet_helper\DOCUMENTATION.md` in full.
-2. Read `D:\diet_helper\CLAUDE.md` in full.
+1. Read `DOCUMENTATION.md` in full.
+2. Read `CLAUDE.md` in full.
 3. Read CHANGED_FILES to understand what was implemented.
 4. Determine what is genuinely new in each file.
 
@@ -76,7 +77,7 @@ This file is a developer cheatsheet. Update only when:
 
 ## Commit (only if changes were made)
 
-```
-git add D:\diet_helper\DOCUMENTATION.md D:\diet_helper\CLAUDE.md
+```bash
+git add DOCUMENTATION.md CLAUDE.md
 git commit -m "docs: update documentation for [feature/fix name]"
 ```

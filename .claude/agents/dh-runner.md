@@ -1,6 +1,7 @@
 ---
 name: dh-runner
 description: Runs Gradle verification tasks for diet_helper (tests, detekt, optional screenshot verify) and returns structured pass/fail JSON. Never reads or modifies source files. Minimal and fast.
+tools: Bash
 ---
 
 # Runner Agent — diet_helper
@@ -9,45 +10,56 @@ Run verification tasks only. Do NOT read, write, or modify any source files.
 
 ## Environment (apply before every command)
 
-```powershell
-$env:JAVA_HOME = "D:\For_work\AS\jbr"
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-$env:JAVA_TOOL_OPTIONS = "-Djdk.net.unixDomain.tmpDir=C:\tmp"
-$env:TEMP = "C:\tmp"; $env:TMP = "C:\tmp"
-New-Item -ItemType Directory -Path "C:\tmp" -Force | Out-Null
-Set-Location D:\diet_helper
+The Android Gradle Plugin requires JDK 17+. Prefer the JBR shipped with Android Studio over the system JDK.
+
+```bash
+# Detect JBR (Android Studio bundle). First match wins.
+for candidate in \
+    "$HOME"/.jbr/jbr_jcef-17* \
+    /snap/android-studio/current/jbr \
+    /opt/android-studio/jbr; do
+  if [ -x "$candidate/bin/java" ]; then
+    export JAVA_HOME="$candidate"
+    export PATH="$JAVA_HOME/bin:$PATH"
+    break
+  fi
+done
+
+cd "$(git rev-parse --show-toplevel)"
 ```
+
+If no JBR is found, fall back to the system JDK — Gradle will fail loudly if it's incompatible. Do not silently continue with an unset JAVA_HOME.
 
 ## Step 1 — Unit tests (always run)
 
-```powershell
-.\gradlew.bat :app:testDebugUnitTest --no-daemon 2>&1 |
-  Select-String -Pattern "PASSED|FAILED|ERROR|tests|BUILD" |
-  Select-Object -Last 40
+```bash
+./gradlew :app:testDebugUnitTest --no-daemon 2>&1 |
+  grep -E "PASSED|FAILED|ERROR|tests completed|BUILD (SUCCESSFUL|FAILED)" |
+  tail -n 40
 ```
 
-Parse: count PASSED and FAILED. If BUILD FAILED → collect error lines.
+Parse: the Gradle summary line `N tests completed, M failed` is authoritative. If `BUILD FAILED` appears, scan back for `FAILED` lines to collect error context. If neither summary nor BUILD line shows up, re-run with `--info` to find what swallowed the output.
 
 ## Step 2 — Detekt (always run)
 
-```powershell
-.\gradlew.bat :app:detekt --no-daemon 2>&1 |
-  Select-String -Pattern "error|violation|BUILD" |
-  Select-Object -Last 20
+```bash
+./gradlew :app:detekt --no-daemon 2>&1 |
+  grep -E "issues found|Build (failed|successful)|FAILED|BUILD" |
+  tail -n 20
 ```
 
-Parse: if BUILD SUCCESSFUL → "ok". If violations → count and collect messages.
+Parse: `Build successful` and zero "issues found" → "ok". Otherwise extract the violation count from `N issues found:` and collect the next 10 lines (file:line: rule).
 
 ## Step 3 — Screenshots (only if `screenshot_record_needed=true` in prompt)
 
-```powershell
+```bash
 # Record new baselines first
-.\gradlew.bat :app:recordRoborazziDebug --no-daemon 2>&1 |
-  Select-String -Pattern "FAILED|BUILD" | Select-Object -Last 10
+./gradlew :app:recordRoborazziDebug --no-daemon 2>&1 |
+  grep -E "FAILED|BUILD" | tail -n 10
 
 # Then verify
-.\gradlew.bat :app:verifyRoborazziDebug --no-daemon 2>&1 |
-  Select-String -Pattern "FAILED|BUILD" | Select-Object -Last 10
+./gradlew :app:verifyRoborazziDebug --no-daemon 2>&1 |
+  grep -E "FAILED|BUILD" | tail -n 10
 ```
 
 If `screenshot_record_needed=false` → skip, set `"screenshots": "skipped"`.

@@ -50,6 +50,7 @@ presentation/
 - ViewModels injected via `hiltViewModel()`
 
 ## Build
+
 ```bash
 # KSP code generation (run after changing Room/Hilt annotations)
 ./gradlew :app:kspDebugKotlin
@@ -59,30 +60,31 @@ presentation/
 
 # Unit tests
 ./gradlew :app:testDebugUnitTest
+
+# Static analysis
+./gradlew :app:detekt
+
+# Screenshot tests (Roborazzi)
+./gradlew :app:recordRoborazziDebug      # regenerate baselines
+./gradlew :app:verifyRoborazziDebug      # compare against committed baselines
 ```
 
-**JAVA_HOME** must point to `D:\For_work\AS\jbr` if running outside Android Studio.
+**JAVA_HOME** must point to a JDK 17+ runtime. Outside Android Studio, prefer its bundled JBR:
 
-PowerShell one-liner:
-```powershell
-$env:JAVA_HOME = "D:\For_work\AS\jbr"; $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"; .\gradlew.bat :app:kspDebugKotlin
+```bash
+# Auto-detect Android Studio JBR (first match wins)
+for c in "$HOME"/.jbr/jbr_jcef-17* /snap/android-studio/current/jbr /opt/android-studio/jbr; do
+  [ -x "$c/bin/java" ] && export JAVA_HOME="$c" && export PATH="$JAVA_HOME/bin:$PATH" && break
+done
 ```
 
-**Known issue — Gradle loopback error with JBR 21 on Windows:**
-JBR 21 uses Unix domain sockets for internal NIO pipes; on some Windows configurations
-this fails with `Unable to establish loopback connection`. Fix: redirect TEMP to a short path.
-
-```powershell
-$env:JAVA_HOME = "D:\For_work\AS\jbr"
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-$env:JAVA_TOOL_OPTIONS = "-Djdk.net.unixDomain.tmpDir=C:\tmp"
-$env:TEMP = "C:\tmp"; $env:TMP = "C:\tmp"
-New-Item -ItemType Directory -Path "C:\tmp" -Force | Out-Null
-.\gradlew.bat :app:testDebugUnitTest --no-daemon
-```
+Add the snippet to `~/.bashrc` (or equivalent) to persist it.
 
 ## Testing Stack
-- JUnit 4, MockK 1.13.12, Turbine 1.1.0, kotlinx-coroutines-test
+- JUnit 4, Turbine 1.1.0, kotlinx-coroutines-test 1.9.0
+- Robolectric 4.13 (DAO + Compose UI tests on JVM)
+- Roborazzi 1.25.0 (screenshot regression)
+- **Fakes only — no mocking framework.** See `app/src/test/.../data/Fake*.kt`
 
 ## Screens & Navigation
 | Route | Screen |
