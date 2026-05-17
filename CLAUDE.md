@@ -69,16 +69,28 @@ presentation/
 ./gradlew :app:verifyRoborazziDebug      # compare against committed baselines
 ```
 
-**JAVA_HOME** must point to a JDK 17+ runtime. Outside Android Studio, prefer its bundled JBR:
+**JAVA_HOME** must point to a JDK 17+ runtime. Outside Android Studio, prefer its bundled JBR.
+The snippet below works on both Linux (Ubuntu) and Windows under Git Bash:
 
 ```bash
-# Auto-detect Android Studio JBR (first match wins)
-for c in "$HOME"/.jbr/jbr_jcef-17* /snap/android-studio/current/jbr /opt/android-studio/jbr; do
-  [ -x "$c/bin/java" ] && export JAVA_HOME="$c" && export PATH="$JAVA_HOME/bin:$PATH" && break
+# Auto-detect Android Studio JBR (first match wins). Cross-platform.
+for c in \
+    "$HOME"/.jbr/jbr_jcef-17* \
+    /snap/android-studio/current/jbr \
+    /opt/android-studio/jbr \
+    "/c/Program Files/Android/Android Studio/jbr" \
+    "$LOCALAPPDATA/Programs/Android Studio/jbr"; do
+  if [ -x "$c/bin/java" ] || [ -x "$c/bin/java.exe" ]; then
+    export JAVA_HOME="$c"
+    export PATH="$JAVA_HOME/bin:$PATH"
+    break
+  fi
 done
 ```
 
-Add the snippet to `~/.bashrc` (or equivalent) to persist it.
+Add the snippet to `~/.bashrc` on Ubuntu, or to `~/.bash_profile` in Git Bash on Windows, to
+persist it. The `/dh` pipeline runs all shell commands through the `Bash` tool (Git Bash on
+Windows), so no PowerShell-specific setup is required.
 
 ## Testing Stack
 - JUnit 4, Turbine 1.1.0, kotlinx-coroutines-test 1.9.0

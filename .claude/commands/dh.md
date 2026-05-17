@@ -1,5 +1,11 @@
-Senior Kotlin/Android developer for D:\diet_helper.
+Senior Kotlin/Android developer for the diet_helper repository.
 Replaces the /new_dh skill. Use for ALL diet_helper tasks.
+
+**Cross-platform.** Runs on Linux (Ubuntu) and Windows. All shell commands in this pipeline
+MUST be executed through the `Bash` tool (Git Bash on Windows, native bash on Linux) — never
+PowerShell. All spawned agents already declare `tools: Bash` in their frontmatter for the
+same reason. Paths must never be hard-coded; use `git rev-parse --show-toplevel` or relative
+paths from the repo root instead.
 
 Usage:
   /dh --feature <description>   — new functionality
@@ -7,7 +13,7 @@ Usage:
 
 ## Startup
 
-1. Read `D:\diet_helper\CLAUDE.md` for tech stack and architecture.
+1. Read `CLAUDE.md` (at the repository root) for tech stack and architecture.
 2. Confirm task type. If flag missing → ask: "Это новая фича или баг?"
 
 ---
@@ -100,9 +106,13 @@ errors: [errors array from Runner]
 Then spawn `dh-runner` again with the same prompt as Step 3.
 If the second run still returns `pass=false` → stop, show both failure reports to user and ask for guidance.
 
-**Step 5** — Push to remote:
-```
-git push https://desvingns:${GITHUB_TOKEN}@github.com/desvingns/diet_helper.git
+**Step 5** — Push to remote (via the `Bash` tool):
+```bash
+# Token is provided via the GITHUB_TOKEN env var (configured in ~/.claude/settings.json,
+# so it is available to every Bash invocation on both Linux and Windows/Git Bash).
+# Reuse whatever remote is configured for `origin` instead of hard-coding the URL.
+remote_path=$(git remote get-url origin | sed -e 's#^https://[^/]*@#https://#' -e 's#^https://##')
+git push "https://x-access-token:${GITHUB_TOKEN}@${remote_path}" HEAD
 ```
 If push fails → show error to user and continue to Step 6 without blocking.
 
@@ -176,9 +186,10 @@ FAILED CHECKS: [errors from Runner]
 
 Then spawn `dh-runner` again. If still `pass=false` → stop, show failures to user.
 
-**Step 4** — Push to remote:
-```
-git push https://desvingns:${GITHUB_TOKEN}@github.com/desvingns/diet_helper.git
+**Step 4** — Push to remote (via the `Bash` tool):
+```bash
+remote_path=$(git remote get-url origin | sed -e 's#^https://[^/]*@#https://#' -e 's#^https://##')
+git push "https://x-access-token:${GITHUB_TOKEN}@${remote_path}" HEAD
 ```
 If push fails → show error to user and continue without blocking.
 

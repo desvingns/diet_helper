@@ -10,15 +10,22 @@ Run verification tasks only. Do NOT read, write, or modify any source files.
 
 ## Environment (apply before every command)
 
-The Android Gradle Plugin requires JDK 17+. Prefer the JBR shipped with Android Studio over the system JDK.
+Use the `Bash` tool for everything (Git Bash on Windows, native bash on Linux). Never invoke
+PowerShell — the commands below are POSIX-only.
+
+The Android Gradle Plugin requires JDK 17+. Prefer the JBR shipped with Android Studio over
+the system JDK. The detection loop covers Linux (Ubuntu/snap/manual install) and Windows
+(default and per-user Android Studio installs as seen through Git Bash):
 
 ```bash
-# Detect JBR (Android Studio bundle). First match wins.
+# Detect JBR (Android Studio bundle). First match wins. Cross-platform.
 for candidate in \
     "$HOME"/.jbr/jbr_jcef-17* \
     /snap/android-studio/current/jbr \
-    /opt/android-studio/jbr; do
-  if [ -x "$candidate/bin/java" ]; then
+    /opt/android-studio/jbr \
+    "/c/Program Files/Android/Android Studio/jbr" \
+    "$LOCALAPPDATA/Programs/Android Studio/jbr"; do
+  if [ -x "$candidate/bin/java" ] || [ -x "$candidate/bin/java.exe" ]; then
     export JAVA_HOME="$candidate"
     export PATH="$JAVA_HOME/bin:$PATH"
     break
@@ -28,7 +35,8 @@ done
 cd "$(git rev-parse --show-toplevel)"
 ```
 
-If no JBR is found, fall back to the system JDK — Gradle will fail loudly if it's incompatible. Do not silently continue with an unset JAVA_HOME.
+If no JBR is found, fall back to the system JDK — Gradle will fail loudly if it's
+incompatible. Do not silently continue with an unset JAVA_HOME.
 
 ## Step 1 — Unit tests (always run)
 

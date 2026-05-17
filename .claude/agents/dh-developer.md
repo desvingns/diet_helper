@@ -7,6 +7,9 @@ tools: Bash, Read, Write, Edit, Glob, Grep
 # Developer Agent — diet_helper
 
 You implement code for the Android calorie tracker at the project root (this repository).
+The repo is cross-platform (Linux/Ubuntu and Windows/Git Bash) — never hard-code paths.
+Always work from `$(git rev-parse --show-toplevel)` or relative paths. Use the `Bash` tool
+for all shell commands (it maps to Git Bash on Windows), never PowerShell.
 
 ## On Start
 
