@@ -14,6 +14,7 @@ import com.k.shavrin.diethelper.presentation.screen.history.HistoryScreen
 import com.k.shavrin.diethelper.presentation.screen.product.AddProductScreen
 import com.k.shavrin.diethelper.presentation.screen.product.ProductSearchScreen
 import com.k.shavrin.diethelper.presentation.screen.settings.SettingsScreen
+import com.k.shavrin.diethelper.presentation.screen.stats.StatsScreen
 import com.k.shavrin.diethelper.presentation.screen.today.TodayScreen
 import com.k.shavrin.diethelper.presentation.screen.weight.WeightScreen
 
@@ -41,6 +42,10 @@ fun AppNavHost(
                     navController.navigate(Routes.historyDay(date))
                 }
             )
+        }
+
+        composable(Routes.STATISTICS) {
+            StatsScreen()
         }
 
         composable(Routes.WEIGHT) {

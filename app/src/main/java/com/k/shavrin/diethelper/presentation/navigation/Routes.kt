@@ -3,6 +3,7 @@ package com.k.shavrin.diethelper.presentation.navigation
 object Routes {
     const val TODAY = "today"
     const val HISTORY = "history"
+    const val STATISTICS = "statistics"
     const val WEIGHT = "weight"
     const val SETTINGS = "settings"
 
