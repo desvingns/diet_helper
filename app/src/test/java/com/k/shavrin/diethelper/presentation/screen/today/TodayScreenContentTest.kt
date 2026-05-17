@@ -3,7 +3,9 @@ package com.k.shavrin.diethelper.presentation.screen.today
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToKey
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.DailySummary
 import com.k.shavrin.diethelper.domain.model.DayStatus
@@ -203,6 +205,7 @@ class TodayScreenContentTest {
         composeTestRule.onNodeWithText("Завтрак").assertIsDisplayed()
         composeTestRule.onNodeWithText("Обед").assertIsDisplayed()
         composeTestRule.onNodeWithText("Ужин").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("today_feed").performScrollToKey("header_SNACK")
         composeTestRule.onNodeWithText("Перекус").assertIsDisplayed()
     }
 

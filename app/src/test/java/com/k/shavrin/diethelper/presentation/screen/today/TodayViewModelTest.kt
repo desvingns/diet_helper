@@ -253,6 +253,54 @@ class TodayViewModelTest {
         }
     }
 
+    // ── week navigation ───────────────────────────────────────────────────────
+
+    @Test
+    fun `goToPreviousWeek moves current date back 7 days`() = runTest {
+        val before = viewModel.currentDate.value
+        viewModel.goToPreviousWeek()
+        assertEquals(before.minusDays(7), viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToPreviousWeek can navigate multiple weeks into the past`() = runTest {
+        viewModel.goToPreviousWeek()
+        viewModel.goToPreviousWeek()
+        assertEquals(LocalDate.now().minusDays(14), viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToNextWeek from past date moves forward 7 days`() = runTest {
+        viewModel.goToPreviousWeek()
+        val twoWeeksAgo = LocalDate.now().minusDays(14)
+        viewModel.goToDate(twoWeeksAgo)
+        viewModel.goToNextWeek()
+        assertEquals(twoWeeksAgo.plusDays(7), viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToNextWeek does not move past today when candidate exceeds today`() = runTest {
+        // Start from today — candidate would be today+7, which is after today
+        viewModel.goToNextWeek()
+        assertEquals(LocalDate.now(), viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToNextWeek stays at today when already on today`() = runTest {
+        val today = LocalDate.now()
+        repeat(3) { viewModel.goToNextWeek() }
+        assertEquals(today, viewModel.currentDate.value)
+    }
+
+    @Test
+    fun `goToPreviousWeek then goToNextWeek returns to original date when result is not past today`() = runTest {
+        val twoWeeksAgo = LocalDate.now().minusDays(14)
+        viewModel.goToDate(twoWeeksAgo)
+        viewModel.goToPreviousWeek()
+        viewModel.goToNextWeek()
+        assertEquals(twoWeeksAgo, viewModel.currentDate.value)
+    }
+
     @Test
     fun `pasteMeal clears clipboard after paste`() = runTest {
         val today = LocalDate.now()

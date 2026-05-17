@@ -51,7 +51,6 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.domain.model.StatsDayItem
 import com.k.shavrin.diethelper.presentation.screen.today.ErrorState

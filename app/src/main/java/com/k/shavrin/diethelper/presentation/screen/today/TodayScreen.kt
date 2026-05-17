@@ -55,12 +55,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -119,7 +120,7 @@ fun TodayScreen(
     }
 }
 
-internal data class MealCallbacks(
+data class MealCallbacks(
     val onCopyMeal: (MealType) -> Unit = {},
     val onPasteMeal: (MealType) -> Unit = {},
     val onClearClipboard: () -> Unit = {},
@@ -127,6 +128,7 @@ internal data class MealCallbacks(
 )
 
 @OptIn(ExperimentalFoundationApi::class)
+@Suppress("LongParameterList")
 @Composable
 fun TodayContent(
     state: TodayUiState.Success,
@@ -170,7 +172,8 @@ fun TodayContent(
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag("today_feed"),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                 horizontal = 16.dp,
                 vertical = 8.dp
