@@ -128,7 +128,7 @@ internal data class MealCallbacks(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun TodayContent(
+fun TodayContent(
     state: TodayUiState.Success,
     onGoToDate: (LocalDate) -> Unit,
     onTodayClick: () -> Unit,
