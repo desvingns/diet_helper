@@ -100,7 +100,13 @@ errors: [errors array from Runner]
 Then spawn `dh-runner` again with the same prompt as Step 3.
 If the second run still returns `pass=false` → stop, show both failure reports to user and ask for guidance.
 
-**Step 5** — If SPEC contains new screen or composable → spawn `dh-docs`:
+**Step 5** — Push to remote:
+```
+git push https://desvingns:${GITHUB_TOKEN}@github.com/desvingns/diet_helper.git
+```
+If push fails → show error to user and continue to Step 6 without blocking.
+
+**Step 6** — If SPEC contains new screen or composable → spawn `dh-docs`:
 ```
 SPEC: [paste]
 CHANGED_FILES: [list]
@@ -114,6 +120,7 @@ Update CLAUDE.md if genuinely new architecture elements were added.
    Commit: [hash]
    Tests: [N passed]
    Detekt: ok
+   Pushed: yes / failed: [reason]
    Files: [list of created/changed files]
 ```
 
@@ -169,7 +176,13 @@ FAILED CHECKS: [errors from Runner]
 
 Then spawn `dh-runner` again. If still `pass=false` → stop, show failures to user.
 
-**Step 4 — Docs** (if fix reveals an architectural decision):
+**Step 4** — Push to remote:
+```
+git push https://desvingns:${GITHUB_TOKEN}@github.com/desvingns/diet_helper.git
+```
+If push fails → show error to user and continue without blocking.
+
+**Step 5 — Docs** (if fix reveals an architectural decision):
 Spawn `dh-docs` with SPEC and CHANGED_FILES. It will decide if DOCUMENTATION.md needs updating.
 
 ### Phase 3 — Report
@@ -180,6 +193,7 @@ Spawn `dh-docs` with SPEC and CHANGED_FILES. It will decide if DOCUMENTATION.md 
    Commit: [hash]
    Tests: [N passed]
    Detekt: ok
+   Pushed: yes / failed: [reason]
 ```
 
 ---
