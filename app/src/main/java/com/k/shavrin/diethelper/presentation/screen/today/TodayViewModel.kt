@@ -113,6 +113,17 @@ class TodayViewModel @Inject constructor(
         }
     }
 
+    fun goToPreviousWeek() {
+        _currentDate.value = _currentDate.value.minusDays(7)
+    }
+
+    fun goToNextWeek() {
+        val candidate = _currentDate.value.plusDays(7)
+        if (!candidate.isAfter(LocalDate.now())) {
+            _currentDate.value = candidate
+        }
+    }
+
     fun updateMultiplier(entry: FoodEntry, newMultiplier: Float) {
         viewModelScope.launch {
             updateEntryUseCase(entry.copy(multiplier = newMultiplier))

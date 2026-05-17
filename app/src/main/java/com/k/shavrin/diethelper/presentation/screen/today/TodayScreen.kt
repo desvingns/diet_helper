@@ -2,11 +2,13 @@
 
 package com.k.shavrin.diethelper.presentation.screen.today
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -52,13 +55,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.k.shavrin.diethelper.domain.model.DailySummary
 import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
@@ -103,7 +112,9 @@ fun TodayScreen(
                 onClearClipboard = viewModel::clearClipboard,
                 onSaveMeal = viewModel::saveMeal
             ),
-            readOnly = false
+            readOnly = false,
+            onPreviousWeek = viewModel::goToPreviousWeek,
+            onNextWeek = viewModel::goToNextWeek
         )
     }
 }
@@ -126,7 +137,9 @@ internal fun TodayContent(
     onDelete: (FoodEntry) -> Unit,
     onCopyToDay: (FoodEntry, LocalDate) -> Unit,
     mealCallbacks: MealCallbacks = MealCallbacks(),
-    readOnly: Boolean
+    readOnly: Boolean,
+    onPreviousWeek: () -> Unit = {},
+    onNextWeek: () -> Unit = {}
 ) {
     val expandedSections = remember { mutableStateMapOf<MealType, Boolean>() }
 
@@ -148,7 +161,9 @@ internal fun TodayContent(
                 weekStatuses = state.weekStatuses,
                 streak = state.streak,
                 onDateSelected = onGoToDate,
-                onTodayClick = onTodayClick
+                onTodayClick = onTodayClick,
+                onPreviousWeek = onPreviousWeek,
+                onNextWeek = onNextWeek
             )
         }
 
@@ -162,6 +177,11 @@ internal fun TodayContent(
             ),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            item(key = "macro_stats") {
+                DailyMacroStatsCard(summary = state.summary)
+                HorizontalDivider()
+            }
+
             MealType.values().forEach { mealType ->
                 val entries = state.sections[mealType].orEmpty()
                 val isExpanded = expandedSections[mealType] ?: false
@@ -409,10 +429,13 @@ internal fun WeekDateHeader(
     weekStatuses: List<Pair<LocalDate, DayStatus>>,
     streak: Int,
     onDateSelected: (LocalDate) -> Unit,
-    onTodayClick: () -> Unit
+    onTodayClick: () -> Unit,
+    onPreviousWeek: () -> Unit = {},
+    onNextWeek: () -> Unit = {}
 ) {
     val today = LocalDate.now()
     var showDatePicker by remember { mutableStateOf(false) }
+    var dragAccum by remember { mutableStateOf(0f) }
 
     Column(
         modifier = Modifier
@@ -443,18 +466,38 @@ internal fun WeekDateHeader(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Week row: 7 circles Mon–Sun
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            weekStatuses.forEach { (day, status) ->
-                WeekDayCircle(
-                    day = day,
-                    status = status,
-                    isSelected = day == date,
-                    isToday = day == today,
-                    onClick = { onDateSelected(day) }
+        Box(
+            modifier = Modifier.pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragEnd = { dragAccum = 0f },
+                    onHorizontalDrag = { change, dragAmount ->
+                        change.consume()
+                        dragAccum += dragAmount
+                        val threshold = 80.dp.toPx()
+                        if (dragAccum > threshold) {
+                            onPreviousWeek()
+                            dragAccum = 0f
+                        } else if (dragAccum < -threshold) {
+                            onNextWeek()
+                            dragAccum = 0f
+                        }
+                    }
                 )
+            }
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                weekStatuses.forEach { (day, status) ->
+                    WeekDayCircle(
+                        day = day,
+                        status = status,
+                        isSelected = day == date,
+                        isToday = day == today,
+                        onClick = { onDateSelected(day) }
+                    )
+                }
             }
         }
 
@@ -869,6 +912,116 @@ private fun CopyToDateDialog(
         }
     ) {
         DatePicker(state = datePickerState)
+    }
+}
+
+private val MacroProteinColor = Color(0xFFEF9A9A)
+private val MacroFatColor = Color(0xFFFFD54F)
+private val MacroCarbsColor = Color(0xFF90CAF9)
+
+@Composable
+private fun DailyMacroStatsCard(summary: DailySummary) {
+    val totalMacros = summary.totalProtein + summary.totalFat + summary.totalCarbs
+    val proteinPct = if (totalMacros > 0f) (summary.totalProtein / totalMacros * 100).roundToInt() else 0
+    val fatPct = if (totalMacros > 0f) (summary.totalFat / totalMacros * 100).roundToInt() else 0
+    val carbsPct = if (totalMacros > 0f) (100 - proteinPct - fatPct) else 0
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            MacroLegendRow(MacroProteinColor, "Белки", proteinPct, summary.totalProtein)
+            MacroLegendRow(MacroFatColor, "Жиры", fatPct, summary.totalFat)
+            MacroLegendRow(MacroCarbsColor, "Углеводы", carbsPct, summary.totalCarbs)
+        }
+        MacroDonutChart(
+            proteinPct = proteinPct.toFloat(),
+            fatPct = fatPct.toFloat(),
+            carbsPct = carbsPct.toFloat(),
+            modifier = Modifier.size(88.dp)
+        )
+    }
+}
+
+@Composable
+private fun MacroLegendRow(color: Color, label: String, pct: Int, grams: Float) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            text = "$label $pct%, ${formatMacro(grams)}",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+@Composable
+private fun MacroDonutChart(
+    proteinPct: Float,
+    fatPct: Float,
+    carbsPct: Float,
+    modifier: Modifier = Modifier
+) {
+    val strokeWidthDp = 28f
+    Canvas(modifier = modifier) {
+        val strokePx = strokeWidthDp * density
+        val inset = strokePx / 2f
+        val arcSize = Size(size.width - strokePx, size.height - strokePx)
+        val topLeft = Offset(inset, inset)
+        val total = proteinPct + fatPct + carbsPct
+        val safeTotal = if (total == 0f) 1f else total
+        val carbsSweep = 360f * carbsPct / safeTotal
+        val fatSweep = 360f * fatPct / safeTotal
+        val proteinSweep = 360f * proteinPct / safeTotal
+        var startAngle = -90f
+
+        if (carbsSweep > 0f) {
+            drawArc(
+                color = MacroCarbsColor,
+                startAngle = startAngle,
+                sweepAngle = carbsSweep,
+                useCenter = false,
+                topLeft = topLeft,
+                size = arcSize,
+                style = Stroke(width = strokePx, cap = StrokeCap.Butt)
+            )
+            startAngle += carbsSweep
+        }
+        if (fatSweep > 0f) {
+            drawArc(
+                color = MacroFatColor,
+                startAngle = startAngle,
+                sweepAngle = fatSweep,
+                useCenter = false,
+                topLeft = topLeft,
+                size = arcSize,
+                style = Stroke(width = strokePx, cap = StrokeCap.Butt)
+            )
+            startAngle += fatSweep
+        }
+        if (proteinSweep > 0f) {
+            drawArc(
+                color = MacroProteinColor,
+                startAngle = startAngle,
+                sweepAngle = proteinSweep,
+                useCenter = false,
+                topLeft = topLeft,
+                size = arcSize,
+                style = Stroke(width = strokePx, cap = StrokeCap.Butt)
+            )
+        }
     }
 }
 
