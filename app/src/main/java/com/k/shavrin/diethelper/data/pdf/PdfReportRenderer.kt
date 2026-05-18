@@ -9,8 +9,6 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
-import android.net.Uri
-import androidx.core.content.FileProvider
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.domain.model.ReportData
@@ -38,14 +36,13 @@ private val longDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("
 private val shortDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM", ruLocale)
 private val timestampFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", ruLocale)
 
-private const val FILE_PROVIDER_SUFFIX = ".fileprovider"
 private const val REPORT_DIR_NAME = "reports"
 
 class PdfReportRenderer @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ReportRenderer {
 
-    override suspend fun render(data: ReportData): Uri = withContext(Dispatchers.IO) {
+    override suspend fun render(data: ReportData): String = withContext(Dispatchers.IO) {
         val document = PdfDocument()
         val ctx = PdfPageContext(document)
         try {
@@ -60,7 +57,7 @@ class PdfReportRenderer @Inject constructor(
             finishPage(ctx)
 
             val file = writeDocumentToFile(document, data)
-            FileProvider.getUriForFile(context, "${context.packageName}$FILE_PROVIDER_SUFFIX", file)
+            file.absolutePath
         } finally {
             document.close()
         }

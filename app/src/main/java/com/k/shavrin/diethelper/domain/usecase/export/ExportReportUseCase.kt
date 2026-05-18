@@ -1,6 +1,5 @@
 package com.k.shavrin.diethelper.domain.usecase.export
 
-import android.net.Uri
 import com.k.shavrin.diethelper.domain.model.DailySummary
 import com.k.shavrin.diethelper.domain.model.ExportConfig
 import com.k.shavrin.diethelper.domain.model.ExportMode
@@ -28,7 +27,7 @@ class ExportReportUseCase @Inject constructor(
     private val goalsRepository: GoalsRepository,
     private val renderer: ReportRenderer
 ) {
-    suspend operator fun invoke(config: ExportConfig): Uri {
+    suspend operator fun invoke(config: ExportConfig): String {
         val (start, end) = orderRange(config.from, config.to)
         val allDates = expandDates(start, end)
 

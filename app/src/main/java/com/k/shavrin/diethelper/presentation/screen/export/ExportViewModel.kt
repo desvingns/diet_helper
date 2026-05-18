@@ -1,11 +1,14 @@
 package com.k.shavrin.diethelper.presentation.screen.export
 
+import android.content.Context
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.k.shavrin.diethelper.domain.model.ExportConfig
 import com.k.shavrin.diethelper.domain.model.ExportMode
 import com.k.shavrin.diethelper.domain.usecase.export.ExportReportUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,13 +18,16 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDate
 import javax.inject.Inject
 
 private const val DEFAULT_RANGE_DAYS_BACK = 6L
+private const val FILE_PROVIDER_SUFFIX = ".fileprovider"
 
 @HiltViewModel
 class ExportViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val exportReportUseCase: ExportReportUseCase
 ) : ViewModel() {
 
@@ -65,13 +71,18 @@ class ExportViewModel @Inject constructor(
         viewModelScope.launch {
             val current = _state.value
             try {
-                val uri = exportReportUseCase(
+                val path = exportReportUseCase(
                     ExportConfig(
                         from = current.from,
                         to = current.to,
                         mode = current.mode,
                         includeStats = current.includeStats
                     )
+                )
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}$FILE_PROVIDER_SUFFIX",
+                    File(path)
                 )
                 _state.update { it.copy(isExporting = false) }
                 _events.tryEmit(ExportEvent.Share(uri))
