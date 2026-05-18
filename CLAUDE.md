@@ -1,7 +1,20 @@
+# CLAUDE.md
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # Diet Helper — Android Calorie Tracker
 
 Learning project: Clean Architecture + Compose + Hilt + Room.
 **Do not simplify or collapse architecture** — verbosity is intentional for educational purposes.
+
+## Project State Files
+
+Three project-root markdown files track state and history (all committed):
+
+- `STATE.md` — **live state**, refreshed by `dh-docs` after every `/dh` run. Current iteration, last completed work, recent commits, up-next.
+- `ROADMAP.md` — **planned work**, ordered by iteration. Edit manually.
+- `DOCUMENTATION.md` — **history**: product features, user flows, architecture decisions log.
+
+Cross-session memory lives in `~/.claude/projects/C--Pet-diet-helper/memory/`; `MEMORY.md` is its index and is auto-loaded into every session.
 
 ## Package
 `com.k.shavrin.diethelper`
@@ -17,27 +30,49 @@ Learning project: Clean Architecture + Compose + Hilt + Room.
 ## Architecture (Clean Architecture)
 ```
 domain/
-  model/          — pure Kotlin data classes (Product, FoodEntry, WeightEntry, SavedMeal, SavedMealItem, DailyGoals, DailySummary, HistoryItem, MealType, DayStatus)
-  repository/     — interfaces (ProductRepository, FoodEntryRepository, WeightRepository, SavedMealRepository, GoalsRepository)
-  usecase/        — one class per use case, grouped by feature
-    savedmeal/    — GetSavedMealsUseCase, SaveMealUseCase, DeleteSavedMealUseCase, AddSavedMealEntriesUseCase
+  model/          — pure Kotlin data classes:
+                    Product, FoodEntry, WeightEntry, SavedMeal, SavedMealItem,
+                    DailyGoals, DailySummary, HistoryItem, MealType, DayStatus,
+                    StatsDayItem
+  repository/     — interfaces (ProductRepository, FoodEntryRepository, WeightRepository,
+                    SavedMealRepository, GoalsRepository)
+  usecase/        — one class per use case, grouped by feature subfolder:
+    foodentry/    — AddFoodEntryUseCase, UpdateFoodEntryUseCase, DeleteFoodEntryUseCase,
+                    GetFoodEntriesForDayUseCase, GetDailySummaryUseCase,
+                    GetHistoryUseCase, GetWeekDayStatusesUseCase,
+                    CopyFoodEntryToDayUseCase, GetStreakUseCase
+    product/      — AddProductUseCase, GetAllProductsUseCase, SearchProductsUseCase,
+                    ToggleFavoriteUseCase
+    goals/        — GetDailyGoalsUseCase, SaveDailyGoalsUseCase
+    weight/       — GetAllWeightEntriesUseCase, UpsertWeightEntryUseCase,
+                    DeleteWeightEntryUseCase
+    savedmeal/    — GetSavedMealsUseCase, SaveMealUseCase, DeleteSavedMealUseCase,
+                    AddSavedMealEntriesUseCase
+    stats/        — GetStatsRangeUseCase
 data/
   local/
-    entity/       — Room entities (ProductEntity, FoodEntryEntity, FoodEntryWithProduct, WeightEntryEntity, SavedMealEntity, SavedMealItemEntity, SavedMealWithItems, SavedMealItemWithProduct)
+    entity/       — Room entities (ProductEntity, FoodEntryEntity, FoodEntryWithProduct,
+                    WeightEntryEntity, SavedMealEntity, SavedMealItemEntity,
+                    SavedMealWithItems, SavedMealItemWithProduct)
     dao/          — DAOs (ProductDao, FoodEntryDao, WeightEntryDao, SavedMealDao)
     converter/    — Converters.kt: LocalDate → Long epochDay via TypeConverter
     DietHelperDatabase.kt (v2)
     GoalsDataSource.kt  — DataStore wrapper
     DatabaseSeeder.kt   — seed data on first launch
-  mapper/         — entity ↔ domain mappers (SavedMealMapper)
-  repository/     — *Impl classes (SavedMealRepositoryImpl)
+  mapper/         — entity ↔ domain mappers:
+                    ProductMapper, FoodEntryMapper, WeightEntryMapper, SavedMealMapper
+  repository/     — *Impl classes: ProductRepositoryImpl, FoodEntryRepositoryImpl,
+                    WeightRepositoryImpl, GoalsRepositoryImpl, SavedMealRepositoryImpl
 di/               — Hilt modules (DatabaseModule, DataStoreModule, RepositoryModule)
 presentation/
   navigation/     — Routes, BottomNavItem, AppNavHost
-  screen/         — today, product, history, weight, settings (each: Screen + ViewModel + UiState)
+  screen/         — today, product, history (HistoryScreen + HistoryViewModel +
+                    HistoryDayScreen + HistoryDayViewModel), weight, settings, stats
+                    (each screen: Screen + ViewModel + UiState)
   components/     — shared composables (DailySummaryCard)
   theme/          — Color, Type, Theme
-  util/           — Format.kt, InMemoryMealClipboard.kt
+  util/           — Format.kt, InMemoryMealClipboard.kt, MacroColorUtil.kt
+  Previews.kt     — standalone @Preview composables (not tied to a single screen)
 ```
 
 ## Key Technical Decisions
@@ -48,6 +83,11 @@ presentation/
 - `InMemoryMealClipboard` transient (lost on app exit); no persistence overhead
 - Single-activity app, Navigation Compose with bottom nav
 - ViewModels injected via `hiltViewModel()`
+- `FoodEntryRepository.getEntriesForDates(List<LocalDate>)` is the multi-day query used by stats and streak; it returns a single reactive `Flow` over the union of those dates
+- Streak (shown on Today screen): consecutive days where calories ≥ 30% of daily goal, looking back up to 89 days; today counts if it already meets the threshold
+- `MacroColorUtil` provides colour interpolation (green → red) for macro progress indicators; it is `internal` and not exported outside the `util` package
+- Product favourites tracked by `isFavorite: Boolean` on `ProductEntity`; toggled via `ToggleFavoriteUseCase`
+- `history` screen has **two** ViewModels: `HistoryViewModel` (calendar/list) and `HistoryDayViewModel` (single-day detail, receives date via SavedStateHandle)
 
 ## Build
 
@@ -101,10 +141,13 @@ Windows), so no PowerShell-specific setup is required.
 ## Screens & Navigation
 | Route | Screen |
 |-------|--------|
-| `today` | Today (food diary for current day) |
-| `products` | Product search |
-| `add_product` | Add custom product |
+| `today` | Today (food diary for current day, shows streak) |
+| `product_search/{date}/{mealType}` | Product search — launched from Today/HistoryDay with target date + meal slot |
+| `add_product?name={name}` | Add custom product (optional pre-filled name query param) |
 | `history` | Calendar-based history list |
 | `history_day/{date}` | Day detail from history |
 | `weight` | Weight tracking chart |
 | `settings` | Daily goals (calories, protein, fat, carbs) |
+| `statistics` | Macro/calorie bar charts over a selectable date range |
+
+Route constants live in `Routes` object; helper fns: `Routes.productSearch(date, mealType)`, `Routes.addProduct(name)`, `Routes.historyDay(date)`.

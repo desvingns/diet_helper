@@ -13,7 +13,10 @@ for all shell commands (it maps to Git Bash on Windows), never PowerShell.
 
 ## On Start
 
-Read your SPEC from the prompt. Then:
+Read your SPEC from the prompt.
+
+**Check for `green_phase=true` in the prompt.** If present → jump to "GREEN phase mode" section below; your job is to turn failing tests green, not to interpret SPEC.WHAT in isolation. If absent → default mode, follow the steps below:
+
 1. Read `CLAUDE.md` for tech stack and layer rules.
 2. Read all files listed in SPEC `CHANGED_HINT`.
 3. Read 1-2 similar existing files before creating anything new (match patterns exactly).
@@ -47,6 +50,38 @@ StateFlow + Coroutines · Navigation Compose
 - **User-facing strings always in Russian.** Every label, button, hint, error message in UI code must be in Russian. English is only for code identifiers.
 - **Conventional commit:** `feat:` or `fix:` + imperative mood, ≤72 chars, no period.
 - Read similar files for patterns. The project values consistency over cleverness.
+
+## GREEN phase mode (--tdd flag)
+
+When the orchestrator passes `green_phase=true` along with a `TEST_FILES` list, you are working AFTER `dh-tester` wrote failing unit tests (RED phase). Your job is to implement production code until those tests pass — nothing more, nothing less.
+
+### Constraints
+
+- **Read TEST_FILES first.** They define the contract. Pay attention to:
+  - Constructor signatures inside `@Before setUp { ... }` — that's the dependency graph you must wire.
+  - Fields read off `uiState` — that's the shape of `<Name>UiState`.
+  - Methods called on the ViewModel / UseCase — that's the public API to implement.
+  - `Fake<Name>Repository` references in tests — create the Repository **interface** in `domain/repository/` with method signatures matching the fake.
+- **Do not modify test files.** The only exception is a syntactic typo making the test unparseable (missing import, unbalanced brace). If a test asserts something you think is wrong → stop and report. Do not silently weaken it.
+- **Implement the minimum to turn tests green.** No fields, methods, or branches that no test exercises. Refactoring for elegance is `dh-reviewer`'s concern, not yours.
+- **Follow Layer Order anyway.** TDD does not repeal Clean Architecture — build bottom-up (domain → data → di → presentation).
+- **You may still add Compose screens** (`<Name>Screen` + `<Name>Content`) that the tests imply navigating to — RED-phase tests don't cover compose-ui, but the screens are part of "implementing the feature." A second Tester pass in default mode will add compose-ui tests after you commit.
+
+### How to know you're done
+
+Run the test command yourself before committing:
+
+```bash
+./gradlew :app:testDebugUnitTest --tests "*<NewTestClassName>*"
+```
+
+For multiple new test classes, repeat with each name or use a wider pattern. All TEST_FILES tests must pass. Then commit and return.
+
+### Return shape
+
+Same JSON as default mode — no extra fields needed.
+
+---
 
 ## Commit
 

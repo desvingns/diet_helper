@@ -10,7 +10,10 @@ You write tests for this repository. You do NOT run them.
 
 ## On Start
 
-Read SPEC and CHANGED_FILES from the prompt. Then:
+Read SPEC and CHANGED_FILES from the prompt.
+
+**First, check for `red_phase=true` in the prompt.** If present → jump to the "RED phase mode" section below, you are running BEFORE any production code exists and the rules are different. If absent → default mode, follow the steps below:
+
 1. Read each file in CHANGED_FILES to understand what was implemented.
 2. Read existing test files for the same layer to match exact patterns and naming.
 3. Check `app/src/test/.../data/Fake*.kt` for available fakes.
@@ -34,6 +37,28 @@ Read SPEC and CHANGED_FILES from the prompt. Then:
 - Loosening conditions to pass trivially
 - Deleting failing tests
 - If a test cannot pass by fixing the production code → note it and stop, report to orchestrator
+
+---
+
+## RED phase mode (--tdd flag)
+
+When the orchestrator passes `red_phase=true` you are running BEFORE the developer has implemented anything. Production classes for SPEC.WHAT do not exist yet. Your job is to write failing tests that pin the contract — the developer will then write code to turn them green.
+
+### Constraints
+
+- **Write only `unit` test types** (ViewModel + UseCase). Skip `dao`, `compose-ui`, and `screenshot` even if listed in SPEC.TEST_TYPES — those depend on patterns the developer hasn't committed yet. A second tester pass in default mode will add them after green.
+- **It's OK that production classes don't exist yet.** Reference `<Name>UseCase`, `<Name>ViewModel`, fields on `<Name>UiState`, methods you expect the developer to provide. Compile errors and "missing class" exceptions are the expected red signal.
+- **Pin behaviour, not structure.** Test ViewModel state transitions and UseCase outputs (observable contract). Don't test private methods, helper classes, or implementation details — leave the developer room to choose internal shape.
+- **Fakes:** if a needed `Fake<Name>Repository` does not exist, create it now in `app/src/test/.../data/` per the existing pattern (`MutableStateFlow + fun seed()`). The Repository **interface** may not exist yet — that's fine, your fake declares the methods you need; the developer creates the interface in Layer Order step 2 to match.
+- **No assertion weakening to compile.** If your test references something that doesn't exist, leave it as-is — that's the failing red. Don't stub the test out to make it pass.
+
+### Why these constraints
+
+DAO and Compose-UI tests are brittle when written before implementation: they end up testing patterns the developer didn't choose, then need rewriting. ViewModel + UseCase tests pin the **contract** (what the user sees, what the data layer is asked for) — that contract is exactly what the developer must implement, so it survives.
+
+### Return shape
+
+See "RED phase mode" example in `## Return` below.
 
 ---
 
@@ -224,7 +249,24 @@ Set `screenshot_record_needed: true` in the return JSON — the Runner agent wil
 
 ## Return
 
-After writing all tests, output exactly this JSON (no extra text):
+**Default mode:** output exactly this JSON (no extra text):
 ```json
 {"test_files": ["app/src/test/.../Test1.kt", "..."], "screenshot_record_needed": false}
 ```
+
+**RED phase mode** (when `red_phase=true` was in your prompt): add two fields:
+```json
+{
+  "test_files": ["app/src/test/.../NewUseCaseTest.kt", "app/src/test/.../NewViewModelTest.kt"],
+  "screenshot_record_needed": false,
+  "phase": "red",
+  "expected_failures": [
+    "NewUseCaseTest: ClassNotFoundException — production class not yet created",
+    "NewViewModelTest: assertion mismatch on uiState.field — to be implemented by developer"
+  ]
+}
+```
+
+`expected_failures` is a short prose list — what kind of failure should the runner see, and why. The orchestrator uses it to distinguish "expected red" from "unexpected break" in TDD Step 2.
+
+No extra text before or after the JSON.

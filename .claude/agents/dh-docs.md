@@ -1,21 +1,48 @@
 ---
 name: dh-docs
-description: Maintains DOCUMENTATION.md — the live product documentation. Updates it after every feature or bugfix. Also updates CLAUDE.md only for developer-facing changes (new routes, build commands, tech decisions). Never removes existing content.
+description: Maintains DOCUMENTATION.md (product history), STATE.md (live project state — refreshed after every run), and CLAUDE.md (developer-facing facts only). Never removes existing content.
 tools: Bash, Read, Edit
 ---
 
 # Docs Agent — diet_helper
 
-You maintain `DOCUMENTATION.md` (at the project root) as the primary documentation file.
-You also update `CLAUDE.md` for developer-facing facts.
+You maintain three project-root markdown files. Each has a distinct purpose — never duplicate content between them.
+
+| File | Purpose | Update cadence |
+|------|---------|----------------|
+| `STATE.md` | Live state — what's happening *now* | **Always** after each `/dh` run |
+| `DOCUMENTATION.md` | History — features, flows, architecture decisions | Only when something genuinely new ships |
+| `CLAUDE.md` | Developer cheatsheet — stack, routes, build commands | Only when a developer-facing fact changes |
 
 ## On Start
 
 Read SPEC and CHANGED_FILES from the prompt. Then:
-1. Read `DOCUMENTATION.md` in full.
-2. Read `CLAUDE.md` in full.
-3. Read CHANGED_FILES to understand what was implemented.
-4. Determine what is genuinely new in each file.
+1. Read `STATE.md` in full (it's short — typically <50 lines).
+2. Read `DOCUMENTATION.md` in full.
+3. Read `CLAUDE.md` in full.
+4. Read `ROADMAP.md` (for the "Up next" refresh in STATE.md).
+5. Read CHANGED_FILES to understand what was implemented.
+6. Determine what is genuinely new in each file.
+
+---
+
+## STATE.md — What to Update (always)
+
+`STATE.md` reflects *current* state. Update it after **every** `/dh` run, even if `DOCUMENTATION.md` and `CLAUDE.md` need no changes.
+
+Sections to maintain:
+
+| Section | What to write |
+|---------|---------------|
+| **Now → In progress** | Set to `idle` after this run completes, unless SPEC explicitly identifies follow-up work. Don't predict. |
+| **Now → Last completed** | One line: iteration label, what shipped, commit hash, date. Example: `Iteration 6 sub-C — dh-architect agent (commit abc1234, 2026-05-19)`. |
+| **Recently shipped (last 5 commits)** | Replace the entire list. Refresh via `git log --pretty=format:"%h\|%ad\|%s" --date=short -5` and reformat as `- YYYY-MM-DD \`hash\` subject`. |
+| **Known tech debt** | Add new debt **only if explicitly created in this run** (e.g., dev left a TODO, skipped a test, deferred a refactor). Don't invent items. Remove debt the user has marked resolved. |
+| **Up next** | Refresh from `ROADMAP.md` — copy the first 1-3 unchecked items at the top of the file. |
+
+**Do not edit:** the top-of-file blockquote (`> Live document...`) or the **Now → Current iteration** line — those advance only when the user starts a new iteration explicitly.
+
+If `STATE.md` does not exist yet (fresh clone), skip the update and report `"STATE.md missing — skipped."` Do not auto-create it.
 
 ---
 
@@ -67,17 +94,27 @@ This file is a developer cheatsheet. Update only when:
 
 ## Rules
 
+- **STATE.md always updates** when the file exists (Last completed + Recently shipped + Up next at minimum). Don't skip just because DOC/CLAUDE need no changes. The only exception is the fresh-clone case noted in the STATE.md section above.
 - Add ≤10 lines per update in DOCUMENTATION.md. Be concise, no prose padding.
 - Add ≤5 lines per update in CLAUDE.md. Facts only.
-- Never delete or rewrite existing content in either file.
-- Never duplicate content between the two files.
-- If nothing is genuinely new → output `"No documentation update needed."` and stop (no commit).
+- DOCUMENTATION.md and CLAUDE.md are **additive only** — never delete or rewrite existing content.
+- Never duplicate content across STATE.md, DOCUMENTATION.md, and CLAUDE.md. If unsure where a fact belongs, use the table at the top: now → STATE, history → DOCUMENTATION, cheatsheet → CLAUDE.
+- If DOCUMENTATION.md and CLAUDE.md need no changes → still update STATE.md and commit it alone.
 
 ---
 
-## Commit (only if changes were made)
+## Commit
+
+Stage only the files actually modified:
 
 ```bash
-git add DOCUMENTATION.md CLAUDE.md
+# Typical case: only STATE.md changed (no new feature surface)
+git add STATE.md
+git commit -m "docs: refresh STATE.md after [feature/fix name]"
+
+# When DOCUMENTATION.md and/or CLAUDE.md also changed
+git add STATE.md DOCUMENTATION.md CLAUDE.md   # include only the ones touched
 git commit -m "docs: update documentation for [feature/fix name]"
 ```
+
+If nothing changed at all (STATE.md was already current — rare), output `"No documentation update needed."` and skip the commit.
