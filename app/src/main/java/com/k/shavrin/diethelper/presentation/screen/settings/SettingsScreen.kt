@@ -9,16 +9,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Text
@@ -43,6 +46,7 @@ import kotlinx.coroutines.withTimeout
 
 @Composable
 fun SettingsScreen(
+    onNavigateToExport: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -61,10 +65,12 @@ fun SettingsScreen(
         onFatMaxChange = viewModel::onFatMaxChange,
         onCarbsMinChange = viewModel::onCarbsMinChange,
         onCarbsMaxChange = viewModel::onCarbsMaxChange,
-        onSave = viewModel::save
+        onSave = viewModel::save,
+        onNavigateToExport = onNavigateToExport
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun SettingsContent(
     state: SettingsUiState,
@@ -75,7 +81,8 @@ fun SettingsContent(
     onFatMaxChange: (String) -> Unit,
     onCarbsMinChange: (String) -> Unit,
     onCarbsMaxChange: (String) -> Unit,
-    onSave: () -> Unit
+    onSave: () -> Unit,
+    onNavigateToExport: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -153,6 +160,21 @@ fun SettingsContent(
                 text = "Сохранено",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        OutlinedButton(
+            onClick = onNavigateToExport,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                imageVector = Icons.Filled.FileDownload,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = "Экспорт PDF",
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }

@@ -6,6 +6,7 @@ object Routes {
     const val STATISTICS = "statistics"
     const val WEIGHT = "weight"
     const val SETTINGS = "settings"
+    const val EXPORT = "export"
 
     const val PRODUCT_SEARCH = "product_search/{date}/{mealType}"
     const val ADD_PRODUCT = "add_product?name={name}"

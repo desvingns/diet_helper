@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.k.shavrin.diethelper.presentation.screen.export.ExportScreen
 import com.k.shavrin.diethelper.presentation.screen.history.HistoryDayScreen
 import com.k.shavrin.diethelper.presentation.screen.history.HistoryScreen
 import com.k.shavrin.diethelper.presentation.screen.product.AddProductScreen
@@ -53,7 +54,13 @@ fun AppNavHost(
         }
 
         composable(Routes.SETTINGS) {
-            SettingsScreen()
+            SettingsScreen(
+                onNavigateToExport = { navController.navigate(Routes.EXPORT) }
+            )
+        }
+
+        composable(Routes.EXPORT) {
+            ExportScreen(onNavigateBack = { navController.popBackStack() })
         }
 
         composable(
