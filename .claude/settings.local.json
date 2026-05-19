@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(git pull origin main)"
+      "PowerShell(git pull origin main)",
+      "Bash(mkdir -p C:/Pet/diet_helper/.claude/scripts && ls C:/Pet/diet_helper/.claude/scripts/)",
+      "WebFetch(domain:claude.ai)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__get_page_text"
     ]
   }
 }

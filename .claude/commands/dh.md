@@ -7,6 +7,40 @@ PowerShell. All spawned agents already declare `tools: Bash` in their frontmatte
 same reason. Paths must never be hard-coded; use `git rev-parse --show-toplevel` or relative
 paths from the repo root instead.
 
+## Deterministic steps via .claude/scripts/
+
+Two pipeline steps that used to spawn agents are now plain Bash scripts. They emit exactly
+one JSON line to stdout (gradle/grep logs go to temp files) so the orchestrator's context
+stays the same size as before, but skips the LLM round-trip entirely:
+
+- `.claude/scripts/dh-runner.sh [screenshot_record_needed]` — replaces `dh-runner` agent
+- `.claude/scripts/dh-reviewer.sh <file1> <file2> ...` — replaces `dh-reviewer` agent
+
+The `dh-runner` and `dh-reviewer` agent files are kept as a **fallback** only: invoke them
+via `Agent` when a script fails (non-zero exit, unparseable JSON, missing dependency).
+
+## Strict output contracts for LLM agents
+
+Every LLM agent in the chain must return exactly one structured payload as its final
+message — no prose before or after, no markdown fences. The shape depends on the agent:
+
+| Agent          | Payload         |
+|----------------|-----------------|
+| `dh-architect` | One BRAINSTORM block (framed by `=== BRAINSTORM ===` markers) |
+| `dh-developer` | JSON `{"changed_files":[...], "commit":"hash"}` |
+| `dh-tester`    | JSON `{"test_files":[...], "screenshot_record_needed": bool, ...}` |
+| `dh-verifier`  | JSON `{"pass": bool, "static_checks":{...}, "manual_checklist":[...]}` |
+| `dh-docs`      | JSON `{"committed": bool, "files":[...], "commit":"hash"}` (files/commit only when committed=true) |
+
+After every LLM agent call:
+
+1. Extract the JSON (or BRAINSTORM block) from the agent's response.
+2. Parse it. If parsing fails or required keys are missing → spawn the same agent ONE more
+   time, prefixing the original prompt with:
+   `Previous response was not valid JSON. Return ONLY the JSON object specified, no prose.`
+   (For `dh-architect`, replace "JSON" with "BRAINSTORM block".)
+3. If the retry still fails → stop the pipeline and show both responses to the user.
+
 Usage:
   /dh --feature <description>         — new functionality (default: developer-first order)
   /dh --feature --tdd <description>   — new functionality, TDD red-green order (tester writes failing tests first)
@@ -131,17 +165,17 @@ SPEC:
 [paste SPEC block]
 ```
 
-**Step 1.5 — Reviewer** (check layer boundaries):
-Spawn agent `dh-reviewer` with prompt:
-```
-Check Clean Architecture boundaries for the files below.
-Return JSON: {"pass": bool, "violations": [...]}
-
-CHANGED_FILES:
-[output from developer agent]
+**Step 1.5 — Reviewer** (check layer boundaries) — **deterministic script**:
+```bash
+bash .claude/scripts/dh-reviewer.sh [each changed_file from developer JSON, space-separated]
 ```
 
-If Reviewer returns `pass=false` → stop immediately, show violations to user. Do NOT proceed to Tester.
+The script emits exactly one JSON line: `{"pass": bool, "violations": [...]}`. Parse it.
+
+Fallback: if the script's exit code is non-zero or its output is not valid JSON, spawn the
+`dh-reviewer` agent with the same CHANGED_FILES list and use its output instead.
+
+If `pass=false` → stop immediately, show violations to user. Do NOT proceed to Tester.
 
 **Step 2 — Tester** (write comprehensive tests):
 Spawn agent `dh-tester` with prompt:
@@ -156,12 +190,15 @@ CHANGED_FILES:
 [output from developer agent]
 ```
 
-**Step 3 — Runner** (verify everything passes):
-Spawn agent `dh-runner` with prompt:
+**Step 3 — Runner** (verify everything passes) — **deterministic script**:
+```bash
+bash .claude/scripts/dh-runner.sh [true|false from tester.screenshot_record_needed]
 ```
-Run verification. screenshot_record_needed=[bool from tester]
-Return JSON: {"pass": bool, "tests":"N passed/M failed", "detekt":"ok|N violations", "screenshots":"ok|skipped|N failures"}
-```
+
+The script emits exactly one JSON line with shape `{"pass": bool, "tests":..., "detekt":..., "screenshots":..., "errors":[...]}`. Parse it.
+
+Fallback: if the script's exit code is non-zero or its output is not valid JSON, spawn the
+`dh-runner` agent with `screenshot_record_needed=<bool>` and use its output instead.
 
 **Step 4** — If Runner returns `pass=false`, attempt ONE automatic fix:
 
@@ -179,7 +216,7 @@ detekt: [detekt value from Runner]
 errors: [errors array from Runner]
 ```
 
-Then spawn `dh-runner` again with the same prompt as Step 3.
+Then re-run `.claude/scripts/dh-runner.sh` (same arguments as Step 3) and parse its JSON.
 If the second run still returns `pass=false` → stop, show both failure reports to user and ask for guidance.
 
 **Step 4.5 — Verifier** (static wiring checks + manual checklist gate before push):
@@ -238,7 +275,7 @@ If the user passed `--tdd`, replace the default Step 1..Step 6 above with the re
     SPEC:
     [paste SPEC block]
 
-**Step 2 — Runner (expect red).** Spawn `dh-runner` with the default Step 3 prompt. **Interpret the result yourself:**
+**Step 2 — Runner (expect red).** Run `bash .claude/scripts/dh-runner.sh false` (no screenshots in RED phase) and parse the JSON output. **Interpret the result yourself:**
 
 - If `tests` reports failures AND `detekt` is `ok` AND the failures plausibly match `expected_failures` from Step 1 → red is correct, proceed to Step 3.
 - If `tests` reports `0 failed` → tester didn't actually pin a contract. Stop and ask user.
@@ -306,15 +343,18 @@ TEST_TYPES: unit
 CONSTRAINTS: regression test required, conventional commit fix:
 ```
 
-**Step 1.5 — Reviewer** (if fix touches `presentation/` or `domain/`):
-Spawn agent `dh-reviewer` with the changed files from Step 1.
+**Step 1.5 — Reviewer** (if fix touches `presentation/` or `domain/`) — **deterministic script**:
+```bash
+bash .claude/scripts/dh-reviewer.sh [each changed_file from developer JSON, space-separated]
+```
+Parse JSON. Fallback to spawning `dh-reviewer` agent on script error.
 If `pass=false` → stop, show violations.
 
-**Step 2 — Runner**:
-Spawn agent `dh-runner` with prompt:
+**Step 2 — Runner** — **deterministic script**:
+```bash
+bash .claude/scripts/dh-runner.sh false
 ```
-Run verification. screenshot_record_needed=false
-```
+Parse JSON. Fallback to spawning `dh-runner` agent on script error.
 
 **Step 3** — If `pass=false`, attempt ONE automatic fix:
 
@@ -327,7 +367,7 @@ ORIGINAL SPEC: [bugfix SPEC block]
 FAILED CHECKS: [errors from Runner]
 ```
 
-Then spawn `dh-runner` again. If still `pass=false` → stop, show failures to user.
+Then re-run `.claude/scripts/dh-runner.sh false`. If still `pass=false` → stop, show failures to user.
 
 **Step 4** — Push to remote (via the `Bash` tool):
 ```bash
@@ -358,8 +398,9 @@ Spawn `dh-docs` with SPEC and CHANGED_FILES. It always refreshes `STATE.md`; it 
 - Orchestrator NEVER modifies application source files directly. (Writing markdown artifacts to `.claude/specs/` during `--discuss` is allowed — these are planning documents, not code.)
 - All code changes happen inside spawned agents.
 - If a spawned agent fails — stop the chain and report immediately.
+- LLM agent output is validated as JSON. On parse failure, retry the same agent ONCE with an explicit "JSON only, no prose" preface. Second failure → stop.
 - Maximum 3 clarifying questions before generating SPEC.
-- `dh-reviewer` runs after every Developer pass, before Tester. A reviewer violation blocks the chain.
-- Runner gets at most 2 runs per task (1 main + 1 retry after auto-fix). Never loop more than once.
+- Reviewer step runs after every Developer pass, before Tester (deterministic script `dh-reviewer.sh`; agent fallback on script error). A violation blocks the chain.
+- Runner step is the deterministic script `dh-runner.sh` (agent fallback on script error). Runner gets at most 2 runs per task (1 main + 1 retry after auto-fix). Never loop more than once.
 - `dh-verifier` runs after Runner pass on `--feature` only. A static_checks failure blocks the chain; on pass, push waits for explicit user `y` after the manual checklist is shown. (`--bugfix` skips Verifier — bugfixes rarely touch wiring.)
 - `--tdd` flag (only on `--feature`) reorders Phase 2: Tester writes failing unit tests first (`red_phase=true`), Runner verifies the red, then Developer implements until green (`green_phase=true`). Opt-in only; default order remains developer-first. `--bugfix` is unchanged — regression tests are written inline by the developer there.

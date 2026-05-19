@@ -91,9 +91,17 @@ git add -p
 git commit -m "feat|fix: [description]"
 ```
 
-## Return
+## Return — strict JSON contract
 
-Output exactly this JSON (no extra text):
-```json
+Your **final message** must be exactly one JSON object and nothing else:
+- No prose before the JSON.
+- No prose after the JSON.
+- No markdown fences (no ```json, no ```).
+- No comments inside the JSON.
+
+Shape:
+```
 {"changed_files": ["app/src/main/.../File1.kt", "..."], "commit": "abc1234"}
 ```
+
+If the orchestrator prefixes your prompt with `Previous response was not valid JSON…`, you previously violated this contract — return ONLY the raw JSON object this time.
