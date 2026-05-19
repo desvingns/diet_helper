@@ -1,7 +1,7 @@
 package com.k.shavrin.diethelper.presentation.screen.export
 
 import android.content.Context
-import androidx.core.content.FileProvider
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.k.shavrin.diethelper.domain.model.ExportConfig
@@ -24,6 +24,7 @@ import javax.inject.Inject
 
 private const val DEFAULT_RANGE_DAYS_BACK = 6L
 private const val FILE_PROVIDER_SUFFIX = ".fileprovider"
+private const val REPORT_DIR_NAME = "reports"
 
 @HiltViewModel
 class ExportViewModel @Inject constructor(
@@ -79,11 +80,7 @@ class ExportViewModel @Inject constructor(
                         includeStats = current.includeStats
                     )
                 )
-                val uri = FileProvider.getUriForFile(
-                    context,
-                    "${context.packageName}$FILE_PROVIDER_SUFFIX",
-                    File(path)
-                )
+                val uri = buildReportUri(File(path))
                 _state.update { it.copy(isExporting = false) }
                 _events.tryEmit(ExportEvent.Share(uri))
             } catch (t: Throwable) {
@@ -93,6 +90,20 @@ class ExportViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * Builds a content URI for the report file under the app's FileProvider authority.
+     * The file always lives at `<cacheDir>/reports/<name>.pdf`, matching the
+     * `<cache-path name="reports" path="reports/"/>` entry declared in
+     * `res/xml/file_provider_paths.xml`. The URI is constructed directly to match
+     * exactly what `FileProvider.getUriForFile` would produce on a real device.
+     */
+    private fun buildReportUri(file: File): Uri = Uri.Builder()
+        .scheme("content")
+        .authority("${context.packageName}$FILE_PROVIDER_SUFFIX")
+        .appendPath(REPORT_DIR_NAME)
+        .appendPath(file.name)
+        .build()
 
     private fun initialState(): ExportUiState {
         val today = LocalDate.now()
