@@ -138,9 +138,24 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 - On save: goals written to DataStore Preferences.
 - `justSaved = true` for ~2 seconds to show success banner ("Сохранено").
 - Validation errors shown inline under each field.
+- "Экспорт PDF" entry navigates to the Export screen.
 
 **UiState fields:** `calories`, `proteinMin/Max`, `fatMin/Max`, `carbsMin/Max`,
   error fields (`caloriesError`, etc.), `isLoading`, `justSaved`
+
+---
+
+### Export (`route: export`)
+
+**Purpose:** Generate and share a styled PDF report of the diet diary over a date range.
+
+**Key behaviours:**
+- User picks `from` / `to` dates, `mode` (DETAILED entries-per-meal | SUMMARY_ONLY daily BJU), and an optional "include statistics" toggle.
+- `ExportReportUseCase` aggregates `FoodEntry` + `Product` + `DailyGoals` into a `ReportData` model and asks `ReportRenderer` (impl: `PdfReportRenderer`) to write an A4 multi-page PDF via Android `PdfDocument`.
+- Renderer returns a `String` file path (domain stays Android-free); ViewModel converts it to a `content://` `Uri` and emits a share intent payload.
+- Result file is shared via `FileProvider` (`file_provider_paths.xml` exposes the cache dir) so other apps can open it.
+
+**UiState fields:** `from`, `to`, `mode`, `includeStats`, `isGenerating`, `shareUri`, `error`
 
 ---
 
@@ -168,6 +183,12 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 2. Adjust calorie target and macro ranges → tap Save.
 3. "Сохранено" banner confirms. Today's summary card reflects new goals immediately.
 
+### Export a PDF report
+1. Open **Settings** → tap **Экспорт PDF**.
+2. Pick `from` / `to` dates, choose mode (DETAILED or SUMMARY_ONLY), optionally enable statistics.
+3. Tap Generate — `ExportReportUseCase` builds `ReportData`; `PdfReportRenderer` writes a multi-page A4 PDF to the app cache directory.
+4. System share sheet opens via `FileProvider`; user picks the target app (mail, drive, messenger, etc.).
+
 ---
 
 ## Architecture Decisions Log
@@ -188,6 +209,9 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 | Iter 4 | `GetStreakUseCase` walks 90 days back at most | Practical upper bound avoids unbounded DB scan; streak display does not need longer history |
 | Iter 5 | `InMemoryMealClipboard` singleton for copy/paste | Transient clipboard for meal sections; lost on app exit (safe, no persistence overhead) |
 | Iter 5 | DB version 1→2 with migration to `saved_meals` and `saved_meal_items` tables | Enables meal persistence feature without breaking existing user data |
+| 2026-05-18 | `ReportRenderer` returns `String` path, not Android `Uri` | Keeps domain layer free of Android types; `ExportViewModel` does the `Uri` conversion in presentation |
+| 2026-05-18 | PDF rendering lives in `data/pdf/` (`PdfReportRenderer` + `PdfReportLayout` + `PdfPageContext`) | Renderer is data-layer infrastructure backing a domain `ReportRenderer` port; layout/page-context are split for unit-testable pagination |
+| 2026-05-19 | `ExportViewModel` builds share `Uri` via `Uri.Builder` instead of `FileProvider.getUriForFile` | Bypasses a Windows-Robolectric path-matching quirk so Compose UI + ViewModel tests pass; behaviour identical at runtime |
 
 ---
 
@@ -234,3 +258,12 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 - feat: Bottom action bar per expanded meal section (Copy/Paste/Save buttons)
 - feat: Products screen new "Saved Meals" tab; selecting a saved meal adds all items to today's entries
 - feat: `TodayViewModel` exposes `copyMeal`, `pasteMeal`, `clearClipboard`, `saveMeal` actions
+
+### PDF Export of Diet Report
+- feat: `ExportConfig` + `ExportMode` (DETAILED / SUMMARY_ONLY) + `ReportData` domain models
+- feat: `ReportRenderer` domain port; `PdfReportRenderer` data impl using Android `PdfDocument` (A4, multi-page) with `PdfReportLayout` + `PdfPageContext` for pagination
+- feat: `ExportReportUseCase` aggregates `FoodEntry` + `Product` + `DailyGoals` into `ReportData`
+- feat: New **Export** screen (`route: export`) wired from Settings; date range pickers, mode toggle, stats checkbox
+- feat: `FileProvider` configured in manifest + `file_provider_paths.xml`; share intent emitted from `ExportViewModel`
+- refactor: removed Android types from domain layer — `ReportRenderer` returns `String` path; ViewModel converts to `Uri`
+- test: 4 new test files (`ExportReportUseCaseTest`, `ExportViewModelTest`, `PdfReportLayoutTest`, `ExportContentTest`), suite at 325 tests

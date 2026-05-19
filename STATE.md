@@ -14,21 +14,23 @@
 
 - **Current iteration:** 6 — Workflow polish (infra, not product feature)
 - **In progress:** idle
-- **Last completed:** Iteration 6 sub-iteration E — TDD red-green mode (`--tdd` flag, RED/GREEN phase sections in `dh-tester`/`dh-developer`, TDD subsection in `dh.md`) (2026-05-18, uncommitted — sub-B + sub-C + sub-D + sub-E land together in a single commit)
+- **Last completed:** PDF export of diet report from Settings — date range + mode (DETAILED / SUMMARY_ONLY) + optional stats, A4 multi-page PdfDocument, FileProvider share (commits `3f15fbe` + `ca5fd37` + `c0763e0`, 2026-05-19, local — push pending, `GITHUB_TOKEN` missing in env)
 
 ## Recently shipped (last 5 commits)
 
+- 2026-05-19 `c0763e0` fix: make ExportContent and ViewModel tests pass + detekt clean
+- 2026-05-18 `ca5fd37` refactor: remove Android types from domain layer for PDF export
+- 2026-05-18 `3f15fbe` feat: PDF export of diet report by date range
+- 2026-05-18 `70c468e` New sub agents system
 - 2026-05-17 `93a63d0` chore: make dh pipeline cross-platform (linux + windows)
-- 2026-05-17 `18f7908` chore: ignore `.idea/` directory entirely and untrack existing files
-- 2026-05-17 `1d81e2f` chore: add git push step to dh pipeline after tests pass
-- 2026-05-17 `ad592ee` test: add week-navigation unit tests, testTag for today feed
-- 2026-05-17 `294a360` fix: make `TodayContent` public for testability
 
 ## Known tech debt
 
 - Eval framework for `dh-*` agents — deferred until 10+ runs of the new pipeline accumulate (then runs become the eval set)
 - Tool-output sandbox (sandbox-large-output hook) — deferred; not yet a real problem, `grep | tail -40` in `dh-runner` is good enough
 - No `git worktrees` for parallel agent execution — current pipeline is sequential; add when a feature genuinely needs parallel work
+- `ExportViewModel` builds the share `Uri` via `Uri.Builder` instead of `FileProvider.getUriForFile` to bypass a Windows-Robolectric path-matching quirk in tests; revisit once Robolectric handles Windows authorities (added 2026-05-19)
+- Three commits `3f15fbe` + `ca5fd37` + `c0763e0` are local-only — push pending until `GITHUB_TOKEN` is restored in the Bash session
 
 ## Up next (head of ROADMAP)
 

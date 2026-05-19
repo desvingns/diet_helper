@@ -33,9 +33,9 @@ domain/
   model/          — pure Kotlin data classes:
                     Product, FoodEntry, WeightEntry, SavedMeal, SavedMealItem,
                     DailyGoals, DailySummary, HistoryItem, MealType, DayStatus,
-                    StatsDayItem
+                    StatsDayItem, ExportConfig, ExportMode, ReportData
   repository/     — interfaces (ProductRepository, FoodEntryRepository, WeightRepository,
-                    SavedMealRepository, GoalsRepository)
+                    SavedMealRepository, GoalsRepository, ReportRenderer)
   usecase/        — one class per use case, grouped by feature subfolder:
     foodentry/    — AddFoodEntryUseCase, UpdateFoodEntryUseCase, DeleteFoodEntryUseCase,
                     GetFoodEntriesForDayUseCase, GetDailySummaryUseCase,
@@ -49,7 +49,9 @@ domain/
     savedmeal/    — GetSavedMealsUseCase, SaveMealUseCase, DeleteSavedMealUseCase,
                     AddSavedMealEntriesUseCase
     stats/        — GetStatsRangeUseCase
+    export/       — ExportReportUseCase
 data/
+  pdf/            — PdfReportRenderer (impl of ReportRenderer), PdfReportLayout, PdfPageContext
   local/
     entity/       — Room entities (ProductEntity, FoodEntryEntity, FoodEntryWithProduct,
                     WeightEntryEntity, SavedMealEntity, SavedMealItemEntity,
@@ -63,7 +65,7 @@ data/
                     ProductMapper, FoodEntryMapper, WeightEntryMapper, SavedMealMapper
   repository/     — *Impl classes: ProductRepositoryImpl, FoodEntryRepositoryImpl,
                     WeightRepositoryImpl, GoalsRepositoryImpl, SavedMealRepositoryImpl
-di/               — Hilt modules (DatabaseModule, DataStoreModule, RepositoryModule)
+di/               — Hilt modules (DatabaseModule, DataStoreModule, RepositoryModule, PdfModule)
 presentation/
   navigation/     — Routes, BottomNavItem, AppNavHost
   screen/         — today, product, history (HistoryScreen + HistoryViewModel +
@@ -88,6 +90,8 @@ presentation/
 - `MacroColorUtil` provides colour interpolation (green → red) for macro progress indicators; it is `internal` and not exported outside the `util` package
 - Product favourites tracked by `isFavorite: Boolean` on `ProductEntity`; toggled via `ToggleFavoriteUseCase`
 - `history` screen has **two** ViewModels: `HistoryViewModel` (calendar/list) and `HistoryDayViewModel` (single-day detail, receives date via SavedStateHandle)
+- PDF export: `ReportRenderer` (domain) returns a `String` path — no Android types in domain; `ExportViewModel` converts the path to a share `Uri`
+- `ExportViewModel` builds the share `Uri` via `Uri.Builder` instead of `FileProvider.getUriForFile` to bypass a Windows-Robolectric path-matching quirk; runtime behaviour is identical
 
 ## Build
 
@@ -149,5 +153,6 @@ Windows), so no PowerShell-specific setup is required.
 | `weight` | Weight tracking chart |
 | `settings` | Daily goals (calories, protein, fat, carbs) |
 | `statistics` | Macro/calorie bar charts over a selectable date range |
+| `export` | PDF export — date range + mode (DETAILED / SUMMARY_ONLY) + optional stats; shares via FileProvider |
 
 Route constants live in `Routes` object; helper fns: `Routes.productSearch(date, mealType)`, `Routes.addProduct(name)`, `Routes.historyDay(date)`.
