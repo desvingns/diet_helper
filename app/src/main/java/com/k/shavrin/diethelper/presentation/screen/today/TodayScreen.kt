@@ -143,6 +143,22 @@ fun TodayContent(
     onPreviousWeek: () -> Unit = {},
     onNextWeek: () -> Unit = {}
 ) {
+    if (!readOnly) {
+        TodayDesignedContent(
+            state = state,
+            onGoToDate = onGoToDate,
+            onTodayClick = onTodayClick,
+            onAddTo = onAddTo,
+            onUpdateMultiplier = onUpdateMultiplier,
+            onDelete = onDelete,
+            onCopyToDay = onCopyToDay,
+            mealCallbacks = mealCallbacks,
+            onPreviousWeek = onPreviousWeek,
+            onNextWeek = onNextWeek
+        )
+        return
+    }
+
     val expandedSections = remember { mutableStateMapOf<MealType, Boolean>() }
 
     LaunchedEffect(state.sections) {
@@ -157,18 +173,6 @@ fun TodayContent(
     var pasteMealDialogForType by remember { mutableStateOf<MealType?>(null) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        if (!readOnly) {
-            WeekDateHeader(
-                date = state.date,
-                weekStatuses = state.weekStatuses,
-                streak = state.streak,
-                onDateSelected = onGoToDate,
-                onTodayClick = onTodayClick,
-                onPreviousWeek = onPreviousWeek,
-                onNextWeek = onNextWeek
-            )
-        }
-
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -368,7 +372,7 @@ private fun MealActionBar(
 }
 
 @Composable
-private fun SaveMealDialog(
+internal fun SaveMealDialog(
     mealLabel: String,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit
@@ -401,7 +405,7 @@ private fun SaveMealDialog(
 }
 
 @Composable
-private fun PasteMealDialog(
+internal fun PasteMealDialog(
     snapshot: ClipboardSnapshot,
     onPaste: () -> Unit,
     onDismiss: () -> Unit,
@@ -855,7 +859,7 @@ private fun FoodEntryRow(
 }
 
 @Composable
-private fun EditGramsDialog(
+internal fun EditGramsDialog(
     initialGrams: Int,
     onDismiss: () -> Unit,
     onConfirm: (Float) -> Unit
@@ -891,7 +895,7 @@ private fun EditGramsDialog(
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-private fun CopyToDateDialog(
+internal fun CopyToDateDialog(
     initialDate: LocalDate,
     onDismiss: () -> Unit,
     onConfirm: (LocalDate) -> Unit
