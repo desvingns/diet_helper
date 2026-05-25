@@ -1,5 +1,6 @@
 package com.k.shavrin.diethelper.presentation.screen.today
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
@@ -9,7 +10,9 @@ import androidx.compose.ui.test.performScrollToKey
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.DailySummary
 import com.k.shavrin.diethelper.domain.model.DayStatus
+import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
+import com.k.shavrin.diethelper.domain.model.Product
 import com.k.shavrin.diethelper.presentation.theme.DietHelperTheme
 import org.junit.Rule
 import org.junit.Test
@@ -21,231 +24,135 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34], application = android.app.Application::class)
+@Config(sdk = [34], qualifiers = "w411dp-h891dp-xxhdpi", application = android.app.Application::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class TodayScreenContentTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val today = LocalDate.now()
+    private val selectedDate: LocalDate = LocalDate.of(2025, 5, 23)
+    private val weekStart: LocalDate = selectedDate.with(DayOfWeek.MONDAY)
 
-    // Build a Monday-aligned week with 7 statuses
-    private val weekStart: LocalDate = today.with(DayOfWeek.MONDAY)
-    private val weekDays: List<LocalDate> = (0..6).map { weekStart.plusDays(it.toLong()) }
-
-    private fun defaultWeekStatuses(
-        override: Map<LocalDate, DayStatus> = emptyMap()
-    ): List<Pair<LocalDate, DayStatus>> = weekDays.map { day ->
-        day to (override[day] ?: if (day.isAfter(today)) DayStatus.FUTURE else DayStatus.GRAY_LOGGED)
+    private fun defaultWeekStatuses(): List<Pair<LocalDate, DayStatus>> {
+        val statuses = listOf(
+            DayStatus.GREEN,
+            DayStatus.GREEN,
+            DayStatus.YELLOW,
+            DayStatus.GREEN,
+            DayStatus.RED,
+            DayStatus.GRAY_LOGGED,
+            DayStatus.FUTURE
+        )
+        return statuses.mapIndexed { index, status -> weekStart.plusDays(index.toLong()) to status }
     }
 
     private fun defaultState(
-        date: LocalDate = today,
-        weekStatuses: List<Pair<LocalDate, DayStatus>> = defaultWeekStatuses(),
+        sections: Map<MealType, List<FoodEntry>> = MealType.entries.associateWith { emptyList() },
         streak: Int = 0
     ) = TodayUiState.Success(
-        date = date,
-        sections = MealType.entries.associateWith { emptyList() },
-        sectionCalories = MealType.entries.associateWith { 0f },
-        sectionProtein = MealType.entries.associateWith { 0f },
-        sectionFat = MealType.entries.associateWith { 0f },
-        sectionCarbs = MealType.entries.associateWith { 0f },
+        date = selectedDate,
+        sections = sections,
+        sectionCalories = sections.mapValues { (_, entries) ->
+            entries.sumOf { (it.product.caloriesPer100g * it.multiplier).toDouble() }.toFloat()
+        },
+        sectionProtein = sections.mapValues { (_, entries) ->
+            entries.sumOf { (it.product.proteinPer100g * it.multiplier).toDouble() }.toFloat()
+        },
+        sectionFat = sections.mapValues { (_, entries) ->
+            entries.sumOf { (it.product.fatPer100g * it.multiplier).toDouble() }.toFloat()
+        },
+        sectionCarbs = sections.mapValues { (_, entries) ->
+            entries.sumOf { (it.product.carbsPer100g * it.multiplier).toDouble() }.toFloat()
+        },
         summary = DailySummary.EMPTY,
         goals = DailyGoals.DEFAULT,
-        weekStatuses = weekStatuses,
+        weekStatuses = defaultWeekStatuses(),
         streak = streak
     )
 
-    // ── WeekDateHeader: "Сегодня" button visibility ───────────────────────────
-
     @Test
-    fun `shows Сегодня button when today is the selected date`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                WeekDateHeader(
-                    date = today,
-                    weekStatuses = defaultWeekStatuses(),
-                    streak = 0,
-                    onDateSelected = {},
-                    onTodayClick = {}
-                )
-            }
-        }
+    fun `TodayContent shows designed header and calorie hero`() {
+        render(defaultState())
+
         composeTestRule.onNodeWithText("Сегодня").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Пятница, 23 мая").assertIsDisplayed()
+        composeTestRule.onNodeWithText("ИЗ 2 000 ККАЛ").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("today_feed").performScrollToKey("meal_label")
+        composeTestRule.onNodeWithText("ПРИЁМЫ ПИЩИ").assertIsDisplayed()
     }
 
     @Test
-    fun `shows Сегодня button when a past date is selected`() {
-        val yesterday = today.minusDays(1)
-        composeTestRule.setContent {
-            DietHelperTheme {
-                WeekDateHeader(
-                    date = yesterday,
-                    weekStatuses = defaultWeekStatuses(),
-                    streak = 0,
-                    onDateSelected = {},
-                    onTodayClick = {}
-                )
-            }
-        }
-        // Button is always visible in WeekDateHeader regardless of selected date
-        composeTestRule.onNodeWithText("Сегодня").assertIsDisplayed()
-    }
+    fun `TodayContent shows streak chip in hero`() {
+        render(defaultState(streak = 7))
 
-    // ── WeekDateHeader: streak label ─────────────────────────────────────────
-
-    @Test
-    fun `shows zero streak prompt when streak is zero`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                WeekDateHeader(
-                    date = today,
-                    weekStatuses = defaultWeekStatuses(),
-                    streak = 0,
-                    onDateSelected = {},
-                    onTodayClick = {}
-                )
-            }
-        }
-        composeTestRule.onNodeWithText("Запишите еду, чтобы начать серию", substring = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("7 дней подряд").assertIsDisplayed()
     }
 
     @Test
-    fun `shows streak count when streak is greater than zero`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                WeekDateHeader(
-                    date = today,
-                    weekStatuses = defaultWeekStatuses(),
-                    streak = 5,
-                    onDateSelected = {},
-                    onTodayClick = {}
-                )
-            }
+    fun `TodayContent shows each empty meal card`() {
+        render(defaultState())
+
+        listOf("BREAKFAST", "LUNCH", "DINNER", "SNACK").forEach { meal ->
+            composeTestRule.onNodeWithTag("today_feed").performScrollToKey("header_$meal")
         }
-        composeTestRule.onNodeWithText("5 дней подряд", substring = true).assertIsDisplayed()
+        composeTestRule.onAllNodesWithText("Пока пусто").assertCountEquals(4)
+        composeTestRule.onAllNodesWithText("Пока пусто")[3].assertIsDisplayed()
     }
 
     @Test
-    fun `shows formatted date header`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                WeekDateHeader(
-                    date = today,
-                    weekStatuses = defaultWeekStatuses(),
-                    streak = 0,
-                    onDateSelected = {},
-                    onTodayClick = {}
-                )
-            }
+    fun `TodayContent renders food inside populated card`() {
+        val product = Product(
+            id = 1,
+            name = "Овсянка на молоке",
+            caloriesPer100g = 116f,
+            proteinPer100g = 3.8f,
+            fatPer100g = 2.9f,
+            carbsPer100g = 18f,
+            isFavorite = false
+        )
+        val entry = FoodEntry(
+            id = 1,
+            productId = product.id,
+            product = product,
+            date = selectedDate,
+            mealType = MealType.BREAKFAST,
+            multiplier = 2.5f
+        )
+        val sections = MealType.entries.associateWith { mealType ->
+            if (mealType == MealType.BREAKFAST) listOf(entry) else emptyList()
         }
-        // The header contains the day-of-month number
-        composeTestRule.onNodeWithText(today.dayOfMonth.toString(), substring = true).assertIsDisplayed()
-    }
 
-    // ── TodayContent: WeekDateHeader is shown in non-readOnly mode ───────────
+        render(defaultState(sections = sections))
 
-    @Test
-    fun `TodayContent shows week header when readOnly is false`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                TodayContent(
-                    state = defaultState(),
-                    onGoToDate = {},
-                    onTodayClick = {},
-                    onAddTo = {},
-                    onUpdateMultiplier = { _, _ -> },
-                    onDelete = {},
-                    onCopyToDay = { _, _ -> },
-                    readOnly = false
-                )
-            }
-        }
-        composeTestRule.onNodeWithText("Сегодня").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("today_feed").performScrollToKey("header_BREAKFAST")
+        composeTestRule.onNodeWithText("Овсянка на молоке").assertIsDisplayed()
+        composeTestRule.onNodeWithText("290 ккал").assertIsDisplayed()
     }
 
     @Test
-    fun `TodayContent hides week header when readOnly is true`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                TodayContent(
-                    state = defaultState(),
-                    onGoToDate = {},
-                    onTodayClick = {},
-                    onAddTo = {},
-                    onUpdateMultiplier = { _, _ -> },
-                    onDelete = {},
-                    onCopyToDay = { _, _ -> },
-                    readOnly = true
-                )
-            }
-        }
+    fun `read only day presentation does not receive Today redesign header`() {
+        render(defaultState(), readOnly = true)
+
         composeTestRule.onNodeWithText("Сегодня").assertDoesNotExist()
+        composeTestRule.onNodeWithTag("today_feed").performScrollToKey("summary")
+        composeTestRule.onNodeWithText("Итог за день").assertIsDisplayed()
     }
 
-    // ── TodayContent: section headers are visible ─────────────────────────────
-
-    @Test
-    fun `TodayContent shows all meal type section headers`() {
+    private fun render(state: TodayUiState.Success, readOnly: Boolean = false) {
         composeTestRule.setContent {
-            DietHelperTheme {
+            DietHelperTheme(darkTheme = true) {
                 TodayContent(
-                    state = defaultState(),
+                    state = state,
                     onGoToDate = {},
                     onTodayClick = {},
                     onAddTo = {},
                     onUpdateMultiplier = { _, _ -> },
                     onDelete = {},
                     onCopyToDay = { _, _ -> },
-                    readOnly = false
+                    readOnly = readOnly
                 )
             }
         }
-        composeTestRule.onNodeWithText("Завтрак").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Обед").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Ужин").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("today_feed").performScrollToKey("header_SNACK")
-        composeTestRule.onNodeWithText("Перекус").assertIsDisplayed()
-    }
-
-    @Test
-    fun `TodayContent shows Пока пусто placeholder for empty sections`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                TodayContent(
-                    state = defaultState(),
-                    onGoToDate = {},
-                    onTodayClick = {},
-                    onAddTo = {},
-                    onUpdateMultiplier = { _, _ -> },
-                    onDelete = {},
-                    onCopyToDay = { _, _ -> },
-                    readOnly = false
-                )
-            }
-        }
-        // All 4 sections are empty — at least one placeholder should be displayed
-        composeTestRule.onAllNodesWithText("Пока пусто")[0].assertIsDisplayed()
-    }
-
-    // ── WeekDateHeader: week row contains 7 day circles (day-of-month labels) ─
-
-    @Test
-    fun `WeekDateHeader renders circle for each day in the week`() {
-        composeTestRule.setContent {
-            DietHelperTheme {
-                WeekDateHeader(
-                    date = today,
-                    weekStatuses = defaultWeekStatuses(),
-                    streak = 0,
-                    onDateSelected = {},
-                    onTodayClick = {}
-                )
-            }
-        }
-        // Each circle shows the abbreviated day-of-week letter; the week has exactly 7 days
-        // The rendered letters are П В С Ч Р С В — check that at least Monday ("П") is present
-        composeTestRule.onNodeWithText("П").assertIsDisplayed()
     }
 }
