@@ -131,6 +131,35 @@ class TodayScreenContentTest {
     }
 
     @Test
+    fun `TodayContent renders food with zero carbs without crashing`() {
+        val product = Product(
+            id = 1,
+            name = "Chicken breast",
+            caloriesPer100g = 165f,
+            proteinPer100g = 31f,
+            fatPer100g = 3.6f,
+            carbsPer100g = 0f,
+            isFavorite = false
+        )
+        val entry = FoodEntry(
+            id = 1,
+            productId = product.id,
+            product = product,
+            date = selectedDate,
+            mealType = MealType.LUNCH,
+            multiplier = 1f
+        )
+        val sections = MealType.entries.associateWith { mealType ->
+            if (mealType == MealType.LUNCH) listOf(entry) else emptyList()
+        }
+
+        render(defaultState(sections = sections))
+
+        composeTestRule.onNodeWithTag("today_feed").performScrollToKey("header_LUNCH")
+        composeTestRule.onNodeWithText("Chicken breast").assertIsDisplayed()
+    }
+
+    @Test
     fun `read only day presentation does not receive Today redesign header`() {
         render(defaultState(), readOnly = true)
 

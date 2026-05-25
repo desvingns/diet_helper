@@ -897,7 +897,6 @@ private fun MacroPill(entry: FoodEntry) {
     val protein = entry.product.proteinPer100g * entry.multiplier
     val fat = entry.product.fatPer100g * entry.multiplier
     val carbs = entry.product.carbsPer100g * entry.multiplier
-    val total = (protein + fat + carbs).coerceAtLeast(1f)
     Column(
         modifier = Modifier
             .width(8.dp)
@@ -905,9 +904,15 @@ private fun MacroPill(entry: FoodEntry) {
             .clip(RoundedCornerShape(4.dp))
             .background(TodaySurfaceHigh)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().weight(protein / total).background(TodayProtein))
-        Box(modifier = Modifier.fillMaxWidth().weight(fat / total).background(TodayFat))
-        Box(modifier = Modifier.fillMaxWidth().weight(carbs / total).background(TodayCarbs))
+        if (protein > 0f) {
+            Box(modifier = Modifier.fillMaxWidth().weight(protein).background(TodayProtein))
+        }
+        if (fat > 0f) {
+            Box(modifier = Modifier.fillMaxWidth().weight(fat).background(TodayFat))
+        }
+        if (carbs > 0f) {
+            Box(modifier = Modifier.fillMaxWidth().weight(carbs).background(TodayCarbs))
+        }
     }
 }
 
