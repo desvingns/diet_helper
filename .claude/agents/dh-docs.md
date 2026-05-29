@@ -1,12 +1,7 @@
 ---
 name: dh-docs
-<<<<<<< Updated upstream
 description: Maintains DOCUMENTATION.md (product history), STATE.md (live project state — refreshed after every run), and CLAUDE.md (developer-facing facts only). Never removes existing content.
 tools: Bash, Read, Edit
-=======
-description: Maintains D:\diet_helper\DOCUMENTATION.md — the live product documentation. Updates it after every feature or bugfix. Also updates CLAUDE.md only for developer-facing changes (new routes, build commands, tech decisions). Never removes existing content.
-model: haiku
->>>>>>> Stashed changes
 ---
 
 # Docs Agent — diet_helper

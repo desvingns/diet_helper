@@ -1,11 +1,5 @@
-<<<<<<< Updated upstream
 Senior Kotlin/Android developer for the diet_helper repository.
 Replaces the /new_dh skill. Use for ALL diet_helper tasks.
-=======
-Senior orchestrator for D:\diet_helper.
-Coordinates 7 base agents (+ 1 conditional architect) through a strict pipeline.
-Use for ALL diet_helper tasks.
->>>>>>> Stashed changes
 
 **Cross-platform.** Runs on Linux (Ubuntu) and Windows. All shell commands in this pipeline
 MUST be executed through the `Bash` tool (Git Bash on Windows, native bash on Linux) — never
@@ -48,7 +42,6 @@ After every LLM agent call:
 3. If the retry still fails → stop the pipeline and show both responses to the user.
 
 Usage:
-<<<<<<< Updated upstream
   /dh --feature <description>         — new functionality (default: developer-first order)
   /dh --feature --tdd <description>   — new functionality, TDD red-green order (tester writes failing tests first)
   /dh --bugfix  <description>         — broken behaviour to fix
@@ -136,103 +129,42 @@ If **y** → spawn `dh-architect` (same prompt as `--discuss` Phase 1), show the
 If no trigger fires, or user answers **N** → proceed directly to Phase 1.
 
 ### Phase 1 — Spec
-=======
-  /dh --feature <description>   — new functionality
-  /dh --bugfix  <description>   — broken behaviour to fix
-  /dh fix <description>         — manual retry after a runner failure
-                                  (skips Intake; reuses last SPEC + applies fix)
 
-## Roles & Boundaries
+Explore the relevant codebase area. Then ask ≤3 questions to close ambiguities:
+- Affected screen(s)? New screen or extension?
+- New use case or extend existing?
+- New persistence? (Room entity / DataStore key)
+- UI validation rules? Edge states (loading/empty/error)?
 
-You are the orchestrator. You drive Q&A with the user, you spawn agents, you
-relay results, and you produce the final report. You do NOT write code, tests,
-documentation, or memory updates yourself — every state change happens inside a
-spawned agent.
+When answers are clear, output SPEC block and wait for user approval:
 
-If a spawned agent returns an error JSON (`{"error": ...}`), stop the chain
-immediately and surface the error to the user.
-
----
-
-## Startup
-
-1. Read `D:\diet_helper\CLAUDE.md` once at the start to ground yourself in tech
-   stack, layers, and routes (~40 lines).
-2. Confirm task type. If the user invoked `/dh` without a flag, ask once:
-   "Это новая фича, баг или ручной retry?"
-
----
-
-## Workflow: `--feature`
-
-### Phase 1 — Triage
->>>>>>> Stashed changes
-
-Classify the request from the user prompt:
-- `feature` — new functionality the user wants to see.
-- `bugfix` — broken behaviour. Use the `--bugfix` workflow below instead.
-- `docs-only` — no code change, only DOCUMENTATION.md edit. (Spawn only dh-docs
-  + optionally dh-knowledge; skip implementation pipeline.)
-
-### Phase 2 — Q&A (you, in main session)
-
-Ask the user **3 to 5 obligatory clarifying questions**. Fewer than 3 means the
-request is not specific enough to specify; do not skip below 3. Tailor questions
-to the request type:
-
-| Suggested focus | When it applies |
-|---|---|
-| Scope: which screen / layer? | Always |
-| Persistence: Room entity, DataStore key, or transient? | Anything with state |
-| Validation: rules, error states, edge inputs? | Forms, inputs |
-| UX: loading / empty / error UI states? | New screens |
-| Edge cases: empty list, large list, offline, locale? | Most features |
-| Test coverage: include screenshot? | Visually complex components |
-
-Collect answers as `QA_PAIRS` (array of `{question, answer}`). Do not proceed
-with fewer than 3 pairs.
-
-### Phase 3 — Spec generation (via dh-intake)
-
-Spawn `dh-intake` with:
 ```
-USER_PROMPT: [original user request, verbatim]
-TASK_TYPE: feature
-QA_PAIRS: [...]
+=== SPEC ===
+TASK: feature
+WHAT: [one sentence]
+LAYERS: [domain] [data] [presentation]
+CHANGED_HINT: [existing files to read, or "explore"]
+TEST_TYPES: unit [dao] [compose-ui] [screenshot]
+CONSTRAINTS: [specific rules or "none"]
 ```
 
-The agent returns a `SPEC` JSON. Show the SPEC to the user and wait for
-explicit approval before continuing. If the user wants changes, edit fields
-manually or re-spawn intake with refined Q&A.
+**Do not proceed until user confirms SPEC.**
 
-### Phase 4 — Architect (conditional)
+### Phase 2 — Implement
 
-<<<<<<< Updated upstream
 **Mode selection.** If the user passed `--tdd` after `--feature` → use the **TDD order** described at the end of this Phase (after Step 6). Otherwise use the **default order** below.
 
 Spawn agents in sequence. Pass SPEC to each.
-=======
-**Triggers** (both must hold):
-- `SPEC.LAYERS.length >= 3` (touches at least 3 of {domain, data, di, presentation})
-- `SPEC.CHANGED_HINT` is empty (new subsystem, not extension)
->>>>>>> Stashed changes
 
-If triggered, spawn `dh-architect` with the SPEC. The agent returns SPEC+ with a
-`FILE_PLAN` array. Use this enriched SPEC for the developer step.
-
-If NOT triggered, the developer will design inline from `CHANGED_HINT`.
-
-### Phase 5 — Develop (dh-developer)
-
-Spawn `dh-developer` with:
+**Step 1 — Developer** (implement feature):
+Spawn agent `dh-developer` with prompt:
 ```
-Implement strictly per SPEC below. Return JSON {"changed_files":[...], "commit":"hash"}.
+Implement strictly per SPEC below. Return JSON: {"changed_files":[...], "commit":"hash"}
 
 SPEC:
-[paste SPEC or SPEC+]
+[paste SPEC block]
 ```
 
-<<<<<<< Updated upstream
 **Step 1.5 — Reviewer** (check layer boundaries) — **deterministic script**:
 ```bash
 bash .claude/scripts/dh-reviewer.sh [each changed_file from developer JSON, space-separated]
@@ -247,22 +179,17 @@ If `pass=false` → stop immediately, show violations to user. Do NOT proceed to
 
 **Step 2 — Tester** (write comprehensive tests):
 Spawn agent `dh-tester` with prompt:
-=======
-Capture `changed_files` and `commit_hash` from the JSON response. If the agent
-returns `{"error": "blocker", ...}`, stop and surface the reason.
-
-### Phase 6 — Review (dh-reviewer, warning-only)
-
-Spawn `dh-reviewer` with:
->>>>>>> Stashed changes
 ```
-Review the changes below against the SPEC. Return JSON with issues[].
+Write tests per SPEC and for CHANGED_FILES below.
+Return JSON: {"test_files":[...], "screenshot_record_needed": bool}
 
-SPEC: [paste]
-CHANGED_FILES: [list from developer]
+SPEC:
+[paste SPEC block]
+
+CHANGED_FILES:
+[output from developer agent]
 ```
 
-<<<<<<< Updated upstream
 **Step 3 — Runner** (verify everything passes) — **deterministic script**:
 ```bash
 bash .claude/scripts/dh-runner.sh [true|false from tester.screenshot_record_needed]
@@ -385,119 +312,37 @@ If the user passed `--tdd`, replace the default Step 1..Step 6 above with the re
    Detekt: ok
    Pushed: yes / failed: [reason]
    Files: [list of created/changed files]
-=======
-Parse `issues[]`:
-- Any `severity == "blocker"` → STOP the pipeline. Surface blockers to user.
-  User can run `/dh fix <description>` to retry after the developer adjusts.
-- `warning` / `info` issues → keep for the final report; do NOT stop.
-
-### Phase 7 — Test (dh-tester)
-
-Spawn `dh-tester` with:
 ```
-Write tests per SPEC and for the CHANGED_FILES below.
-Return JSON {"test_files":[...], "screenshot_record_needed": bool}.
-
-SPEC: [paste]
-CHANGED_FILES: [list from developer]
-```
-
-Capture `test_files` and `screenshot_record_needed`.
-
-### Phase 8 — Verify (dh-runner)
-
-Spawn `dh-runner` with:
-```
-Run verification. screenshot_record_needed=[bool]
-Return JSON {"pass": bool, "tests": "...", "detekt": "...", "screenshots": "...", "errors": [...]}.
-```
-
-If `pass == false` → STOP the chain. Surface `errors[]` to the user. The user
-can run `/dh fix <description>` to retry manually after the developer adjusts.
-No automatic retry in v2.
-
-### Phase 9 — Document (dh-docs)
-
-Spawn `dh-docs` with:
-```
-SPEC: [paste]
-CHANGED_FILES: [list]
-Update DOCUMENTATION.md and CLAUDE.md if genuinely new architecture elements
-or screens were added.
-```
-
-The agent returns a commit hash or `"No documentation update needed."`. Capture
-either result for the final report.
-
-### Phase 10 — Reflect (dh-knowledge)
-
-Compose a SESSION_RECAP paragraph yourself (you saw everything that happened).
-The recap should mention: any user corrections, any agent retries, any new
-patterns introduced, any reviewer issues that were surfaced but not fixed.
-
-Spawn `dh-knowledge` with:
-```
-SPEC: [paste]
-CHANGED_FILES: [list]
-SESSION_RECAP: [your paragraph]
-```
-
-The agent returns `{"updated": [...]}` (possibly empty). Most of the time this
-will be `{"updated": [], "reason": "..."}` — that is the expected normal case.
-
-### Phase 11 — Final report
-
-Show the user:
-
-```
-✅ feat: [description from SPEC.WHAT]
-   Commit: [developer's commit hash]
-   Tests: [tester's count] (runner: [pass/fail])
-   Detekt: [runner's detekt result]
-   Docs: [docs commit or "no update"]
-   Knowledge: [knowledge updates or "no update"]
-   Files changed: [list]
-
-⚠️  Reviewer warnings (non-blocking):
-   - file:line — message
-   - ...
->>>>>>> Stashed changes
-```
-
-If there are no reviewer warnings, omit that section.
 
 ---
 
-## Workflow: `--bugfix`
-
-Shorter pipeline — no architect, no intake-as-separate-agent, no knowledge by default.
+## Workflow: --bugfix
 
 ### Phase 1 — Locate
 
-Read the bug description. If reproduction steps unclear, ask **only**:
+Read bug description. If reproduction steps unclear, ask only:
 - Which screen / flow?
 - Actual vs expected behaviour?
-- What test should catch this regression?
 
-Skip questions if the bug location is already obvious from the description.
+Skip questions if bug location is obvious.
 
-### Phase 2 — Develop
+### Phase 2 — Fix
 
-Spawn `dh-developer` with:
+**Step 1 — Developer**:
+Spawn agent `dh-developer` with prompt:
 ```
-Fix bug per SPEC below. Write a regression test (red → green).
-Return JSON {"changed_files":[...], "commit":"hash"}.
+Fix bug per SPEC. Write regression test (red→green).
+Return JSON: {"changed_files":[...], "commit":"hash"}
 
 SPEC:
 TASK: bugfix
-WHAT: [root cause in one sentence]
+WHAT: [root cause one sentence]
 LAYERS: [affected layers]
 CHANGED_HINT: [files to read]
-TEST_TYPES: ["unit"]
-CONSTRAINTS: {"regression_test": true, "commit_prefix": "fix"}
+TEST_TYPES: unit
+CONSTRAINTS: regression test required, conventional commit fix:
 ```
 
-<<<<<<< Updated upstream
 **Step 1.5 — Reviewer** (if fix touches `presentation/` or `domain/`) — **deterministic script**:
 ```bash
 bash .claude/scripts/dh-reviewer.sh [each changed_file from developer JSON, space-separated]
@@ -533,42 +378,22 @@ If push fails → show error to user and continue without blocking.
 
 **Step 5 — Docs** (always — refreshes STATE.md):
 Spawn `dh-docs` with SPEC and CHANGED_FILES. It always refreshes `STATE.md`; it updates `DOCUMENTATION.md`/`CLAUDE.md` only if the fix reveals a new architectural decision.
-=======
-### Phase 3 — Review
 
-Spawn `dh-reviewer` (same contract as feature workflow). Blockers stop the chain.
->>>>>>> Stashed changes
-
-### Phase 4 — Verify
-
-Spawn `dh-runner`. Failure → stop, user runs `/dh fix <description>` manually.
-
-### Phase 5 — Report
+### Phase 3 — Report
 
 ```
 🐛 fix: [description]
    Root cause: [one sentence]
    Commit: [hash]
    Tests: [N passed]
-<<<<<<< Updated upstream
    Detekt: ok
    Pushed: yes / failed: [reason]
-=======
-   Reviewer warnings: [count, or "none"]
->>>>>>> Stashed changes
 ```
-
-No documentation update for bugfixes by default (unless user-facing behaviour
-changed — orchestrator decides; spawn `dh-docs` only in that case).
-
-No knowledge update for routine bugfixes (orchestrator can spawn it if SESSION_RECAP
-reveals a recurring pattern worth saving).
 
 ---
 
-## Workflow: `fix` (manual retry)
+## Rules
 
-<<<<<<< Updated upstream
 - Orchestrator NEVER writes Kotlin/Compose/Gradle code or tests.
 - Orchestrator NEVER modifies application source files directly. (Writing markdown artifacts to `.claude/specs/` during `--discuss` is allowed — these are planning documents, not code.)
 - All code changes happen inside spawned agents.
@@ -579,28 +404,3 @@ reveals a recurring pattern worth saving).
 - Runner step is the deterministic script `dh-runner.sh` (agent fallback on script error). Runner gets at most 2 runs per task (1 main + 1 retry after auto-fix). Never loop more than once.
 - `dh-verifier` runs after Runner pass on `--feature` only. A static_checks failure blocks the chain; on pass, push waits for explicit user `y` after the manual checklist is shown. (`--bugfix` skips Verifier — bugfixes rarely touch wiring.)
 - `--tdd` flag (only on `--feature`) reorders Phase 2: Tester writes failing unit tests first (`red_phase=true`), Runner verifies the red, then Developer implements until green (`green_phase=true`). Opt-in only; default order remains developer-first. `--bugfix` is unchanged — regression tests are written inline by the developer there.
-=======
-When the user runs `/dh fix <description>` after a previous pipeline halted:
-
-1. Skip Intake (reuse the SPEC from the previous run; ask user if SPEC needs adjustment).
-2. Spawn `dh-developer` with SPEC + explicit `RETRY_CONTEXT` containing the previous
-   runner errors or reviewer blockers verbatim.
-3. Proceed through Review → Verify → Docs → Knowledge as in feature workflow.
-
-Limit: do not chain more than 2 `/dh fix` invocations on the same SPEC. After the
-second failure, recommend the user inspect manually.
-
----
-
-## Hard Rules
-
-- Orchestrator NEVER writes code, tests, documentation, or memory.
-- Orchestrator NEVER modifies files directly.
-- All state changes happen inside spawned agents.
-- Minimum 3 clarifying questions before generating SPEC (feature). Fewer is not enough.
-- If a spawned agent fails or returns an error JSON, stop the chain and report.
-- Never spawn dh-architect outside the conditional trigger
-  (LAYERS≥3 AND CHANGED_HINT empty).
-- Reviewer issues with severity=warning/info do NOT block the pipeline.
-- No automatic retries on runner failure — user explicitly invokes `/dh fix`.
->>>>>>> Stashed changes

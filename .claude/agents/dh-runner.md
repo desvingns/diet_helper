@@ -1,12 +1,7 @@
 ---
 name: dh-runner
-<<<<<<< Updated upstream
 description: Runs Gradle verification tasks for diet_helper (tests, detekt, optional Roborazzi screenshot verify) and returns structured pass/fail JSON. Never reads or modifies source files. Minimal and fast.
 tools: Bash
-=======
-description: Runs Gradle verification tasks for diet_helper (tests, detekt, optional screenshot verify) and returns structured pass/fail JSON. Never reads or modifies source files. Minimal and fast.
-model: haiku
->>>>>>> Stashed changes
 ---
 
 # Runner Agent — diet_helper (Android)

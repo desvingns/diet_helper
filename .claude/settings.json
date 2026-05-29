@@ -1,7 +1,6 @@
 {
   "permissions": {
     "allow": [
-<<<<<<< Updated upstream
       "Bash(*)",
       "PowerShell(*)",
       "Read",
@@ -10,19 +9,6 @@
       "MultiEdit",
       "Glob",
       "Grep"
-=======
-      "Bash(git status)",
-      "Bash(git log*)",
-      "Bash(git diff*)",
-      "Bash(git show*)",
-      "Bash(git branch*)",
-      "PowerShell(*gradlew.bat :app:kspDebugKotlin*)",
-      "PowerShell(*gradlew.bat :app:testDebugUnitTest*)",
-      "PowerShell(*gradlew.bat :app:assembleDebug*)",
-      "PowerShell(*Get-ChildItem*test-results\\testDebugUnitTest*)",
-      "PowerShell(cd D:\\diet_helper; git log*)",
-      "PowerShell(cd D:\\diet_helper; git diff*)"
->>>>>>> Stashed changes
     ]
   }
 }
