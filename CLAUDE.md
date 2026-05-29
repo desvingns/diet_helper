@@ -1,11 +1,15 @@
+<<<<<<< Updated upstream
 # CLAUDE.md
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 # Diet Helper — Android Calorie Tracker
+=======
+# Diet Helper
+>>>>>>> Stashed changes
 
-Learning project: Clean Architecture + Compose + Hilt + Room.
-**Do not simplify or collapse architecture** — verbosity is intentional for educational purposes.
+Package: `com.k.shavrin.diethelper` | minSdk 26, targetSdk 35, JVM 17
 
+<<<<<<< Updated upstream
 ## Project State Files
 
 Three project-root markdown files track state and history (all committed):
@@ -18,15 +22,16 @@ Cross-session memory lives in `~/.claude/projects/C--Pet-diet-helper/memory/`; `
 
 ## Package
 `com.k.shavrin.diethelper`
+=======
+## Stack
+Kotlin 2.1.20 · AGP 8.5.2 · KSP 2.1.20-1.0.32 · Compose BOM 2024.09.03
+Material3 · Hilt 2.55 · Room 2.7.1 · DataStore 1.1.1 · Coroutines 1.9.0 · Lifecycle 2.8.6
+>>>>>>> Stashed changes
 
-## Stack & Versions
-- Kotlin 2.1.20, AGP 8.5.2, KSP 2.1.20-1.0.32
-- Compose BOM 2024.09.03, Material3
-- Hilt 2.55, hilt-navigation-compose 1.2.0
-- Room 2.7.1, DataStore Preferences 1.1.1
-- Coroutines 1.9.0, Lifecycle 2.8.6
-- minSdk 26, targetSdk 35, JVM 17
+## Layers
+`domain/` (model, repository, usecase) → `data/` (local, mapper, repository) → `di/` → `presentation/` (navigation, screen, components, theme, util)
 
+<<<<<<< Updated upstream
 ## Architecture (Clean Architecture)
 ```
 domain/
@@ -156,3 +161,36 @@ Windows), so no PowerShell-specific setup is required.
 | `export` | PDF export — date range + mode (DETAILED / SUMMARY_ONLY) + optional stats; shares via FileProvider |
 
 Route constants live in `Routes` object; helper fns: `Routes.productSearch(date, mealType)`, `Routes.addProduct(name)`, `Routes.historyDay(date)`.
+=======
+## Routes
+| Route | Screen |
+|-------|--------|
+| `today` | Today (food diary) |
+| `products` | Product search |
+| `add_product` | Add custom product |
+| `history` | Calendar history |
+| `history_day/{date}` | Day detail |
+| `weight` | Weight chart |
+| `settings` | Daily goals |
+
+## Build (PowerShell)
+```powershell
+$env:JAVA_HOME = "D:\For_work\AS\jbr"
+$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+.\gradlew.bat :app:kspDebugKotlin           # KSP codegen
+.\gradlew.bat :app:assembleDebug            # Debug APK
+.\gradlew.bat :app:testDebugUnitTest        # Unit tests
+.\gradlew.bat :app:detekt                   # Linting
+```
+
+## JBR Loopback Fix (Windows + JBR 21)
+If `Unable to establish loopback connection`:
+```powershell
+$env:JAVA_TOOL_OPTIONS = "-Djdk.net.unixDomain.tmpDir=C:\tmp"
+$env:TEMP = "C:\tmp"; $env:TMP = "C:\tmp"
+New-Item -ItemType Directory -Path "C:\tmp" -Force | Out-Null
+```
+
+## Architecture & Decisions
+Authoritative source: see `DOCUMENTATION.md` (Domain Model, Architecture Decisions Log, Feature Changelog).
+>>>>>>> Stashed changes
