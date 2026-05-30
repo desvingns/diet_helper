@@ -26,3 +26,9 @@ local.properties
 schemas/
 
 !gradle-wrapper.jar
+
+# Graphify generated knowledge graph (local; rebuild: graphify update .)
+graphify-out/
+
+# Self-improvement loop: raw telemetry (retro digests + lessons.md are tracked)
+selfimprove/runs/*.jsonl
