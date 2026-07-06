@@ -1,56 +1,31 @@
-# `.claude/specs/` — Persistent Brainstorm Artifacts
+# `.claude/specs/` — SPEC board (/mp pipeline)
 
-This directory stores persistent records of `/dh --discuss <topic>` brainstorms — the
-options surfaced, the recommendation, and (later) the SPEC that was approved and the
-commit that shipped it.
+Work-unit board for the /mp pipeline (mp-dev + mp-spec plugins,
+`mobile-pipeline` marketplace). One SPEC file = one implementable work unit
+(«спека»); an epic = `<epic>-00-overview.md` + numbered `<epic>-NN-<slug>.md`.
 
-**Committed to git** — gives long-term visibility into "what were we thinking about a
-month ago." If a brainstorm went nowhere, the file is still useful evidence of considered
-trade-offs. Delete only when the file is genuinely obsolete and you'd rather forget the
-context.
+## Layout
 
-## How files get created
+| Dir | Meaning |
+|-----|---------|
+| `backlog/` | Ready-to-run SPECs, dependency-ordered inside each epic |
+| `active/`  | The SPEC currently being implemented (moved here at start) |
+| `done/`    | Shipped SPECs, moved on close-out with commit refs |
 
-1. User runs `/dh --discuss <topic>`.
-2. `dh-architect` agent returns a BRAINSTORM block.
-3. The `/dh` orchestrator asks: *"Сохранить как spec-черновик в `.claude/specs/`? (y/N)"*
-4. If yes, orchestrator asks for a `kebab-case` slug and writes `<slug>.md` here.
+## How SPECs get here
 
-Later, when `/dh --feature` is run for the same topic, the orchestrator fills in the
-**Approved SPEC** and **Implementation links** sections.
+- `/mp-spec --feature "<epic brief>"` — brownfield feature mode: grounding →
+  grill → decomposition → **GATE (user confirms the SPEC set)** → files land in
+  `backlog/`. Working files for resumability live under the mp-spec base dir
+  (`pipeline/grounding.md`, `grill.md`, `decomposition.json`).
+- `/mp --plan <design source>` — mp-planner bridges a spec bundle / design doc
+  into ordered backlog SPECs.
 
-## File format
+## How SPECs get implemented
 
-```markdown
-# <Topic, one-line restatement>
-Status: brainstorm | spec-ready | in-progress | done
-Date: YYYY-MM-DD
+- `/mp --feature --next` — takes the next backlog SPEC through
+  develop → review → test → verify gates.
 
-## Brainstorm output
-<full BRAINSTORM block from dh-architect — verbatim>
-
-## Approved SPEC
-<full SPEC block from /dh --feature, or "(pending)" if not yet approved>
-
-## Implementation links
-- commit: <hash>
-- files: <list of changed files>
-(or "(pending)" if not yet implemented)
-```
-
-## Status lifecycle
-
-| Status | Meaning |
-|--------|---------|
-| `brainstorm` | Just options + recommendation. No SPEC yet, no code. |
-| `spec-ready` | User picked an option and approved a SPEC. Ready to implement. |
-| `in-progress` | `/dh --feature` started but didn't complete (interrupted, blocked, etc). |
-| `done` | Feature shipped. Implementation links filled in. |
-
-Status is updated manually or by the orchestrator at the relevant moment.
-
-## Naming
-
-`<slug>.md` — short, kebab-case, descriptive. Examples: `csv-export.md`, `meal-search.md`,
-`offline-sync.md`. Avoid version suffixes — if the topic evolves, edit the existing file
-or start a new one with a clearly different scope.
+Never overwrite or delete an existing SPEC; new files only (on collision — ask).
+History: the /dh-era README is archived at
+`.claude/_archive_pre_mp/specs-README-dh.md`; audit epics filed 2026-07-06.

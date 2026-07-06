@@ -1,12 +1,4 @@
 {
-  "extraKnownMarketplaces": {
-    "mobile-pipeline": {
-      "source": {
-        "source": "directory",
-        "path": "D:\\Pet\\claude-mobile-pipeline"
-      }
-    }
-  },
   "enabledPlugins": {
     "mp-spec@mobile-pipeline": true,
     "mp-dev@mobile-pipeline": true

@@ -1,7 +1,7 @@
 # Project State — diet_helper
 
-> **Live document.** Updated by `dh-docs` after each `/dh` run.
-> Manual edits welcome — `dh-docs` only edits known sections and preserves the rest.
+> **Live document.** Updated by `mp-docs` after each `/mp` run.
+> Manual edits welcome — `mp-docs` only edits known sections and preserves the rest.
 >
 > Different from related files:
 > - `STATE.md` (this file) — **now**: where we are today, what's mid-flight.
@@ -12,32 +12,51 @@
 
 ## Now
 
-- **Current iteration:** 6 — Workflow polish (infra, not product feature)
-- **In progress:** idle
-- **Last completed:** PDF export of diet report from Settings — date range + mode (DETAILED / SUMMARY_ONLY) + optional stats, A4 multi-page PdfDocument, FileProvider share (commits `3f15fbe` + `ca5fd37` + `c0763e0`, 2026-05-19, local — push pending, `GITHUB_TOKEN` missing in env)
+- **Current iteration:** 7 — Audit backlog (6 improvement epics)
+- **In progress:** filing audit epics to `.claude/specs/backlog/` via `/mp-spec --feature` (2026-07-06)
+- **Last completed:** full project audit + wiring hygiene (2026-07-06): brain project card +
+  scan-list entry, memory migrated `D--diet-helper` → `D--Pet-MyDietHelper`, graphify graph
+  rebuilt, dead marketplace path removed from `.claude/settings.json`, SPEC board scaffolded,
+  STATE/ROADMAP/README/CLAUDE refreshed. Before that: migration to /mp pipeline (2026-05-31,
+  commits `f08090d` + `26b5ae9`).
 
-## Recently shipped (last 5 commits)
+## Recently shipped (last 5 commits before the audit)
 
-- 2026-05-19 `c0763e0` fix: make ExportContent and ViewModel tests pass + detekt clean
-- 2026-05-18 `ca5fd37` refactor: remove Android types from domain layer for PDF export
-- 2026-05-18 `3f15fbe` feat: PDF export of diet report by date range
-- 2026-05-18 `70c468e` New sub agents system
-- 2026-05-17 `93a63d0` chore: make dh pipeline cross-platform (linux + windows)
+- 2026-05-31 `26b5ae9` chore: migrate to /mp — archive superseded dh-* agents/commands/scripts
+- 2026-05-31 `f08090d` chore: wire to mobile-pipeline marketplace (mp-spec + mp-dev)
+- 2026-05-30 `14e9eff` chore: graphify wiring + self-improvement loop
+- 2026-05-29 `08278b7` fix: resolve merge conflicts in /dh tooling files
+- 2026-05-29 `5d3bda4` update skills and agents
 
 ## Known tech debt
 
-- Eval framework for `dh-*` agents — deferred until 10+ runs of the new pipeline accumulate (then runs become the eval set)
-- Tool-output sandbox (sandbox-large-output hook) — deferred; not yet a real problem, `grep | tail -40` in `dh-runner` is good enough
-- No `git worktrees` for parallel agent execution — current pipeline is sequential; add when a feature genuinely needs parallel work
-- `ExportViewModel` builds the share `Uri` via `Uri.Builder` instead of `FileProvider.getUriForFile` to bypass a Windows-Robolectric path-matching quirk in tests; revisit once Robolectric handles Windows authorities (added 2026-05-19)
-- Three commits `3f15fbe` + `ca5fd37` + `c0763e0` are local-only — push pending until `GITHUB_TOKEN` is restored in the Bash session
-- **5 screens lack `<Name>Content(...)` extraction → compose-ui tests deferred** (added 2026-05-19 alongside cmp 1.1.0 sync). Affected: `HistoryScreen`, `HistoryDayScreen`, `AddProductScreen`, `ProductSearchScreen`, `WeightScreen`. Each needs a small refactor (`hiltViewModel()` stays in `*Screen`, the body becomes `*Content(state, onXxx)`) before its `*ScreenContentTest.kt` can be written. Surface as `coverage_exceptions` in `dh-tester` JSON until refactored. Track as one small `/dh --feature` per screen, or a single batched refactor iteration.
-- JaCoCo `verification.rule` not yet wired in `app/build.gradle.kts` — `dh-runner` (cmp 1.1.0) enforces 65% threshold via XML parse of the `jacocoUnitTestReport` task, but Gradle itself does not fail on regression. Add `JacocoCoverageVerification` when CI is the next pain point.
-- No `androidTest/` instrumented suite — full `AppNavHost` rendering and Hilt-graph smoke tests are deferred. Current `AppNavHostTest.kt` covers route helpers and source structure only.
-- **JaCoCo project line coverage: 27.7%** (1076 / 3885 lines, measured 2026-05-19). Below the 65% target that `dh-runner` enforces by default — gradle passes because we ran `./gradlew` directly, but a future `/dh --feature` will fail-close on this. Plan: either (a) lower the threshold via the runner's second arg until incremental work raises it, or (b) prioritise the 5 screen-content refactors above (each adds ~40-80 covered lines) plus PDF renderer tests. Biggest uncovered chunks are the 5 `*Screen.kt` bodies and `data/pdf/PdfReportRenderer.kt`.
+All of the code-level debt below is tracked as epics on the SPEC board (2026-07-06 audit):
+
+- **data-safety epic:** `fallbackToDestructiveMigration()` active; `exportSchema = false`
+  (schema history not committed); non-transactional DatabaseSeeder and `saveMeal`
+  delete-then-insert; DataStore IOException uncaught; PDF partial file not cleaned on failure;
+  `allowBackup=true` without `dataExtractionRules`; unsafe `enumValueOf` nav-arg parse;
+  hardcoded Dispatchers (no DispatcherProvider).
+- **testability epic:** 5 screens lack `<Name>Content(...)` extraction → no Compose/Roborazzi
+  tests (HistoryScreen, HistoryDayScreen scaffold, AddProductScreen, ProductSearchScreen,
+  WeightScreen); 15+ hardcoded `LocalDate.now()` in production → midnight-dependent tests.
+- **quality-gates epic:** JaCoCo `verificationRule` not wired (project line coverage 27.7%,
+  measured 2026-05-19, target 65%); no `androidTest/` instrumented suite; CI lacks wrapper
+  validation / release smoke / dependabot; `selfimprove/runs/` telemetry empty —
+  `record-run.sh` not wired into /mp runs.
+- **i18n-strings epic:** ~82 hardcoded RU strings across 10 presentation files;
+  `strings.xml` contains only `app_name`.
+- **a11y epic:** 13+ icons without `contentDescription`; Canvas charts (macro donut, weight,
+  stats) and progress bars have no semantics.
+- **ux-polish epic:** launcher icon is the Android system stub, no splash screen; no undo
+  after deletes; silent invalid weight input; no IME actions / nav transitions / haptics.
+- Standing quirk: `ExportViewModel` builds the share `Uri` via `Uri.Builder` instead of
+  `FileProvider.getUriForFile` (Windows-Robolectric path-matching); revisit when Robolectric
+  handles Windows authorities.
 
 ## Up next (head of ROADMAP)
 
-- Iteration 6 sub-iteration F — output sandbox for gradle logs *(optional, only if `grep | tail` becomes insufficient — defer unless needed)*
-- Iteration 7 — first product feature after iter 6 ships (TBD via `/dh --discuss`)
-- Validate `--tdd` on 2-3 real features and decide whether to make it default
+- Implement audit epics via `/mp --feature --next`, recommended order:
+  data-safety → testability → quality-gates → i18n-strings → a11y → ux-polish.
+- Product feature candidates live in ROADMAP → «Product candidates»; each gets its own
+  `/mp-spec --feature` run when picked.

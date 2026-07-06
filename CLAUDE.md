@@ -10,11 +10,11 @@ Learning project: Clean Architecture + Compose + Hilt + Room.
 
 Three project-root markdown files track state and history (all committed):
 
-- `STATE.md` — **live state**, refreshed by `dh-docs` after every `/dh` run. Current iteration, last completed work, recent commits, up-next.
+- `STATE.md` — **live state**, refreshed by `mp-docs` after every `/mp` run. Current iteration, last completed work, recent commits, up-next.
 - `ROADMAP.md` — **planned work**, ordered by iteration. Edit manually.
 - `DOCUMENTATION.md` — **history**: product features, user flows, architecture decisions log.
 
-Cross-session memory lives in `~/.claude/projects/C--Pet-diet-helper/memory/`; `MEMORY.md` is its index and is auto-loaded into every session.
+Cross-session memory lives in `~/.claude/projects/D--Pet-MyDietHelper/memory/`; `MEMORY.md` is its index and is auto-loaded into every session.
 
 ## Package
 `com.k.shavrin.diethelper`
@@ -133,7 +133,7 @@ done
 ```
 
 Add the snippet to `~/.bashrc` on Ubuntu, or to `~/.bash_profile` in Git Bash on Windows, to
-persist it. The `/dh` pipeline runs all shell commands through the `Bash` tool (Git Bash on
+persist it. The `/mp` pipeline runs all shell commands through the `Bash` tool (Git Bash on
 Windows), so no PowerShell-specific setup is required.
 
 ## Testing Stack
