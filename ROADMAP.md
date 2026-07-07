@@ -16,30 +16,32 @@ shipped under the bespoke `/dh` pipeline. Sub-item F (output sandbox) retired �
 itself was superseded by the migration to `/mp` (2026-05-31, commit `26b5ae9`;
 dh-* agents archived in `.claude/_archive_pre_mp/`).
 
-## Iteration 7 — Audit backlog (filed 2026-07-06)
+## Iteration 7 — Audit backlog (filed 2026-07-06 — 37 SPECs on the board)
 
-Six tech epics from the full project audit, decomposed onto the SPEC board via
-`/mp-spec --feature`. Implement with `/mp --feature --next` in this order
+Six tech epics from the full project audit, **decomposed onto the SPEC board** via
+`/mp-spec --feature` (37 numbered SPECs total + 6 overviews, all committed and pushed).
+Each SPEC is grounded in verified `file:line` facts, carries Gherkin acceptance, and passed
+a light evaluator gate. Implement with `/mp --feature --next` in this order
 (gates ordering: coverage threshold lands only after testability adds tests;
 string extraction lands after Content extraction to avoid same-file churn):
 
-1. **data-safety** — Room/DataStore hardening: drop destructive-migration fallback,
-   `exportSchema=true` + commit schemas, transactional seeder + saveMeal, DataStore
-   IOException handling, PDF partial-file cleanup, `dataExtractionRules`, safe enum
-   nav-arg parse, DispatcherProvider.
-2. **testability** — Clock/todayProvider injection (kill 15+ prod `LocalDate.now()`),
-   fix time-dependent tests, extract `Content()` for 5 screens + Compose tests +
-   Roborazzi baselines, flesh out SettingsViewModelTest.
-3. **quality-gates** — JaCoCo verification rule + threshold ramp, CI hardening
-   (wrapper validation, coverage gate, release smoke), dependabot, androidTest
-   scaffold + 1 Hilt smoke, wire `selfimprove/record-run.sh` telemetry into /mp runs.
-4. **i18n-strings** — ~82 UI strings → `strings.xml`, Format.kt day/month names →
-   resources, ViewModel validation messages via UiText pattern, PDF strings.
-5. **a11y** — contentDescription pass, semantics for Canvas charts (donut/weight/stats)
-   and progress bars, touch-target audit.
-6. **ux-polish** — custom adaptive launcher icon + splash screen, undo-snackbar on
-   deletes, fix silent invalid weight input, IME actions + focus order, nav
-   transitions, dynamic color (opt-in), haptics, previews for remaining screens.
+1. **data-safety** (8 SPECs) — drop destructive-migration fallback, `exportSchema=true` +
+   commit schemas, transactional seeder + saveMeal, DataStore IOException handling, PDF
+   partial-file cleanup, `dataExtractionRules`, safe enum nav-arg parse, DispatcherProvider.
+2. **testability** (8 SPECs) — Clock injection (kill 11 prod `LocalDate.now()` sites),
+   fix time-dependent tests, extract `Content()` for **4** screens (HistoryDayScreen already
+   reuses TodayContent) + Compose tests + Roborazzi baselines, flesh out SettingsViewModelTest.
+3. **quality-gates** (5 SPECs) — JaCoCo verification rule + threshold ramp, CI hardening
+   (wrapper validation, coverage gate, release smoke), dependabot, androidTest scaffold + 1
+   Hilt smoke, wire `selfimprove/record-run.sh` telemetry.
+4. **i18n-strings** (5 SPECs) — **301** hardcoded RU strings (22 files) → `strings.xml`,
+   Format.kt day/month names + plurals → resources, ViewModel validation via sealed `UiText`,
+   PDF strings with meal-label dedup.
+5. **a11y** (3 SPECs) — contentDescription pass (13 icons), semantics for Canvas charts
+   (donut/calorie-ring/stats-bars), progress semantics + non-color signal + touch targets.
+6. **ux-polish** (8 SPECs) — custom adaptive launcher icon + splash, undo-snackbar (re-insert),
+   fix silent invalid weight input, IME actions + focus, nav transitions, dynamic color
+   (opt-in, default OFF), haptics, previews for the 5 remaining screens.
 
 ## Product candidates (unscheduled)
 

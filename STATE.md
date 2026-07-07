@@ -12,13 +12,15 @@
 
 ## Now
 
-- **Current iteration:** 7 — Audit backlog (6 improvement epics)
-- **In progress:** filing audit epics to `.claude/specs/backlog/` via `/mp-spec --feature` (2026-07-06)
-- **Last completed:** full project audit + wiring hygiene (2026-07-06): brain project card +
-  scan-list entry, memory migrated `D--diet-helper` → `D--Pet-MyDietHelper`, graphify graph
-  rebuilt, dead marketplace path removed from `.claude/settings.json`, SPEC board scaffolded,
-  STATE/ROADMAP/README/CLAUDE refreshed. Before that: migration to /mp pipeline (2026-05-31,
-  commits `f08090d` + `26b5ae9`).
+- **Current iteration:** 7 — Audit backlog (6 improvement epics filed, ready to implement)
+- **In progress:** idle — backlog board is loaded; next action is `/mp --feature --next`
+- **Last completed:** all 6 audit epics decomposed onto `.claude/specs/backlog/` via
+  `/mp-spec --feature` (2026-07-06) — **37 SPECs across 6 epics**, each grounded (file:line
+  facts), grilled (locked decisions), and light-eval-passed. Recommended implement order:
+  data-safety (8) → testability (8) → quality-gates (5) → i18n-strings (5) → a11y (3) →
+  ux-polish (8). Before that: full project audit + wiring hygiene (brain card + scan-list,
+  memory migrated `D--diet-helper` → `D--Pet-MyDietHelper`, graphify rebuilt, dead marketplace
+  path removed, board scaffolded, docs refreshed).
 
 ## Recently shipped (last 5 commits before the audit)
 
@@ -56,7 +58,14 @@ All of the code-level debt below is tracked as epics on the SPEC board (2026-07-
 
 ## Up next (head of ROADMAP)
 
-- Implement audit epics via `/mp --feature --next`, recommended order:
+- Implement the backlog via `/mp --feature --next`, recommended order:
   data-safety → testability → quality-gates → i18n-strings → a11y → ux-polish.
+  Note the cross-epic ordering baked into the SPECs: testability before i18n-strings
+  (Content extraction before string moves); a11y and ux-polish after i18n (resource-backed
+  descriptions/strings). Working files for each epic's grounding/grill/decomposition live under
+  `C:\Users\Admin\AppSpecs\<epic>\pipeline\`.
+- Audit corrections surfaced while filing: real hardcoded-string count is **301 in 22 files**
+  (not ~82); only **4** screens need `Content()` extraction (HistoryDayScreen already reuses
+  TodayContent), not 5.
 - Product feature candidates live in ROADMAP → «Product candidates»; each gets its own
   `/mp-spec --feature` run when picked.
