@@ -3,6 +3,9 @@
 package com.k.shavrin.diethelper.presentation.screen.workout
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.Context
+import android.content.Intent
 import android.view.WindowManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -20,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,6 +61,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -75,11 +80,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.R
+import com.k.shavrin.diethelper.domain.model.PerformedTrainingSet
+import com.k.shavrin.diethelper.domain.model.TrainingLoadBasis
+import com.k.shavrin.diethelper.domain.model.TrainingSession
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutExercise
 import com.k.shavrin.diethelper.domain.model.WorkoutProgress
+import com.k.shavrin.diethelper.domain.model.WorkoutSet
+import com.k.shavrin.diethelper.domain.model.completedTrainingPlanKeys
 import com.k.shavrin.diethelper.presentation.components.PillTabs
 import com.k.shavrin.diethelper.presentation.components.ScreenHeading
 import com.k.shavrin.diethelper.presentation.theme.FatSand
@@ -87,6 +98,7 @@ import com.k.shavrin.diethelper.presentation.theme.Ink
 import com.k.shavrin.diethelper.presentation.theme.Lavender
 import com.k.shavrin.diethelper.presentation.theme.Mint
 import kotlinx.coroutines.delay
+import java.io.File
 import java.util.Locale
 import kotlin.math.ceil
 
@@ -95,8 +107,34 @@ private val TrainingAccent = FatSand
 @Composable
 fun WorkoutScreen(viewModel: WorkoutViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
-    WorkoutContent(state, viewModel::selectDay, viewModel::toggleSet, viewModel::finish,
-        viewModel::saveMaximums, viewModel::timer, viewModel::clearError)
+    val journalViewModel: TrainingJournalViewModel = hiltViewModel()
+    val journal by journalViewModel.state.collectAsState()
+    val context = LocalContext.current
+    val activeSession = journal.sessions.firstOrNull { it.outcome == com.k.shavrin.diethelper.domain.model.TrainingOutcome.ACTIVE }
+    LaunchedEffect(activeSession?.id, state.plan) {
+        activeSession?.let { active -> state.plan?.days?.firstOrNull { it.id == active.planDayId }?.let(viewModel::selectDay) }
+    }
+    LaunchedEffect(journal.completedDayId) {
+        if (journal.completedDayId != null) {
+            viewModel.selectNext()
+            journalViewModel.consumeCompletedDay()
+        }
+    }
+    LaunchedEffect(journal.exportPaths) {
+        if (journal.exportPaths.isNotEmpty()) {
+            try {
+                shareTrainingReport(context, journal.exportPaths)
+            } catch (_: Exception) {
+                journalViewModel.shareFailed()
+            } finally {
+                journalViewModel.consumeExport()
+            }
+        }
+    }
+    WorkoutContent(state, viewModel::selectDay, viewModel::toggleSet,
+        viewModel::saveMaximums, viewModel::timer, viewModel::clearError, journal,
+        TrainingJournalActions(journalViewModel::record, journalViewModel::undo, journalViewModel::finish,
+            journalViewModel::followUp, journalViewModel::export, journalViewModel::clearError))
 }
 
 @Composable
@@ -104,10 +142,11 @@ fun WorkoutContent(
     state: WorkoutUiState,
     onSelect: (WorkoutDay) -> Unit,
     onSet: (WorkoutDay, String) -> Unit,
-    onFinish: (WorkoutDay) -> Unit,
     onMaxima: (Map<String, Double>) -> Unit,
     onTimer: (Int, Long, Int) -> Unit,
-    onClearError: () -> Unit
+    onClearError: () -> Unit,
+    journal: TrainingJournalUiState,
+    actions: TrainingJournalActions
 ) {
     var tab by rememberSaveable { mutableIntStateOf(0) }
     var showMaxima by rememberSaveable { mutableStateOf(false) }
@@ -123,12 +162,12 @@ fun WorkoutContent(
     }
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Row(Modifier.fillMaxWidth().padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
-            ScreenHeading("ДВИЖЕНИЕ И СИЛА", "Тренировки", "СРЦ7 · ваша персональная программа", Modifier.weight(1f), artwork = R.drawable.art_training)
+            ScreenHeading("ДВИЖЕНИЕ И СИЛА", "Тренировки", "СРЦ7 · волны и личный журнал", Modifier.weight(1f), artwork = R.drawable.art_training)
             FilledTonalIconButton(onClick = { showMaxima = true }) {
                 Icon(Icons.Default.Tune, contentDescription = "Рабочие максимумы")
             }
         }
-        PillTabs(listOf("Тренировка", "Весь план"), tab, {
+        PillTabs(listOf("Тренировка", "Весь план", "Журнал"), tab, {
             if (it == 1) cycle = day?.cycle ?: cycle
             tab = it
         }, Modifier.padding(horizontal = 20.dp, vertical = 4.dp))
@@ -136,6 +175,12 @@ fun WorkoutContent(
             Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(error, Modifier.weight(1f), color = MaterialTheme.colorScheme.error)
                 TextButton(onClick = onClearError) { Text("Закрыть") }
+            }
+        }
+        journal.error?.let { error ->
+            Row(Modifier.padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(error, Modifier.weight(1f), color = MaterialTheme.colorScheme.error)
+                TextButton(onClick = actions.clearError) { Text("Закрыть") }
             }
         }
         if (state.loading) {
@@ -149,14 +194,18 @@ fun WorkoutContent(
                     Button(onClick = { tab = 1 }) { Text("Посмотреть план") }
                 }
             } else {
-                SessionContent(day, state, onSet, onFinish, onTimer, { showMaxima = true })
+                key(day.id) {
+                    SessionContent(day, state, onSet, onTimer, { showMaxima = true }, journal, actions)
+                }
             }
+        } else if (tab == 2) {
+            TrainingJournalContent(journal, actions)
         } else {
             val plan = state.plan
             LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 item {
                     Text("${plan?.days?.size ?: 0} тренировок · ${plan?.days?.maxOfOrNull { it.cycle } ?: 0} микроциклов", style = MaterialTheme.typography.titleMedium)
-                    Text("Веса пересчитываются от ваших максимумов. Прогрессия и округление сохранены из таблицы.",
+                    Text("Волны, коэффициенты упражнений и округление сохранены из таблицы. Рабочие ориентиры задаёшь ты.",
                         color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                     Row(Modifier.horizontalScroll(rememberScrollState()).padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         (plan?.days?.map { it.cycle }?.distinct().orEmpty()).forEach { number ->
@@ -166,6 +215,7 @@ fun WorkoutContent(
                     Text("В таблице заполнены 57 тренировок. Пустые заготовки циклов 13–25 не добавлены.",
                         style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
+                item { WorkoutWaveOverview(state.waves, cycle) }
                 items(plan?.days.orEmpty().filter { it.cycle == cycle }, key = { it.id }) { plannedDay ->
                     PlanDayCard(plannedDay, progress, onOpen = { onSelect(plannedDay); tab = 0 })
                 }
@@ -182,17 +232,27 @@ private fun SessionContent(
     day: WorkoutDay,
     state: WorkoutUiState,
     onSet: (WorkoutDay, String) -> Unit,
-    onFinish: (WorkoutDay) -> Unit,
     onTimer: (Int, Long, Int) -> Unit,
-    onConfigure: () -> Unit
+    onConfigure: () -> Unit,
+    journal: TrainingJournalUiState,
+    actions: TrainingJournalActions
 ) {
     val progress = state.progress
     val sets = remember(day) { day.sets() }
-    val completed = sets.count { it.key in progress.completedSets }
-    val next = sets.firstOrNull { it.key !in progress.completedSets }
+    val session = journal.sessions.firstOrNull { it.planDayId == day.id }
+    val recorded = session?.sets.orEmpty().filter { it.planKey != null }.associateBy { requireNotNull(it.planKey) }
+    val completedKeys = completedTrainingPlanKeys(progress.completedSets, session?.sets.orEmpty())
+    val completed = sets.count { it.key in completedKeys }
+    val next = sets.firstOrNull { it.key !in completedKeys }
     val finished = day.id in progress.completedDays
-    val editable = state.canEdit(day)
-    LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    val editable = state.canEdit(day, journal.saving)
+    var editingSet by remember(day.id) { mutableStateOf<WorkoutSet?>(null) }
+    var adding by rememberSaveable(day.id) { mutableStateOf(false) }
+    var finishing by rememberSaveable(day.id) { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+    LaunchedEffect(day.id) { listState.scrollToItem(0) }
+    LaunchedEffect(journal.changeVersion) { editingSet = null; adding = false; finishing = false }
+    LazyColumn(state = listState, contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("МИКРОЦИКЛ ${day.cycle}  /  ДЕНЬ ${day.day}", color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
@@ -202,14 +262,15 @@ private fun SessionContent(
             LinearProgressIndicator(progress = { completed.toFloat() / sets.size.coerceAtLeast(1) },
                 modifier = Modifier.fillMaxWidth().height(5.dp), color = Lavender)
         }
+        if (!finished) item { TrainingAdviceCard(journal.advice) }
         if (!progress.configured) {
             item {
                 Card(shape = RoundedCornerShape(24.dp)) {
                     Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Icon(Icons.Default.FitnessCenter, null, tint = Mint)
-                        Text("Ваши максимумы — ваш план", style = MaterialTheme.typography.headlineSmall)
-                        Text("Укажите актуальные максимумы в приседе, жиме и тяге. Рассчитаем каждый подход по формулам вашей программы.")
-                        Button(onClick = onConfigure, modifier = Modifier.fillMaxWidth()) { Text("Указать максимумы") }
+                        Text("Рабочие ориентиры", style = MaterialTheme.typography.headlineSmall)
+                        Text("Укажи ориентиры в приседе, жиме и тяге. Это основа расчёта, а не проверка текущей силы.")
+                        Button(onClick = onConfigure, modifier = Modifier.fillMaxWidth()) { Text("Настроить ориентиры") }
                     }
                 }
             }
@@ -226,21 +287,27 @@ private fun SessionContent(
                             fontSize = 58.sp, fontWeight = FontWeight.Bold, color = Lavender)
                         Text("кг × ${next.group.reps}", fontSize = 24.sp, modifier = Modifier.padding(bottom = 9.dp))
                     }
-                    Text("${percentText(next.group.percent)} от ПМ · ${next.exercise.load.lowercase()} нагрузка" +
+                    Text("${percentText(next.group.percent)} по схеме · ${next.exercise.load.lowercase()} нагрузка" +
                         if (next.exercise.equipmentMultiplier == 2.0) " · вес одной гантели" else "",
                         color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                    Button(onClick = { onSet(day, next.key) }, enabled = !state.saving,
+                    Button(onClick = { actions.clearError(); editingSet = next }, enabled = editable,
                         modifier = Modifier.fillMaxWidth().height(54.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Lavender, contentColor = Ink)) {
                         Icon(Icons.Default.Check, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Подход выполнен", fontWeight = FontWeight.Bold)
+                        Text("Записать подход", fontWeight = FontWeight.Bold)
                     }
                 }
             }
         }
         if (progress.configured && !finished) {
             item { RestTimer(progress, onTimer) }
+            item {
+                OutlinedButton(onClick = { actions.clearError(); adding = true }, enabled = editable, modifier = Modifier.fillMaxWidth()) {
+                    Text("Добавить свой подход / упражнение")
+                }
+                TrainingAdditionalSets(session, editable, actions.undo)
+            }
         }
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -251,7 +318,7 @@ private fun SessionContent(
         items(day.exercises, key = { it.id }) { exercise ->
             var expanded by rememberSaveable(day.id, exercise.id) { mutableStateOf(false) }
             val exerciseSets = sets.filter { it.exercise.id == exercise.id }
-            val count = exerciseSets.count { it.key in progress.completedSets }
+            val count = exerciseSets.count { it.key in completedKeys }
             Card(shape = RoundedCornerShape(20.dp)) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     TextButton(onClick = { expanded = !expanded }, contentPadding = PaddingValues(0.dp)) {
@@ -265,13 +332,8 @@ private fun SessionContent(
                     }
                     if (expanded || next?.exercise?.id == exercise.id) {
                         exerciseSets.forEachIndexed { index, set ->
-                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                                Text("${index + 1}", Modifier.width(30.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                Text(if (progress.configured) "${weightText(exercise.weight(progress.maxima, set.group.percent))} кг × ${set.group.reps}"
-                                    else "— кг × ${set.group.reps}", Modifier.weight(1f), fontWeight = FontWeight.Medium)
-                                Text(percentText(set.group.percent), style = MaterialTheme.typography.labelMedium, color = TrainingAccent)
-                                Checkbox(checked = set.key in progress.completedSets,
-                                    onCheckedChange = { onSet(day, set.key) }, enabled = editable)
+                            TrainingPlannedSetRow(index, set, recorded[set.key], progress, set.key in completedKeys, editable) {
+                                actions.clearError(); editingSet = set
                             }
                         }
                     } else {
@@ -287,14 +349,81 @@ private fun SessionContent(
             }
         }
         item {
-            Button(onClick = { onFinish(day) }, enabled = next == null && !finished && !state.saving,
+            Button(onClick = { actions.clearError(); finishing = true }, enabled = editable,
                 modifier = Modifier.fillMaxWidth().height(54.dp)) {
                 Text(if (finished) "Тренировка сохранена ✓" else "Завершить тренировку")
             }
-            if (!finished && next != null) Text("Отметьте подходы, чтобы перейти к следующей тренировке.",
+            if (!finished && next != null) Text("Можно сохранить неполное занятие и указать, что изменилось.",
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp))
         }
+    }
+    if (editingSet != null || adding) {
+        SessionSetEditor(day, progress, journal, editingSet, recorded, actions,
+            onLegacyUndo = { key -> onSet(day, key); editingSet = null },
+            onDismiss = { editingSet = null; adding = false })
+    }
+    if (finishing) FinishTrainingDialog(next == null, session, journal.saving, journal.error,
+        onSave = { actions.finish(day, it) }, onDismiss = { finishing = false })
+}
+
+@Composable
+private fun TrainingAdditionalSets(
+    session: TrainingSession?,
+    editable: Boolean,
+    onUndo: (PerformedTrainingSet) -> Unit
+) {
+    session?.completedSets?.filter { it.planKey == null }?.forEach { extra ->
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text("${extra.exerciseName} × ${extra.actualReps}", Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)
+            TextButton(onClick = { onUndo(extra) }, enabled = editable) { Text("Снять") }
+        }
+    }
+}
+
+@Composable
+private fun SessionSetEditor(
+    day: WorkoutDay,
+    progress: WorkoutProgress,
+    journal: TrainingJournalUiState,
+    source: WorkoutSet?,
+    recorded: Map<String, PerformedTrainingSet>,
+    actions: TrainingJournalActions,
+    onLegacyUndo: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val existing = source?.let { recorded[it.key] }
+    val legacy = source?.key in progress.completedSets && existing == null
+    val undo: (() -> Unit)? = when {
+        existing?.completed == true -> ({ actions.undo(existing) })
+        legacy && source != null -> ({ onLegacyUndo(source.key) })
+        else -> null
+    }
+    TrainingSetDialog(source, existing, progress.maxima, legacy, journal.saving, journal.error,
+        onSave = { actions.record(day, it) }, onUndo = undo, onDismiss = onDismiss)
+}
+
+@Composable
+private fun TrainingPlannedSetRow(
+    index: Int,
+    set: WorkoutSet,
+    recorded: PerformedTrainingSet?,
+    progress: WorkoutProgress,
+    checked: Boolean,
+    editable: Boolean,
+    onEdit: () -> Unit
+) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text("${index + 1}", Modifier.width(30.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
+        val actual = recorded?.takeIf { it.completed }
+        val actualText = actual?.let {
+            val load = if (it.loadBasis == TrainingLoadBasis.BODYWEIGHT) "Свой вес" else "${it.actualWeightKg?.let(::weightText) ?: "—"} кг"
+            "${it.exerciseName}: $load × ${it.actualReps}"
+        }
+        Text(actualText ?: if (progress.configured) "${weightText(set.exercise.weight(progress.maxima, set.group.percent))} кг × ${set.group.reps}"
+            else "— кг × ${set.group.reps}", Modifier.weight(1f), fontWeight = FontWeight.Medium)
+        Text(percentText(set.group.percent), style = MaterialTheme.typography.labelMedium, color = TrainingAccent)
+        Checkbox(checked = checked, onCheckedChange = { onEdit() }, enabled = editable)
     }
 }
 
@@ -384,16 +513,16 @@ private fun MaximaDialog(progress: WorkoutProgress, onDismiss: () -> Unit, onSav
         listOf("squat", "bench", "deadlift").forEach { key -> put(key, progress.maxima[key]?.takeIf { it > 0 }?.let(::weightText).orEmpty()) }
     } }
     val valid = values.values.all { text -> text.replace(',', '.').toDoubleOrNull()?.let { it.isFinite() && it > 0 && it <= 1500 } == true }
-    AlertDialog(onDismissRequest = onDismiss, title = { Text("Ваши максимумы") }, text = {
+    AlertDialog(onDismissRequest = onDismiss, title = { Text("Рабочие ориентиры") }, text = {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("Укажите ПМ в килограммах. Вспомогательные упражнения и прогрессия по микроциклам рассчитаются автоматически.",
+            Text("Задай расчётные значения в килограммах. Исторический рекорд и текущий рабочий ориентир — разные вещи.",
                 style = MaterialTheme.typography.bodySmall)
             listOf("squat" to "Присед", "bench" to "Жим лёжа", "deadlift" to "Становая тяга").forEach { (key, label) ->
                 OutlinedTextField(value = values[key].orEmpty(), onValueChange = { values[key] = it }, label = { Text(label) },
                     suffix = { Text("кг") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth())
             }
-            Text("Меняйте максимумы между тренировками: веса в плане пересчитываются сразу.",
+            Text("План пересчитывается сразу. Фактически записанные подходы в журнале сохраняют свой вес.",
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }, confirmButton = { TextButton(enabled = valid, onClick = {
@@ -405,5 +534,19 @@ internal fun weightText(value: Double): String = if (value % 1.0 < 0.00001) valu
     else String.format(Locale.ROOT, "%.1f", value)
 private fun percentText(value: Double): String = "${weightText(value * 100)}%"
 
-private fun WorkoutUiState.canEdit(day: WorkoutDay): Boolean =
-    progress.configured && day.id !in progress.completedDays && !saving
+private fun WorkoutUiState.canEdit(day: WorkoutDay, journalSaving: Boolean): Boolean =
+    progress.configured && day.id !in progress.completedDays && !saving && !journalSaving
+
+private fun shareTrainingReport(context: Context, paths: List<String>) {
+    val uris = ArrayList(paths.map { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", File(it)) })
+    val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+        type = "application/octet-stream"
+        putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris)
+        putExtra(Intent.EXTRA_SUBJECT, "Дневник тренировок MyDietHelper")
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        clipData = ClipData.newUri(context.contentResolver, "Журнал тренировок", uris.first()).also { clip ->
+            uris.drop(1).forEach { clip.addItem(ClipData.Item(it)) }
+        }
+    }
+    context.startActivity(Intent.createChooser(intent, "Передать журнал для разбора"))
+}

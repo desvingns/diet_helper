@@ -1,0 +1,426 @@
+{
+  "schema_version": 1,
+  "source": "app/src/main/assets/workout-plan.json",
+  "scope": "all 57 populated days; no actual training performance or calendar dates inferred",
+  "method": "Reference intensity = exercise.factor * group.percent before weight rounding. Means are weighted by prescribed repetitions. Sets include ramp sets. Labels describe individual exercise rows, not whole days. Cycles have unequal populated-day counts.",
+  "limitations": "Descriptive plan metrics, not fatigue, injury risk, recovery, hard-set equivalence or observed training. Do not treat incomplete cycles as confirmed deloads.",
+  "cycles": [
+    {
+      "cycle": 1,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 126,
+      "prescribed_repetitions": 430,
+      "exercise_row_labels": {
+        "Тяжелая": 9,
+        "Средняя": 6,
+        "Легкая": 6
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 61,
+          "repetition_weighted_mean_reference_percent": 55.66,
+          "peak_reference_percent": 80.0
+        },
+        "Жим лежа": {
+          "repetitions": 121,
+          "repetition_weighted_mean_reference_percent": 64.76,
+          "peak_reference_percent": 85.0
+        },
+        "Становая тяга": {
+          "repetitions": 11,
+          "repetition_weighted_mean_reference_percent": 64.73,
+          "peak_reference_percent": 80.0
+        }
+      }
+    },
+    {
+      "cycle": 2,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 116,
+      "prescribed_repetitions": 407,
+      "exercise_row_labels": {
+        "Тяжелая": 6,
+        "Средняя": 10,
+        "Легкая": 5
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 41,
+          "repetition_weighted_mean_reference_percent": 52.46,
+          "peak_reference_percent": 78.39
+        },
+        "Жим лежа": {
+          "repetitions": 134,
+          "repetition_weighted_mean_reference_percent": 64.43,
+          "peak_reference_percent": 87.44
+        },
+        "Становая тяга": {
+          "repetitions": 11,
+          "repetition_weighted_mean_reference_percent": 69.89,
+          "peak_reference_percent": 85.42
+        }
+      }
+    },
+    {
+      "cycle": 3,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 112,
+      "prescribed_repetitions": 387,
+      "exercise_row_labels": {
+        "Тяжелая": 7,
+        "Средняя": 8,
+        "Легкая": 6
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 44,
+          "repetition_weighted_mean_reference_percent": 62.39,
+          "peak_reference_percent": 90.9
+        },
+        "Жим лежа": {
+          "repetitions": 122,
+          "repetition_weighted_mean_reference_percent": 63.65,
+          "peak_reference_percent": 85.85
+        },
+        "Становая тяга": {
+          "repetitions": 13,
+          "repetition_weighted_mean_reference_percent": 71.63,
+          "peak_reference_percent": 76.76
+        }
+      }
+    },
+    {
+      "cycle": 4,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 116,
+      "prescribed_repetitions": 468,
+      "exercise_row_labels": {
+        "Тяжелая": 5,
+        "Средняя": 10,
+        "Легкая": 6
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 66,
+          "repetition_weighted_mean_reference_percent": 52.43,
+          "peak_reference_percent": 88.31
+        },
+        "Жим лежа": {
+          "repetitions": 181,
+          "repetition_weighted_mean_reference_percent": 59.64,
+          "peak_reference_percent": 76.13
+        },
+        "Становая тяга": {
+          "repetitions": 13,
+          "repetition_weighted_mean_reference_percent": 68.32,
+          "peak_reference_percent": 81.21
+        }
+      }
+    },
+    {
+      "cycle": 5,
+      "populated_days": 4,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "prescribed_sets_including_ramps": 74,
+      "prescribed_repetitions": 311,
+      "exercise_row_labels": {
+        "Тяжелая": 1,
+        "Средняя": 7,
+        "Легкая": 8
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 27,
+          "repetition_weighted_mean_reference_percent": 58.38,
+          "peak_reference_percent": 61.21
+        },
+        "Жим лежа": {
+          "repetitions": 123,
+          "repetition_weighted_mean_reference_percent": 53.29,
+          "peak_reference_percent": 71.41
+        },
+        "Становая тяга": {
+          "repetitions": 9,
+          "repetition_weighted_mean_reference_percent": 60.08,
+          "peak_reference_percent": 71.41
+        }
+      }
+    },
+    {
+      "cycle": 6,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 123,
+      "prescribed_repetitions": 376,
+      "exercise_row_labels": {
+        "Тяжелая": 12,
+        "Средняя": 8,
+        "Легкая": 1
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 52,
+          "repetition_weighted_mean_reference_percent": 67.19,
+          "peak_reference_percent": 87.15
+        },
+        "Жим лежа": {
+          "repetitions": 122,
+          "repetition_weighted_mean_reference_percent": 67.02,
+          "peak_reference_percent": 82.02
+        },
+        "Становая тяга": {
+          "repetitions": 16,
+          "repetition_weighted_mean_reference_percent": 69.2,
+          "peak_reference_percent": 87.15
+        }
+      }
+    },
+    {
+      "cycle": 7,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 130,
+      "prescribed_repetitions": 429,
+      "exercise_row_labels": {
+        "Тяжелая": 10,
+        "Средняя": 5,
+        "Легкая": 6
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 61,
+          "repetition_weighted_mean_reference_percent": 57.35,
+          "peak_reference_percent": 82.43
+        },
+        "Жим лежа": {
+          "repetitions": 115,
+          "repetition_weighted_mean_reference_percent": 67.19,
+          "peak_reference_percent": 87.58
+        },
+        "Становая тяга": {
+          "repetitions": 11,
+          "repetition_weighted_mean_reference_percent": 66.69,
+          "peak_reference_percent": 82.43
+        }
+      }
+    },
+    {
+      "cycle": 8,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 112,
+      "prescribed_repetitions": 481,
+      "exercise_row_labels": {
+        "Тяжелая": 1,
+        "Средняя": 13,
+        "Легкая": 7
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 66,
+          "repetition_weighted_mean_reference_percent": 50.52,
+          "peak_reference_percent": 60.06
+        },
+        "Жим лежа": {
+          "repetitions": 175,
+          "repetition_weighted_mean_reference_percent": 57.11,
+          "peak_reference_percent": 72.49
+        },
+        "Становая тяга": {
+          "repetitions": 9,
+          "repetition_weighted_mean_reference_percent": 66.16,
+          "peak_reference_percent": 77.66
+        }
+      }
+    },
+    {
+      "cycle": 9,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 115,
+      "prescribed_repetitions": 402,
+      "exercise_row_labels": {
+        "Тяжелая": 6,
+        "Средняя": 10,
+        "Легкая": 5
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 49,
+          "repetition_weighted_mean_reference_percent": 54.63,
+          "peak_reference_percent": 81.18
+        },
+        "Жим лежа": {
+          "repetitions": 142,
+          "repetition_weighted_mean_reference_percent": 65.64,
+          "peak_reference_percent": 90.54
+        },
+        "Становая тяга": {
+          "repetitions": 11,
+          "repetition_weighted_mean_reference_percent": 72.38,
+          "peak_reference_percent": 88.46
+        }
+      }
+    },
+    {
+      "cycle": 10,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 133,
+      "prescribed_repetitions": 377,
+      "exercise_row_labels": {
+        "Тяжелая": 12,
+        "Средняя": 5,
+        "Легкая": 4
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 52,
+          "repetition_weighted_mean_reference_percent": 68.45,
+          "peak_reference_percent": 88.9
+        },
+        "Жим лежа": {
+          "repetitions": 126,
+          "repetition_weighted_mean_reference_percent": 69.3,
+          "peak_reference_percent": 83.67
+        },
+        "Становая тяга": {
+          "repetitions": 16,
+          "repetition_weighted_mean_reference_percent": 72.17,
+          "peak_reference_percent": 90.99
+        }
+      }
+    },
+    {
+      "cycle": 11,
+      "populated_days": 5,
+      "source_day_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "prescribed_sets_including_ramps": 106,
+      "prescribed_repetitions": 312,
+      "exercise_row_labels": {
+        "Тяжелая": 7,
+        "Средняя": 9,
+        "Легкая": 2
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 39,
+          "repetition_weighted_mean_reference_percent": 65.66,
+          "peak_reference_percent": 84.09
+        },
+        "Жим лежа": {
+          "repetitions": 125,
+          "repetition_weighted_mean_reference_percent": 65.87,
+          "peak_reference_percent": 86.19
+        },
+        "Становая тяга": {
+          "repetitions": 16,
+          "repetition_weighted_mean_reference_percent": 57.81,
+          "peak_reference_percent": 57.81
+        }
+      }
+    },
+    {
+      "cycle": 12,
+      "populated_days": 3,
+      "source_day_numbers": [
+        1,
+        2,
+        3
+      ],
+      "prescribed_sets_including_ramps": 45,
+      "prescribed_repetitions": 165,
+      "exercise_row_labels": {
+        "Тяжелая": 1,
+        "Средняя": 4,
+        "Легкая": 4
+      },
+      "primary_lifts_only": {
+        "Присед": {
+          "repetitions": 13,
+          "repetition_weighted_mean_reference_percent": 65.42,
+          "peak_reference_percent": 68.67
+        },
+        "Жим лежа": {
+          "repetitions": 50,
+          "repetition_weighted_mean_reference_percent": 54.83,
+          "peak_reference_percent": 79.23
+        },
+        "Становая тяга": {
+          "repetitions": 11,
+          "repetition_weighted_mean_reference_percent": 60.5,
+          "peak_reference_percent": 63.38
+        }
+      }
+    }
+  ]
+}

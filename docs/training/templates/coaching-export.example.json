@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "example_only": true,
+  "status": "proposed_format_not_implemented",
+  "data_provenance": "synthetic_example_not_owner_training",
+  "units": {"load": "kg", "duration": "minutes"},
+  "timezone": "Europe/Budapest",
+  "profile_included": false,
+  "export_id": "example-export-001",
+  "sessions": [
+    {
+      "id": "example-session-001",
+      "local_date": "2026-10-19",
+      "started_at": null,
+      "plan_reference": {"template_id": "example-template", "revision": 1},
+      "status": "modified",
+      "completion_reason": "Only the example set is represented.",
+      "before": {"sleep_hours": null, "readiness": null, "illness": "unknown"},
+      "performed_sets": [
+        {
+          "id": "example-set-001",
+          "exercise_id": "back_squat",
+          "variant": "unspecified",
+          "purpose": "working_set",
+          "planned": {"weight_kg": 50, "reps": 5},
+          "actual": {"weight_kg": 50, "reps": 5},
+          "load_basis": "total_external_barbell_load",
+          "outcome": "completed",
+          "set_rpe": null,
+          "repetitions_in_reserve": null,
+          "symptom_status": "not_reported",
+          "symptom_observations": [],
+          "source": "manual_entry"
+        }
+      ],
+      "after": {
+        "duration_minutes": null,
+        "duration_basis": "training_including_warmup_cooldown_and_set_rests_excluding_unrelated_breaks",
+        "gym_visit_minutes": null,
+        "non_training_break_minutes": null,
+        "session_rpe": null,
+        "notes": null
+      },
+      "next_day": {"status": "not_reported", "symptom_observations": null},
+      "media_references": [],
+      "original_note": null
+    }
+  ],
+  "body_mass_entries": [],
+  "nutrition_summary": {"observed_days": 0, "mean_calories": null, "mean_protein_g": null},
+  "illness_events": [],
+  "adjustment_proposals": [],
+  "unknowns": ["Current symptoms and recovery were not supplied in this synthetic example."]
+}

@@ -9,11 +9,14 @@ import com.k.shavrin.diethelper.data.local.converter.Converters
 import com.k.shavrin.diethelper.data.local.dao.FoodEntryDao
 import com.k.shavrin.diethelper.data.local.dao.ProductDao
 import com.k.shavrin.diethelper.data.local.dao.SavedMealDao
+import com.k.shavrin.diethelper.data.local.dao.TrainingJournalDao
 import com.k.shavrin.diethelper.data.local.dao.WeightEntryDao
 import com.k.shavrin.diethelper.data.local.entity.FoodEntryEntity
 import com.k.shavrin.diethelper.data.local.entity.ProductEntity
 import com.k.shavrin.diethelper.data.local.entity.SavedMealEntity
 import com.k.shavrin.diethelper.data.local.entity.SavedMealItemEntity
+import com.k.shavrin.diethelper.data.local.entity.TrainingSessionEntity
+import com.k.shavrin.diethelper.data.local.entity.TrainingSetEntity
 import com.k.shavrin.diethelper.data.local.entity.WeightEntryEntity
 
 @Database(
@@ -22,9 +25,11 @@ import com.k.shavrin.diethelper.data.local.entity.WeightEntryEntity
         FoodEntryEntity::class,
         WeightEntryEntity::class,
         SavedMealEntity::class,
-        SavedMealItemEntity::class
+        SavedMealItemEntity::class,
+        TrainingSessionEntity::class,
+        TrainingSetEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -33,6 +38,7 @@ abstract class DietHelperDatabase : RoomDatabase() {
     abstract fun foodEntryDao(): FoodEntryDao
     abstract fun weightEntryDao(): WeightEntryDao
     abstract fun savedMealDao(): SavedMealDao
+    abstract fun trainingJournalDao(): TrainingJournalDao
 
     companion object {
         const val NAME = "diet_helper.db"

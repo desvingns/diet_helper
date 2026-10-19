@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutPlan
 import com.k.shavrin.diethelper.domain.model.WorkoutProgress
+import com.k.shavrin.diethelper.domain.model.WorkoutWaveCycle
+import com.k.shavrin.diethelper.domain.usecase.workout.AnalyzeWorkoutWavesUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.CompleteWorkoutUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.GetWorkoutPlanUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.GetWorkoutProgressUseCase
@@ -26,7 +28,8 @@ data class WorkoutUiState(
     val selectedDay: WorkoutDay? = null,
     val loading: Boolean = true,
     val saving: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val waves: List<WorkoutWaveCycle> = emptyList()
 )
 
 @HiltViewModel
@@ -36,7 +39,8 @@ class WorkoutViewModel @Inject constructor(
     private val saveMaxima: SaveWorkoutMaximaUseCase,
     private val recordSet: RecordWorkoutSetUseCase,
     private val completeWorkout: CompleteWorkoutUseCase,
-    private val setTimer: SetRestTimerUseCase
+    private val setTimer: SetRestTimerUseCase,
+    private val analyzeWaves: AnalyzeWorkoutWavesUseCase
 ) : ViewModel() {
     private val plan = MutableStateFlow<WorkoutPlan?>(null)
     private val selectedId = MutableStateFlow<Int?>(null)
@@ -61,12 +65,14 @@ class WorkoutViewModel @Inject constructor(
                 val next = unfinished ?: program?.days?.firstOrNull { it.id !in progress.completedDays }
                 Triple(program, progress, program?.days?.find { it.id == selected } ?: next)
             }.collect { (program, progress, selected) ->
-                _state.value = _state.value.copy(plan = program, progress = progress, selectedDay = selected, loading = program == null)
+                _state.value = _state.value.copy(plan = program, progress = progress, selectedDay = selected,
+                    loading = program == null, waves = program?.let(analyzeWaves::invoke).orEmpty())
             }
         }
     }
 
     fun selectDay(day: WorkoutDay) { selectedId.value = day.id }
+    fun selectNext() { selectedId.value = null }
     fun clearError() { _state.value = _state.value.copy(error = null) }
     fun saveMaximums(maxima: Map<String, Double>) = mutate { saveMaxima(maxima) }
 

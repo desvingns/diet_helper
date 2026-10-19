@@ -21,6 +21,14 @@ with aubergine/lavender, adds seven generated raster illustrations and introduce
 short native navigation, tab and meal-card transitions. Its document includes the
 asset paths and final generation prompt set.
 
+The 2026-10-19 [training journal update](docs/training/implementation.md), version
+1.1, preserves the imported SRC7 wave structure and adds a wave overview, dated
+actual sets/RPE, explicit exercise changes/preferences, modified/stopped session
+completion, next-day follow-up and Markdown/JSON sharing. Room 3→4 migration
+preserves existing nutrition and workout settings. The full 435-test suite,
+screenshots, Lint, Detekt and debug assembly pass. Automatic max increases,
+a replacement training program and a cloud agent bridge are not activated.
+
 ---
 
 ## Domain Model

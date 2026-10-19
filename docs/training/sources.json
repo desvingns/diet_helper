@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "evidence_checked_on": "2026-10-19",
+  "review_type": "targeted_curated_review_not_exhaustive",
+  "access_note": "Some PubMed/PMC direct pages returned challenge or minimal pages; indexed abstracts from primary publication records were used where stated. No unavailable full text is claimed as read.",
+  "sources": [
+    {
+      "id": "S01",
+      "year": 2026,
+      "title": "ACSM Position Stand: Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews",
+      "study_type": "overview_of_reviews",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41843416/",
+      "additional_urls": [
+        "https://acsm.org/resistance-training-guidelines-update-2026/"
+      ],
+      "verification_scope": "official ACSM release and indexed publication summary",
+      "limitations": "Healthy adults; does not establish a rehabilitation protocol.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S02",
+      "year": 2016,
+      "title": "Novel Resistance Training-Specific Rating of Perceived Exertion Scale Measuring Repetitions in Reserve",
+      "study_type": "primary_validation_study",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26049792/",
+      "additional_urls": [],
+      "verification_scope": "indexed abstract",
+      "limitations": "Small squat study; RIR is a subjective estimate and is not a pain measure.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S03",
+      "year": 2018,
+      "title": "RPE vs. Percentage 1RM Loading in Periodized Programs Matched for Sets and Repetitions",
+      "study_type": "primary_training_trial",
+      "url": "https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2018.00247/full",
+      "additional_urls": [],
+      "verification_scope": "publisher full-text page and indexed summary",
+      "limitations": "Short, small study in trained men; not a post-injury trial.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S04",
+      "year": 2022,
+      "title": "The Effect of Load and Volume Autoregulation on Muscular Strength and Hypertrophy: A Systematic Review and Meta-Analysis",
+      "study_type": "systematic_review_meta_analysis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35038063/",
+      "additional_urls": [
+        "https://link.springer.com/article/10.1186/s40798-021-00404-9"
+      ],
+      "verification_scope": "indexed structured abstract and publisher metadata",
+      "limitations": "Fifteen studies; load and volume autoregulation are distinct; average effects are not an individualized fatigue algorithm.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S05",
+      "year": 2025,
+      "title": "Autoregulated resistance training for maximal strength enhancement: A systematic review and network meta-analysis",
+      "study_type": "systematic_review_network_meta_analysis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40791980/",
+      "additional_urls": [],
+      "verification_scope": "indexed structured abstract",
+      "limitations": "Indirect comparisons and ranking probabilities do not establish a universally best method or clinical safety.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S06",
+      "year": 2021,
+      "title": "The Minimum Effective Training Dose Required for 1RM Strength in Powerlifters",
+      "study_type": "mixed_methods_and_training_interventions",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34527944/",
+      "additional_urls": [],
+      "verification_scope": "indexed full abstract",
+      "limitations": "Mixed interview/survey evidence plus small training interventions; minimum dose is not optimal dose; high effort is inappropriate to copy into injury re-entry.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S07",
+      "year": 2022,
+      "title": "Effects of Periodization on Strength and Muscle Hypertrophy in Volume-Equated Resistance Training Programs: A Systematic Review and Meta-analysis",
+      "study_type": "systematic_review_meta_analysis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35044672/",
+      "additional_urls": [],
+      "verification_scope": "indexed structured abstract",
+      "limitations": "Training-status subgroup uncertainty; limited long-term and elite-athlete evidence.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S08",
+      "year": 2024,
+      "title": "Does Taking a Break Matter—Adaptations in Muscle Strength and Size Between Continuous and Periodic Resistance Training",
+      "study_type": "primary_training_trial",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39364857/",
+      "additional_urls": [
+        "https://onlinelibrary.wiley.com/doi/10.1111/sms.14739"
+      ],
+      "verification_scope": "indexed abstract and publisher methods/metadata",
+      "limitations": "Healthy participants, controlled detraining; not a prediction for an advanced lifter after back pain.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S09",
+      "year": 2016,
+      "title": "NICE NG59: Low back pain and sciatica in over 16s: assessment and management",
+      "study_type": "clinical_guideline",
+      "url": "https://www.nice.org.uk/guidance/ng59/chapter/Recommendations",
+      "additional_urls": [],
+      "verification_scope": "indexed official recommendations; direct page retrieval intermittently blocked",
+      "limitations": "General assessment/management guidance; does not prescribe barbell loads or diagnose the owner.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S10",
+      "year": 2021,
+      "title": "Interventions for the Management of Acute and Chronic Low Back Pain: Revision 2021",
+      "study_type": "clinical_practice_guideline",
+      "url": "https://www.jospt.org/doi/10.2519/jospt.2021.0304",
+      "additional_urls": [],
+      "verification_scope": "publisher summary of recommendations",
+      "limitations": "Interventions depend on presentation and clinical assessment; no universally curative exercise.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S11",
+      "year": null,
+      "title": "NHS: Back pain",
+      "study_type": "official_patient_guidance",
+      "url": "https://www.nhs.uk/conditions/back-pain/",
+      "additional_urls": [],
+      "verification_scope": "indexed official urgent-symptom advice",
+      "limitations": "Triage information only; symptom absence has not been established for the owner.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S12",
+      "year": 2011,
+      "title": "Effect of two different weight-loss rates on body composition and strength and power-related performance in elite athletes",
+      "study_type": "primary_randomized_trial",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21558571/",
+      "additional_urls": [],
+      "verification_scope": "indexed full abstract",
+      "limitations": "Twenty-four mixed-sport athletes; group-average weight-loss findings are not a fixed individual target.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S13",
+      "year": 2018,
+      "title": "A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults",
+      "study_type": "systematic_review_meta_analysis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28698222/",
+      "additional_urls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5867436/"
+      ],
+      "verification_scope": "indexed abstract and indexed full-text dose-response result",
+      "limitations": "The estimated breakpoint is uncertain; not an exact cap and not a direct prescription for energy restriction.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S14",
+      "year": 2016,
+      "title": "Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial",
+      "study_type": "primary_randomized_trial",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26817506/",
+      "additional_urls": [],
+      "verification_scope": "indexed abstract",
+      "limitations": "Short, intensive intervention; not advanced powerlifting rehabilitation and not support for copying a large energy deficit.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S15",
+      "year": 2020,
+      "title": "WHO guidelines on physical activity and sedentary behaviour: at a glance",
+      "study_type": "public_health_guideline",
+      "url": "https://www.who.int/europe/publications/i/item/9789240014886",
+      "additional_urls": [],
+      "verification_scope": "official recommendations summary",
+      "limitations": "Population health target; individual re-entry should be gradual and symptom-informed.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S16",
+      "year": 2022,
+      "title": "International Olympic Committee consensus statement on acute respiratory illness in athletes part 1: acute respiratory infections",
+      "study_type": "expert_consensus",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35863871/",
+      "additional_urls": [
+        "https://bjsm.bmj.com/content/56/19/1066"
+      ],
+      "verification_scope": "indexed abstract and publisher return-to-sport sections",
+      "limitations": "Respiratory illness context; no universal number of rest days for every illness.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S17",
+      "year": 2019,
+      "title": "A Meta-Analysis of the Effects of Foam Rolling on Performance and Recovery",
+      "study_type": "systematic_review_meta_analysis",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31024339/",
+      "additional_urls": [],
+      "verification_scope": "indexed abstract/summary",
+      "limitations": "Mostly acute outcomes in healthy participants; does not establish prevention or treatment of disc injury.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S18",
+      "year": 2024,
+      "title": "Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions",
+      "study_type": "systematic_review_meta_regression",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38970765/",
+      "additional_urls": [
+        "https://pure.solent.ac.uk/en/publications/exploring-the-dose-response-relationship-between-estimated-resist/"
+      ],
+      "verification_scope": "indexed abstract and author-institution abstract",
+      "limitations": "Exploratory estimates of RIR; associations do not define an exact universal optimum.",
+      "checked_on": "2026-10-19"
+    },
+    {
+      "id": "S19",
+      "year": 2001,
+      "title": "A new approach to monitoring exercise training",
+      "study_type": "primary_monitoring_validation_study",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11708692/",
+      "additional_urls": [],
+      "verification_scope": "indexed full abstract",
+      "limitations": "Cycling and basketball validation; session load is not tissue stress, medical readiness or injury probability.",
+      "checked_on": "2026-10-19"
+    }
+  ]
+}

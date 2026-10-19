@@ -45,6 +45,26 @@ string extraction lands after Content extraction to avoid same-file churn):
 
 ## Product candidates (unscheduled)
 
+### Owner priority — personal training support (researched 2026-10-19)
+
+Evidence and direction: `docs/training/README.md` and
+`docs/training/adaptation-design.md`. Version 1.1 implements the factual journal,
+wave overview, modified/stopped sessions, exercise feedback, next-day follow-up,
+manual adjustment suggestions and MD/JSON export. It does not automatically
+change weights or activate a new program. Personal intake remains in
+Git-ignored `.local/`.
+
+1. Settle practical weekly availability and review the re-entry approach.
+2. SHIPPED in 1.1: dated actual-set journal, effort, accessories, modified/stopped
+   sessions, history snapshots and Markdown/JSON export. Next: repeated-template
+   sessions and editing closed performed-set details.
+3. SHIPPED in 1.1: recovery/symptom follow-up and conservative explainable
+   suggestions. Next: longitudinal, movement-specific review and proposal history.
+4. Technique observation history and joined nutrition/training summaries.
+5. Optional voice extraction, validated suggestion import and local agent bridge.
+
+### Other candidates
+
 Each is its own epic: pick → dedicated `/mp-spec --feature` run → board SPECs.
 Ordered by rough value/effort for a learning project:
 

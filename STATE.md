@@ -12,10 +12,24 @@
 
 ## Now
 
-- **Current iteration:** Visual design and daily-use polish, implemented directly at the user's request without MP (2026-10-19).
-- **In progress:** none; 415 tests, 11 screenshot references/comparisons, Lint,
-  Detekt, debug assembly and emulator smoke checks (100%/130% font) passed.
-- **Latest product delivery:** midnight plum/lavender design with restrained mint status accents; seven generated illustrations for the diary, meals, training and journal/goals; rounded navigation icons and short native UI transitions. Artwork is bundled offline (376 KiB total). Details and final generation prompts: `docs/plum-art-direction.md`.
+- **Current iteration:** Personal training support, version 1.1 (2026-10-19),
+  implemented directly at the owner's request without MP.
+- **In progress:** Telegram delivery of the verified version 1.1 APK. Weekly availability
+  and an individualized replacement/re-entry prescription remain open. The
+  original SRC7 waves are retained; no automatic maximum increase is active.
+- **Latest runtime validation:** all 435 tests, screenshot verification, Lint,
+  Detekt and debug assembly passed. Emulator upgrade 3→4 preserved all old table
+  row counts and byte-identical DataStore preferences. Native checks cover actual
+  sets/RPE, bodyweight extras, partial finish/day advance and MD/JSON sharing.
+  Forms and session transitions also pass at 130% font; final day advancement
+  resets the list to the first approach. Normal font scale was restored.
+- **Latest product delivery:** preserved SRC7 waves with an overview of all 57
+  populated days; dated actual-set journal, exercise changes/preferences,
+  modified/stopped completion, next-day follow-up and explainable suggestions.
+  Versioned Markdown/JSON exports preserve unknown values and weight snapshots.
+  Room version 4 has an explicit non-destructive 3→4 migration. See
+  `docs/training/implementation.md` and `docs/training/src7-wave-analysis.md`.
+- **Previous visual delivery:** midnight plum/lavender design with restrained mint status accents; seven generated illustrations for the diary, meals, training and journal/goals; rounded navigation icons and short native UI transitions. Artwork is bundled offline (376 KiB total). Details and final generation prompts: `docs/plum-art-direction.md`.
 - **Previous visual delivery:** cohesive screen chrome, improved diary/calendar, dated history cards, pinned goals actions, weight trend/validation and a custom adaptive launcher icon. Details: `docs/design-refresh.md`.
 - **Previous product delivery:** 132 PDF diary foods; 107 Serbian catalog products (73 Lidl); live name/barcode search; 57 imported workout days, personal maxima, full plan, set progress and persistent rest timer. Explicit Room 2→3 migration preserves existing food data. Details: `docs/food-and-workouts.md`.
 - **Previous pipeline work:** all 6 audit epics decomposed onto `.claude/specs/backlog/` via
@@ -64,6 +78,11 @@ All of the code-level debt below is tracked as epics on the SPEC board (2026-07-
   handles Windows authorities.
 
 ## Up next (head of ROADMAP)
+
+- Owner priority: collect feedback from version 1.1, discuss the practical
+  training schedule and individualized re-entry approach, and review current
+  technique videos when supplied. The factual journal and export are delivered;
+  any automatic load changes remain future work. Keep private context local.
 
 - Implement the backlog via `/mp --feature --next`, recommended order:
   data-safety → testability → quality-gates → i18n-strings → a11y → ux-polish.

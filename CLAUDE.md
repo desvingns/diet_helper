@@ -8,6 +8,14 @@ Learning project: Clean Architecture + Compose + Hilt + Room.
 
 ## Project State Files
 
+Training/coaching continuity: read `docs/training/README.md` and the private,
+Git-ignored `.local/training/athlete-profile.md` when working on workouts,
+technique or personalized nutrition. Evidence and proposed app behavior are in
+`docs/training/`; the personal profile and dated observations remain local.
+Personalization for the owner is welcome. Historical records and guessed
+restart settings are not verified current 1RMs. New design docs are not active
+app features or medical clearance.
+
 Three project-root markdown files track state and history (all committed):
 
 - `STATE.md` — **live state**, refreshed by `mp-docs` after every `/mp` run. Current iteration, last completed work, recent commits, up-next.
@@ -58,7 +66,7 @@ data/
                     SavedMealWithItems, SavedMealItemWithProduct)
     dao/          — DAOs (ProductDao, FoodEntryDao, WeightEntryDao, SavedMealDao)
     converter/    — Converters.kt: LocalDate → Long epochDay via TypeConverter
-    DietHelperDatabase.kt (v3)
+    DietHelperDatabase.kt (v4; explicit preserving migrations)
     GoalsDataSource.kt  — DataStore wrapper
     DatabaseSeeder.kt   — seed data on first launch
   mapper/         — entity ↔ domain mappers:
