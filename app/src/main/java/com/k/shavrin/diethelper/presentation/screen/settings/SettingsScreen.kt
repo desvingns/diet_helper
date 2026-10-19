@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.k.shavrin.diethelper.R
 import com.k.shavrin.diethelper.presentation.components.ScreenHeading
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
 import kotlinx.coroutines.CancellableContinuation
@@ -99,7 +100,7 @@ fun SettingsContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             ScreenHeading("ЛИЧНЫЙ РИТМ", "Дневные цели", "Ваши ориентиры по питанию на каждый день",
-                Modifier.padding(vertical = 8.dp))
+                Modifier.padding(vertical = 8.dp), artwork = R.drawable.art_journey)
 
             OutlinedTextField(
                 value = state.calories,

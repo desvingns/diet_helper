@@ -55,6 +55,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.domain.model.StatsDayItem
 import com.k.shavrin.diethelper.presentation.screen.today.ErrorState
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
+import com.k.shavrin.diethelper.presentation.theme.CarbsBlue
+import com.k.shavrin.diethelper.presentation.theme.FatSand
+import com.k.shavrin.diethelper.presentation.theme.Lavender
+import com.k.shavrin.diethelper.presentation.theme.ProteinRose
 import com.k.shavrin.diethelper.presentation.util.formatCalories
 import com.k.shavrin.diethelper.presentation.util.formatDate
 import com.k.shavrin.diethelper.presentation.util.formatMacro
@@ -63,10 +67,10 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-private val StatsProteinColor = Color(0xFFF07070)
-private val StatsFatColor = Color(0xFFF5B731)
-private val StatsCarbsColor = Color(0xFF64C8E8)
-private val StatsCaloriesColor = Color(0xFFFF7043)
+private val StatsProteinColor = ProteinRose
+private val StatsFatColor = FatSand
+private val StatsCarbsColor = CarbsBlue
+private val StatsCaloriesColor = Lavender
 private val shortDateFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
 @Composable

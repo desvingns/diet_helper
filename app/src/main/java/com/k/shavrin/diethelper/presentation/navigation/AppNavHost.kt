@@ -1,14 +1,22 @@
 package com.k.shavrin.diethelper.presentation.navigation
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.k.shavrin.diethelper.presentation.screen.export.ExportScreen
 import com.k.shavrin.diethelper.presentation.screen.history.HistoryDayScreen
@@ -26,10 +34,19 @@ fun AppNavHost(
     navController: NavHostController,
     contentPadding: PaddingValues
 ) {
+    val entry by navController.currentBackStackEntryAsState()
+    val arrival = remember { Animatable(1f) }
+    LaunchedEffect(entry?.id) {
+        arrival.snapTo(0f)
+        arrival.animateTo(1f, tween(220))
+    }
     NavHost(
         navController = navController,
         startDestination = Routes.TODAY,
-        modifier = Modifier.padding(contentPadding).consumeWindowInsets(contentPadding)
+        modifier = Modifier.padding(contentPadding).consumeWindowInsets(contentPadding).graphicsLayer {
+            alpha = arrival.value
+            translationX = (1f - arrival.value) * 6.dp.toPx()
+        }
     ) {
         composable(Routes.WORKOUTS) { WorkoutScreen() }
         composable(Routes.TODAY) {

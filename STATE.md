@@ -15,7 +15,8 @@
 - **Current iteration:** Visual design and daily-use polish, implemented directly at the user's request without MP (2026-10-19).
 - **In progress:** none; 415 tests, 11 screenshot references/comparisons, Lint,
   Detekt, debug assembly and emulator smoke checks (100%/130% font) passed.
-- **Latest product delivery:** cohesive forest/mint design, improved diary/calendar, common navigation/tabs, dated history cards, pinned goals actions, weight trend and validation, custom adaptive launcher icon. Details: `docs/design-refresh.md`.
+- **Latest product delivery:** midnight plum/lavender design with restrained mint status accents; seven generated illustrations for the diary, meals, training and journal/goals; rounded navigation icons and short native UI transitions. Artwork is bundled offline (376 KiB total). Details and final generation prompts: `docs/plum-art-direction.md`.
+- **Previous visual delivery:** cohesive screen chrome, improved diary/calendar, dated history cards, pinned goals actions, weight trend/validation and a custom adaptive launcher icon. Details: `docs/design-refresh.md`.
 - **Previous product delivery:** 132 PDF diary foods; 107 Serbian catalog products (73 Lidl); live name/barcode search; 57 imported workout days, personal maxima, full plan, set progress and persistent rest timer. Explicit Room 2→3 migration preserves existing food data. Details: `docs/food-and-workouts.md`.
 - **Previous pipeline work:** all 6 audit epics decomposed onto `.claude/specs/backlog/` via
   `/mp-spec --feature` (2026-07-06) — **37 SPECs across 6 epics**, each grounded (file:line
@@ -56,7 +57,8 @@ All of the code-level debt below is tracked as epics on the SPEC board (2026-07-
 - **ux-polish epic:** custom adaptive icon and launch colors, weight validation/feedback,
   weight IME Done and pinned goals actions delivered in the 2026-10-19 design refresh.
   Remaining: no undo after deletes; IME actions are still incomplete on other forms;
-  navigation transitions and haptics need a focused pass.
+  haptics need a focused pass. Native navigation, tab and meal-card transitions
+  were added with the midnight plum art refresh.
 - Standing quirk: `ExportViewModel` builds the share `Uri` via `Uri.Builder` instead of
   `FileProvider.getUriForFile` (Windows-Robolectric path-matching); revisit when Robolectric
   handles Windows authorities.

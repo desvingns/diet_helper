@@ -15,7 +15,11 @@ Learning project — architecture is intentionally verbose (Clean Architecture +
 The 2026-10-19 [design refresh](docs/design-refresh.md) introduces a shared forest/mint
 visual system, a clearer diary/calendar, consistent screen chrome, pinned goals actions,
 a weight trend with input/save feedback and a custom adaptive launcher icon. The notes
-below retain historical feature details; the refresh document describes the current UI.
+below retain historical feature details. The follow-up
+[midnight plum art refresh](docs/plum-art-direction.md) replaces the forest palette
+with aubergine/lavender, adds seven generated raster illustrations and introduces
+short native navigation, tab and meal-card transitions. Its document includes the
+asset paths and final generation prompt set.
 
 ---
 

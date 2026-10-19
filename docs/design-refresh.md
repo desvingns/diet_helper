@@ -1,5 +1,9 @@
 # Design refresh — 2026-10-19
 
+The subsequent [midnight plum art refresh](plum-art-direction.md) changes the
+palette and adds generated illustrations. This document records the earlier
+layout and interaction work that remains in place.
+
 ## Direction
 
 A quiet, consistent visual language for food, strength training and progress:

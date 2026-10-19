@@ -76,12 +76,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.k.shavrin.diethelper.R
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutExercise
 import com.k.shavrin.diethelper.domain.model.WorkoutProgress
 import com.k.shavrin.diethelper.presentation.components.PillTabs
 import com.k.shavrin.diethelper.presentation.components.ScreenHeading
 import com.k.shavrin.diethelper.presentation.theme.FatSand
+import com.k.shavrin.diethelper.presentation.theme.Ink
+import com.k.shavrin.diethelper.presentation.theme.Lavender
 import com.k.shavrin.diethelper.presentation.theme.Mint
 import kotlinx.coroutines.delay
 import java.util.Locale
@@ -120,7 +123,7 @@ fun WorkoutContent(
     }
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Row(Modifier.fillMaxWidth().padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
-            ScreenHeading("ДВИЖЕНИЕ И СИЛА", "Тренировки", "СРЦ7 · ваша персональная программа", Modifier.weight(1f))
+            ScreenHeading("ДВИЖЕНИЕ И СИЛА", "Тренировки", "СРЦ7 · ваша персональная программа", Modifier.weight(1f), artwork = R.drawable.art_training)
             FilledTonalIconButton(onClick = { showMaxima = true }) {
                 Icon(Icons.Default.Tune, contentDescription = "Рабочие максимумы")
             }
@@ -197,7 +200,7 @@ private fun SessionContent(
             }
             Spacer(Modifier.height(10.dp))
             LinearProgressIndicator(progress = { completed.toFloat() / sets.size.coerceAtLeast(1) },
-                modifier = Modifier.fillMaxWidth().height(5.dp), color = Mint)
+                modifier = Modifier.fillMaxWidth().height(5.dp), color = Lavender)
         }
         if (!progress.configured) {
             item {
@@ -213,14 +216,14 @@ private fun SessionContent(
         } else if (next != null && !finished) {
             item {
                 Column(Modifier.fillMaxWidth().background(
-                    Brush.linearGradient(listOf(Color(0xFF314C3C), Color(0xFF1B2921))), RoundedCornerShape(28.dp)
+                    Brush.linearGradient(listOf(Color(0xFF3B2A53), Color(0xFF20192D))), RoundedCornerShape(28.dp)
                 ).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(if (completed == 0) "ПЕРВЫЙ ПОДХОД" else "СЛЕДУЮЩИЙ ПОДХОД", color = Mint,
+                    Text(if (completed == 0) "ПЕРВЫЙ ПОДХОД" else "СЛЕДУЮЩИЙ ПОДХОД", color = Lavender,
                         style = MaterialTheme.typography.labelMedium, letterSpacing = 2.sp)
                     Text(next.exercise.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(weightText(next.exercise.weight(progress.maxima, next.group.percent)),
-                            fontSize = 58.sp, fontWeight = FontWeight.Bold, color = Mint)
+                            fontSize = 58.sp, fontWeight = FontWeight.Bold, color = Lavender)
                         Text("кг × ${next.group.reps}", fontSize = 24.sp, modifier = Modifier.padding(bottom = 9.dp))
                     }
                     Text("${percentText(next.group.percent)} от ПМ · ${next.exercise.load.lowercase()} нагрузка" +
@@ -228,7 +231,7 @@ private fun SessionContent(
                         color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                     Button(onClick = { onSet(day, next.key) }, enabled = !state.saving,
                         modifier = Modifier.fillMaxWidth().height(54.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Mint, contentColor = Color(0xFF17251D))) {
+                        colors = ButtonDefaults.buttonColors(containerColor = Lavender, contentColor = Ink)) {
                         Icon(Icons.Default.Check, null)
                         Spacer(Modifier.width(8.dp))
                         Text("Подход выполнен", fontWeight = FontWeight.Bold)
