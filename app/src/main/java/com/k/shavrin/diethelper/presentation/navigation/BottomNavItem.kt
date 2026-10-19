@@ -19,7 +19,7 @@ sealed class BottomNavItem(
     object History : BottomNavItem(Routes.HISTORY, Icons.Filled.History, "История")
     object Statistics : BottomNavItem(Routes.STATISTICS, Icons.Filled.BarChart, "Прогресс")
     object Weight : BottomNavItem(Routes.WEIGHT, Icons.Filled.MonitorWeight, "Вес")
-    object Settings : BottomNavItem(Routes.SETTINGS, Icons.Filled.Settings, "Настройки")
+    object Settings : BottomNavItem(Routes.SETTINGS, Icons.Filled.Settings, "Цели")
 }
 
 val BottomNavItems = listOf(

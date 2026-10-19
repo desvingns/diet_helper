@@ -1,6 +1,7 @@
 package com.k.shavrin.diethelper.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,7 +29,7 @@ fun AppNavHost(
     NavHost(
         navController = navController,
         startDestination = Routes.TODAY,
-        modifier = Modifier.padding(contentPadding)
+        modifier = Modifier.padding(contentPadding).consumeWindowInsets(contentPadding)
     ) {
         composable(Routes.WORKOUTS) { WorkoutScreen() }
         composable(Routes.TODAY) {

@@ -7,6 +7,7 @@ import com.k.shavrin.diethelper.domain.usecase.weight.DeleteWeightEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.GetAllWeightEntriesUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.UpsertWeightEntryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,12 @@ class WeightViewModel @Inject constructor(
 
     private val _input = MutableStateFlow("")
     val input: StateFlow<String> = _input.asStateFlow()
+    private val _inputError = MutableStateFlow<String?>(null)
+    val inputError: StateFlow<String?> = _inputError.asStateFlow()
+    private val _saved = MutableStateFlow(false)
+    val saved: StateFlow<Boolean> = _saved.asStateFlow()
+    private val _saving = MutableStateFlow(false)
+    val saving: StateFlow<Boolean> = _saving.asStateFlow()
 
     val uiState: StateFlow<WeightUiState> = getAllUseCase()
         .map { entries ->
@@ -56,13 +63,31 @@ class WeightViewModel @Inject constructor(
 
     fun onInputChange(value: String) {
         _input.value = value
+        _inputError.value = null
+        _saved.value = false
     }
 
     fun save() {
-        val value = _input.value.replace(',', '.').toFloatOrNull()
-        if (value == null || value <= 0f) return
+        if (_saving.value) return
+        _saved.value = false
+        val value = _input.value.trim().replace(',', '.').toFloatOrNull()
+        if (value == null || !value.isFinite() || value <= 0f || value > 500f) {
+            _inputError.value = "Введите вес больше 0 и не более 500 кг, например 75,5"
+            return
+        }
+        _inputError.value = null
+        _saving.value = true
         viewModelScope.launch {
-            upsertUseCase(LocalDate.now(), value)
+            try {
+                upsertUseCase(LocalDate.now(), value)
+                _saved.value = true
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                _inputError.value = "Не удалось сохранить вес. Попробуйте ещё раз."
+            } finally {
+                _saving.value = false
+            }
         }
     }
 

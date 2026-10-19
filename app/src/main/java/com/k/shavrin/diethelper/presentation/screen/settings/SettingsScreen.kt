@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.k.shavrin.diethelper.presentation.components.ScreenHeading
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.launch
@@ -87,68 +88,79 @@ fun SettingsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = 16.dp)
     ) {
-        Text(
-            text = "Дневные цели",
-            style = MaterialTheme.typography.titleLarge
-        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            ScreenHeading("ЛИЧНЫЙ РИТМ", "Дневные цели", "Ваши ориентиры по питанию на каждый день",
+                Modifier.padding(vertical = 8.dp))
 
-        OutlinedTextField(
-            value = state.calories,
-            onValueChange = onCaloriesChange,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Калории, ккал") },
-            isError = state.caloriesError != null,
-            supportingText = state.caloriesError?.let { msg -> { Text(msg) } },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-            singleLine = true,
-            trailingIcon = if (state.showMacroCalorieWarningLow || state.showMacroCalorieWarningHigh) {
-                {
-                    Row {
-                        if (state.showMacroCalorieWarningLow) {
-                            MacroCalorieWarningIcon("Калорий больше чем нижние границы БЖУ")
-                        }
-                        if (state.showMacroCalorieWarningHigh) {
-                            MacroCalorieWarningIcon("Максимальные БЖУ ниже калорийной цели")
+            OutlinedTextField(
+                value = state.calories,
+                onValueChange = onCaloriesChange,
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Калории, ккал") },
+                isError = state.caloriesError != null,
+                supportingText = state.caloriesError?.let { msg -> { Text(msg) } },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                singleLine = true,
+                trailingIcon = if (state.showMacroCalorieWarningLow || state.showMacroCalorieWarningHigh) {
+                    {
+                        Row {
+                            if (state.showMacroCalorieWarningLow) {
+                                MacroCalorieWarningIcon("Калорий больше чем нижние границы БЖУ")
+                            }
+                            if (state.showMacroCalorieWarningHigh) {
+                                MacroCalorieWarningIcon("Максимальные БЖУ ниже калорийной цели")
+                            }
                         }
                     }
-                }
-            } else null
-        )
+                } else null
+            )
 
-        MacroRangeRow(
-            label = "Белки, г",
-            minValue = state.proteinMin,
-            maxValue = state.proteinMax,
-            onMinChange = onProteinMinChange,
-            onMaxChange = onProteinMaxChange,
-            minError = state.proteinMinError,
-            maxError = state.proteinMaxError
-        )
+            MacroRangeRow(
+                label = "Белки, г",
+                minValue = state.proteinMin,
+                maxValue = state.proteinMax,
+                onMinChange = onProteinMinChange,
+                onMaxChange = onProteinMaxChange,
+                minError = state.proteinMinError,
+                maxError = state.proteinMaxError
+            )
 
-        MacroRangeRow(
-            label = "Жиры, г",
-            minValue = state.fatMin,
-            maxValue = state.fatMax,
-            onMinChange = onFatMinChange,
-            onMaxChange = onFatMaxChange,
-            minError = state.fatMinError,
-            maxError = state.fatMaxError
-        )
+            MacroRangeRow(
+                label = "Жиры, г",
+                minValue = state.fatMin,
+                maxValue = state.fatMax,
+                onMinChange = onFatMinChange,
+                onMaxChange = onFatMaxChange,
+                minError = state.fatMinError,
+                maxError = state.fatMaxError
+            )
 
-        MacroRangeRow(
-            label = "Углеводы, г",
-            minValue = state.carbsMin,
-            maxValue = state.carbsMax,
-            onMinChange = onCarbsMinChange,
-            onMaxChange = onCarbsMaxChange,
-            minError = state.carbsMinError,
-            maxError = state.carbsMaxError
-        )
+            MacroRangeRow(
+                label = "Углеводы, г",
+                minValue = state.carbsMin,
+                maxValue = state.carbsMax,
+                onMinChange = onCarbsMinChange,
+                onMaxChange = onCarbsMaxChange,
+                minError = state.carbsMinError,
+                maxError = state.carbsMaxError
+            )
+        }
+        SettingsActions(state, onSave, onNavigateToExport)
+    }
+}
 
+@Composable
+private fun SettingsActions(state: SettingsUiState, onSave: () -> Unit, onNavigateToExport: () -> Unit) {
+    Column(Modifier.padding(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Button(
             onClick = onSave,
             modifier = Modifier.fillMaxWidth(),

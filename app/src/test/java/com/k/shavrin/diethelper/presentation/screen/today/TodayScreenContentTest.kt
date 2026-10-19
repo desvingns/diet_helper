@@ -2,10 +2,13 @@ package com.k.shavrin.diethelper.presentation.screen.today
 
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToKey
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import com.k.shavrin.diethelper.domain.model.DailySummary
@@ -75,7 +78,7 @@ class TodayScreenContentTest {
     fun `TodayContent shows designed header and calorie hero`() {
         render(defaultState())
 
-        composeTestRule.onNodeWithText("Сегодня").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Дневник").assertIsDisplayed()
         composeTestRule.onNodeWithText("Пятница, 23 мая").assertIsDisplayed()
         composeTestRule.onNodeWithText("ИЗ 2 000 ККАЛ").assertIsDisplayed()
         composeTestRule.onNodeWithTag("today_feed").performScrollToKey("meal_label")
@@ -87,6 +90,27 @@ class TodayScreenContentTest {
         render(defaultState(streak = 7))
 
         composeTestRule.onNodeWithText("7 дней подряд").assertIsDisplayed()
+    }
+
+    @Test
+    fun `calendar keeps dates visible and future days disabled`() {
+        render(defaultState())
+        composeTestRule.onNodeWithText("19").assertIsDisplayed()
+        composeTestRule.onNodeWithText("25").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Воскресенье, 25 мая, Будущий день").assertIsNotEnabled()
+    }
+
+    @Test
+    fun `past diary exposes return to today action`() {
+        var clicked = false
+        composeTestRule.setContent {
+            DietHelperTheme {
+                TodayContent(state = defaultState(), onGoToDate = {}, onTodayClick = { clicked = true },
+                    onAddTo = {}, onUpdateMultiplier = { _, _ -> }, onDelete = {}, onCopyToDay = { _, _ -> }, readOnly = false)
+            }
+        }
+        composeTestRule.onNodeWithContentDescription("Вернуться к сегодня").performClick()
+        org.junit.Assert.assertTrue(clicked)
     }
 
     @Test

@@ -24,7 +24,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarViewWeek
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -51,8 +50,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -82,12 +79,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutExercise
 import com.k.shavrin.diethelper.domain.model.WorkoutProgress
+import com.k.shavrin.diethelper.presentation.components.PillTabs
+import com.k.shavrin.diethelper.presentation.components.ScreenHeading
+import com.k.shavrin.diethelper.presentation.theme.FatSand
+import com.k.shavrin.diethelper.presentation.theme.Mint
 import kotlinx.coroutines.delay
 import java.util.Locale
 import kotlin.math.ceil
 
-private val Mint = Color(0xFFB8F3D4)
-private val Lavender = Color(0xFFCEC1FF)
+private val TrainingAccent = FatSand
 
 @Composable
 fun WorkoutScreen(viewModel: WorkoutViewModel = hiltViewModel()) {
@@ -120,25 +120,15 @@ fun WorkoutContent(
     }
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Row(Modifier.fillMaxWidth().padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                Text("ДВИЖЕНИЕ", color = Mint, style = MaterialTheme.typography.labelMedium, letterSpacing = 3.sp)
-                Text("Тренировки", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
-                Text("СРЦ7 · программа из вашей таблицы", color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodySmall)
-            }
+            ScreenHeading("ДВИЖЕНИЕ И СИЛА", "Тренировки", "СРЦ7 · ваша персональная программа", Modifier.weight(1f))
             FilledTonalIconButton(onClick = { showMaxima = true }) {
                 Icon(Icons.Default.Tune, contentDescription = "Рабочие максимумы")
             }
         }
-        TabRow(selectedTabIndex = tab, containerColor = Color.Transparent) {
-            Tab(selected = tab == 0, onClick = { tab = 0 }, text = { Text("Тренировка") }, icon = {
-                Icon(Icons.Default.FitnessCenter, null, Modifier.size(20.dp))
-            })
-            Tab(selected = tab == 1, onClick = {
-                cycle = day?.cycle ?: cycle
-                tab = 1
-            }, text = { Text("Весь план") }, icon = { Icon(Icons.Default.CalendarViewWeek, null, Modifier.size(20.dp)) })
-        }
+        PillTabs(listOf("Тренировка", "Весь план"), tab, {
+            if (it == 1) cycle = day?.cycle ?: cycle
+            tab = it
+        }, Modifier.padding(horizontal = 20.dp, vertical = 4.dp))
         state.error?.let { error ->
             Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(error, Modifier.weight(1f), color = MaterialTheme.colorScheme.error)
@@ -202,7 +192,7 @@ private fun SessionContent(
     LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("МИКРОЦИКЛ ${day.cycle}  /  ДЕНЬ ${day.day}", color = Lavender, style = MaterialTheme.typography.labelMedium)
+                Text("МИКРОЦИКЛ ${day.cycle}  /  ДЕНЬ ${day.day}", color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
                 Text("$completed / ${sets.size} подходов", style = MaterialTheme.typography.labelMedium)
             }
             Spacer(Modifier.height(10.dp))
@@ -223,7 +213,7 @@ private fun SessionContent(
         } else if (next != null && !finished) {
             item {
                 Column(Modifier.fillMaxWidth().background(
-                    Brush.linearGradient(listOf(Color(0xFF35463F), Color(0xFF222A35))), RoundedCornerShape(28.dp)
+                    Brush.linearGradient(listOf(Color(0xFF314C3C), Color(0xFF1B2921))), RoundedCornerShape(28.dp)
                 ).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(if (completed == 0) "ПЕРВЫЙ ПОДХОД" else "СЛЕДУЮЩИЙ ПОДХОД", color = Mint,
                         style = MaterialTheme.typography.labelMedium, letterSpacing = 2.sp)
@@ -276,7 +266,7 @@ private fun SessionContent(
                                 Text("${index + 1}", Modifier.width(30.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(if (progress.configured) "${weightText(exercise.weight(progress.maxima, set.group.percent))} кг × ${set.group.reps}"
                                     else "— кг × ${set.group.reps}", Modifier.weight(1f), fontWeight = FontWeight.Medium)
-                                Text(percentText(set.group.percent), style = MaterialTheme.typography.labelMedium, color = Lavender)
+                                Text(percentText(set.group.percent), style = MaterialTheme.typography.labelMedium, color = TrainingAccent)
                                 Checkbox(checked = set.key in progress.completedSets,
                                     onCheckedChange = { onSet(day, set.key) }, enabled = editable)
                             }
@@ -289,7 +279,7 @@ private fun SessionContent(
         }
         if (day.notes.isNotBlank()) {
             item {
-                Text("Дополнительно", style = MaterialTheme.typography.titleSmall, color = Lavender)
+                Text("Дополнительно", style = MaterialTheme.typography.titleSmall, color = TrainingAccent)
                 Text(day.notes, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
@@ -321,16 +311,16 @@ private fun RestTimer(progress: WorkoutProgress, onTimer: (Int, Long, Int) -> Un
     val remaining = if (progress.restDeadline > now) ceil((progress.restDeadline - now) / 1000.0).toInt()
         else progress.pausedRestSeconds
     val running = progress.restDeadline > now
-    Card(shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFF272332))) {
+    Card(shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Timer, null, tint = Lavender)
+                Icon(Icons.Default.Timer, null, tint = TrainingAccent)
                 Spacer(Modifier.width(10.dp))
                 Column(Modifier.weight(1f)) {
                     Text("Отдых между подходами", style = MaterialTheme.typography.titleSmall)
                     Text(if (remaining > 0) String.format(Locale.ROOT, "%02d:%02d", remaining / 60, remaining % 60)
                         else if (progress.restDeadline != 0L) "Можно продолжать" else "${progress.restSeconds / 60} мин ${progress.restSeconds % 60} сек",
-                        style = MaterialTheme.typography.titleLarge, color = Lavender)
+                        style = MaterialTheme.typography.titleLarge, color = TrainingAccent)
                 }
                 IconButton(onClick = {
                     if (running) onTimer(progress.restSeconds, 0, remaining)
@@ -357,7 +347,7 @@ private fun PlanDayCard(day: WorkoutDay, progress: WorkoutProgress, onOpen: () -
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("День ${day.day}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 if (day.id in progress.completedDays) Icon(Icons.Default.CheckCircle, "Выполнена", tint = Mint)
-                else Text("${day.sets().size} подходов", color = Lavender, style = MaterialTheme.typography.labelMedium)
+                else Text("${day.sets().size} подходов", color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
             }
             day.exercises.forEach { exercise ->
                 Text(exercise.name, style = MaterialTheme.typography.titleSmall)
@@ -376,7 +366,7 @@ private fun ExerciseGroups(exercise: WorkoutExercise, progress: WorkoutProgress)
                 Text(if (progress.configured) "${weightText(exercise.weight(progress.maxima, group.percent))} кг"
                     else "— кг", fontWeight = FontWeight.Medium)
                 Text("${group.sets} × ${group.reps}", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(percentText(group.percent), color = Lavender, style = MaterialTheme.typography.labelMedium)
+                Text(percentText(group.percent), color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
             }
         }
         if (exercise.equipmentMultiplier == 2.0) {

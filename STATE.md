@@ -12,9 +12,11 @@
 
 ## Now
 
-- **Current iteration:** Food catalog and workouts, implemented directly at the user's request without MP (2026-10-19).
-- **In progress:** none; product implementation, 408 tests, Lint, Detekt, debug assembly and live emulator search verified.
-- **Latest product delivery:** 132 PDF diary foods; 107 Serbian catalog products (73 Lidl); live name/barcode search; 57 imported workout days, personal maxima, full plan, set progress and persistent rest timer. Explicit Room 2→3 migration preserves existing food data. Details: `docs/food-and-workouts.md`.
+- **Current iteration:** Visual design and daily-use polish, implemented directly at the user's request without MP (2026-10-19).
+- **In progress:** none; 415 tests, 11 screenshot references/comparisons, Lint,
+  Detekt, debug assembly and emulator smoke checks (100%/130% font) passed.
+- **Latest product delivery:** cohesive forest/mint design, improved diary/calendar, common navigation/tabs, dated history cards, pinned goals actions, weight trend and validation, custom adaptive launcher icon. Details: `docs/design-refresh.md`.
+- **Previous product delivery:** 132 PDF diary foods; 107 Serbian catalog products (73 Lidl); live name/barcode search; 57 imported workout days, personal maxima, full plan, set progress and persistent rest timer. Explicit Room 2→3 migration preserves existing food data. Details: `docs/food-and-workouts.md`.
 - **Previous pipeline work:** all 6 audit epics decomposed onto `.claude/specs/backlog/` via
   `/mp-spec --feature` (2026-07-06) — **37 SPECs across 6 epics**, each grounded (file:line
   facts), grilled (locked decisions), and light-eval-passed. Recommended implement order:
@@ -51,8 +53,10 @@ All of the code-level debt below is tracked as epics on the SPEC board (2026-07-
   `strings.xml` contains only `app_name`.
 - **a11y epic:** 13+ icons without `contentDescription`; Canvas charts (macro donut, weight,
   stats) and progress bars have no semantics.
-- **ux-polish epic:** launcher icon is the Android system stub, no splash screen; no undo
-  after deletes; silent invalid weight input; no IME actions / nav transitions / haptics.
+- **ux-polish epic:** custom adaptive icon and launch colors, weight validation/feedback,
+  weight IME Done and pinned goals actions delivered in the 2026-10-19 design refresh.
+  Remaining: no undo after deletes; IME actions are still incomplete on other forms;
+  navigation transitions and haptics need a focused pass.
 - Standing quirk: `ExportViewModel` builds the share `Uri` via `Uri.Builder` instead of
   `FileProvider.getUriForFile` (Windows-Robolectric path-matching); revisit when Robolectric
   handles Windows authorities.

@@ -12,6 +12,11 @@ Android calorie tracker. The user logs food entries per day, tracks macronutrien
 
 Learning project — architecture is intentionally verbose (Clean Architecture + Hilt + Room).
 
+The 2026-10-19 [design refresh](docs/design-refresh.md) introduces a shared forest/mint
+visual system, a clearer diary/calendar, consistent screen chrome, pinned goals actions,
+a weight trend with input/save feedback and a custom adaptive launcher icon. The notes
+below retain historical feature details; the refresh document describes the current UI.
+
 ---
 
 ## Domain Model

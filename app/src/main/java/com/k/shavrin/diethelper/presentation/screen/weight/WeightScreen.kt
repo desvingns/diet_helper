@@ -3,7 +3,6 @@ package com.k.shavrin.diethelper.presentation.screen.weight
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,12 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -31,10 +31,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.k.shavrin.diethelper.domain.model.WeightEntry
 import com.k.shavrin.diethelper.presentation.screen.today.ErrorState
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
 import com.k.shavrin.diethelper.presentation.theme.DeltaNegative
@@ -49,66 +50,92 @@ fun WeightScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val input by viewModel.input.collectAsState()
+    val inputError by viewModel.inputError.collectAsState()
+    val saved by viewModel.saved.collectAsState()
+    val saving by viewModel.saving.collectAsState()
+    val keyboard = LocalSoftwareKeyboardController.current
+    val onSave = {
+        viewModel.save()
+        keyboard?.hide()
+        Unit
+    }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 16.dp, vertical = 8.dp)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            OutlinedTextField(
-                value = input,
-                onValueChange = viewModel::onInputChange,
-                modifier = Modifier.weight(1f),
-                placeholder = { Text("Вес в кг") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-            )
-            Button(onClick = viewModel::save) { Text("Сохранить") }
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            WeightEntryForm(input, inputError, saved, saving, viewModel::onInputChange, onSave)
         }
-
-        Box(modifier = Modifier
-            .weight(1f)
-            .fillMaxWidth()) {
-            when (val s = state) {
-                WeightUiState.Loading -> LoadingState()
-                is WeightUiState.Error -> ErrorState(s.message)
-                is WeightUiState.Success -> WeightList(
-                    items = s.items,
-                    onDelete = viewModel::delete
-                )
+        when (val s = state) {
+            WeightUiState.Loading -> item { LoadingState() }
+            is WeightUiState.Error -> item { ErrorState(s.message) }
+            is WeightUiState.Success -> {
+                if (s.items.isEmpty()) {
+                    item {
+                        Card(Modifier.fillMaxWidth()) {
+                            Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Icon(Icons.Filled.MonitorWeight, null, tint = MaterialTheme.colorScheme.primary)
+                                Text("Начните с одного взвешивания", style = MaterialTheme.typography.titleMedium)
+                                Text("Запишите вес выше. Здесь появятся история и график вашей динамики.",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                } else {
+                    item { WeightTrendCard(s.items.map { it.entry }) }
+                    item { Text("История взвешиваний", style = MaterialTheme.typography.titleMedium) }
+                    items(s.items, key = { it.entry.id }) { weight ->
+                        Card(Modifier.fillMaxWidth()) {
+                            Column(Modifier.padding(horizontal = 16.dp)) {
+                                WeightRow(weight, onDelete = { viewModel.delete(weight.entry) })
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun WeightList(
-    items: List<WeightEntryWithDelta>,
-    onDelete: (WeightEntry) -> Unit
+private fun WeightEntryForm(
+    input: String,
+    error: String?,
+    saved: Boolean,
+    saving: Boolean,
+    onInput: (String) -> Unit,
+    onSave: () -> Unit
 ) {
-    if (items.isEmpty()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+    Card {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text("Сегодняшнее взвешивание", style = MaterialTheme.typography.titleMedium)
+            Text("Повторное сохранение обновит запись за сегодня", style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(imageVector = Icons.Filled.MonitorWeight, contentDescription = null)
-                Text("Записей нет", style = MaterialTheme.typography.titleMedium)
+                OutlinedTextField(
+                    value = input,
+                    onValueChange = onInput,
+                    modifier = Modifier.weight(1f),
+                    label = { Text("Вес в кг") },
+                    placeholder = { Text("75,5") },
+                    isError = error != null,
+                    enabled = !saving,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { onSave() })
+                )
+                Button(onClick = onSave, enabled = !saving) { Text(if (saving) "Сохраняем…" else "Сохранить") }
             }
-        }
-        return
-    }
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 8.dp)
-    ) {
-        items(items, key = { it.entry.id }) { item ->
-            WeightRow(item = item, onDelete = { onDelete(item.entry) })
-            HorizontalDivider()
+            if (error != null) Text(error, color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall)
+            if (saved) Text("Вес за сегодня сохранён", color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodySmall)
         }
     }
 }

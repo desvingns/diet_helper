@@ -1,6 +1,6 @@
 package com.k.shavrin.diethelper.presentation.screen.history
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,9 +25,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.domain.model.HistoryItem
+import com.k.shavrin.diethelper.presentation.components.ScreenHeading
 import com.k.shavrin.diethelper.presentation.screen.today.ErrorState
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
 import com.k.shavrin.diethelper.presentation.util.formatCalories
@@ -38,16 +43,20 @@ fun HistoryScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    when (val s = state) {
-        HistoryUiState.Loading -> LoadingState()
-        is HistoryUiState.Error -> ErrorState(s.message)
-        is HistoryUiState.Success -> {
-            if (s.items.isEmpty()) {
-                EmptyHistoryState()
-            } else {
-                HistoryList(items = s.items, onItemClick = { item ->
-                    onNavigateToDay(formatIsoDate(item.date))
-                })
+    Column(Modifier.fillMaxSize()) {
+        ScreenHeading("ВАШ ДНЕВНИК", "История", "Каждый день — часть вашего пути",
+            Modifier.padding(horizontal = 20.dp, vertical = 16.dp))
+        when (val s = state) {
+            HistoryUiState.Loading -> LoadingState()
+            is HistoryUiState.Error -> ErrorState(s.message)
+            is HistoryUiState.Success -> {
+                if (s.items.isEmpty()) {
+                    EmptyHistoryState()
+                } else {
+                    HistoryList(items = s.items, onItemClick = { item ->
+                        onNavigateToDay(formatIsoDate(item.date))
+                    })
+                }
             }
         }
     }
@@ -57,28 +66,37 @@ fun HistoryScreen(
 private fun HistoryList(items: List<HistoryItem>, onItemClick: (HistoryItem) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(items, key = { it.date.toEpochDay() }) { item ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onItemClick(item) }
-                    .padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = formatDate(item.date),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = formatCalories(item.totalCalories),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            Card(onClick = { onItemClick(item) }) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(Modifier.size(46.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(14.dp)),
+                        contentAlignment = Alignment.Center) {
+                        Text(item.date.dayOfMonth.toString(), color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+                    }
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = formatDate(item.date),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Text(
+                            text = formatCalories(item.totalCalories),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Icon(Icons.Filled.ChevronRight, "Открыть день", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
-            HorizontalDivider()
         }
     }
 }
@@ -95,6 +113,8 @@ private fun EmptyHistoryState() {
                 contentDescription = null
             )
             Text(text = "История пуста", style = MaterialTheme.typography.titleMedium)
+            Text("Добавьте первый продукт в разделе «Сегодня»",
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

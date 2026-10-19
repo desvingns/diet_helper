@@ -3,6 +3,7 @@ package com.k.shavrin.diethelper.presentation.screen.weight
 import app.cash.turbine.test
 import com.k.shavrin.diethelper.data.FakeWeightRepository
 import com.k.shavrin.diethelper.domain.model.WeightEntry
+import com.k.shavrin.diethelper.domain.repository.WeightRepository
 import com.k.shavrin.diethelper.domain.usecase.weight.DeleteWeightEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.GetAllWeightEntriesUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.UpsertWeightEntryUseCase
@@ -10,7 +11,10 @@ import com.k.shavrin.diethelper.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDate
@@ -21,7 +25,7 @@ class WeightViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private fun createViewModel(repo: FakeWeightRepository): WeightViewModel = WeightViewModel(
+    private fun createViewModel(repo: WeightRepository): WeightViewModel = WeightViewModel(
         getAllUseCase = GetAllWeightEntriesUseCase(repo),
         upsertUseCase = UpsertWeightEntryUseCase(repo),
         deleteUseCase = DeleteWeightEntryUseCase(repo)
@@ -110,6 +114,61 @@ class WeightViewModelTest {
         viewModel.delete(entry)
 
         assertNull(repo.getEntryByDate(date))
+    }
+
+    @Test
+    fun `invalid and non-finite weights show feedback without writing entries`() = runTest {
+        val repo = FakeWeightRepository()
+        val viewModel = createViewModel(repo)
+        listOf("", "abc", "0", "-1", "NaN", "Infinity", "501").forEach { input ->
+            viewModel.onInputChange(input)
+            viewModel.save()
+            assertNotNull("Missing feedback for $input", viewModel.inputError.value)
+            assertNull(repo.getEntryByDate(LocalDate.now()))
+            assertFalse(viewModel.saving.value)
+        }
+    }
+
+    @Test
+    fun `editing clears error and successful save confirms today's entry`() = runTest {
+        val repo = FakeWeightRepository()
+        val viewModel = createViewModel(repo)
+        viewModel.save()
+        assertNotNull(viewModel.inputError.value)
+        viewModel.onInputChange(" 75,5 ")
+        assertNull(viewModel.inputError.value)
+        viewModel.save()
+        assertTrue(viewModel.saved.value)
+        assertFalse(viewModel.saving.value)
+        assertEquals(75.5f, repo.getEntryByDate(LocalDate.now())!!.weightKg, 0.001f)
+        viewModel.onInputChange("76")
+        assertFalse(viewModel.saved.value)
+    }
+
+    @Test
+    fun `failed save clears stale confirmation and can be retried`() = runTest {
+        val storage = FakeWeightRepository()
+        var fail = false
+        val repo = object : WeightRepository by storage {
+            override suspend fun upsertEntry(date: LocalDate, weightKg: Float) {
+                if (fail) throw java.io.IOException("Unavailable storage")
+                storage.upsertEntry(date, weightKg)
+            }
+        }
+        val viewModel = createViewModel(repo)
+        viewModel.onInputChange("75,5")
+        viewModel.save()
+        assertTrue(viewModel.saved.value)
+        fail = true
+        viewModel.save()
+        assertNotNull(viewModel.inputError.value)
+        assertFalse(viewModel.saved.value)
+        assertFalse(viewModel.saving.value)
+        assertEquals(75.5f, storage.getEntryByDate(LocalDate.now())!!.weightKg, 0.001f)
+        fail = false
+        viewModel.save()
+        assertTrue(viewModel.saved.value)
+        assertNull(viewModel.inputError.value)
     }
 }
 

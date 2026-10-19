@@ -26,16 +26,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ContentPaste
 import androidx.compose.material.icons.filled.DinnerDining
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.FreeBreakfast
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
@@ -57,7 +55,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -68,6 +65,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -77,6 +77,16 @@ import com.k.shavrin.diethelper.domain.model.DailySummary
 import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
+import com.k.shavrin.diethelper.presentation.theme.CarbsBlue
+import com.k.shavrin.diethelper.presentation.theme.FatSand
+import com.k.shavrin.diethelper.presentation.theme.ForestContainer
+import com.k.shavrin.diethelper.presentation.theme.ForestSurface
+import com.k.shavrin.diethelper.presentation.theme.Graphite
+import com.k.shavrin.diethelper.presentation.theme.Ink
+import com.k.shavrin.diethelper.presentation.theme.Mint
+import com.k.shavrin.diethelper.presentation.theme.MutedSage
+import com.k.shavrin.diethelper.presentation.theme.ProteinRose
+import com.k.shavrin.diethelper.presentation.theme.SoftWhite
 import com.k.shavrin.diethelper.presentation.util.formatCalories
 import com.k.shavrin.diethelper.presentation.util.formatEntryAmount
 import com.k.shavrin.diethelper.presentation.util.formatMacro
@@ -90,27 +100,22 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.math.roundToInt
 
-private val TodayBackground = Color(0xFF0F0D13)
-private val TodaySurface = Color(0xFF1D1B20)
-private val TodaySurfaceContainer = Color(0xFF211F26)
-private val TodaySurfaceHigh = Color(0xFF2B2930)
-private val TodayOnSurface = Color(0xFFE6E0E9)
-private val TodayOnSurfaceVariant = Color(0xFFCAC4D0)
-private val TodayOutlineVariant = Color(0xFF49454F)
-private val TodayPrimary = Color(0xFF6650A4)
-private val TodayProtein = Color(0xFFEF9A9A)
-private val TodayFat = Color(0xFFFFD54F)
-private val TodayCarbs = Color(0xFF90CAF9)
+private val TodayBackground = Graphite
+private val TodaySurface = ForestSurface
+private val TodaySurfaceContainer = ForestContainer
+private val TodaySurfaceHigh = Color(0xFF2D3A32)
+private val TodayOnSurface = SoftWhite
+private val TodayOnSurfaceVariant = MutedSage
+private val TodayOutlineVariant = Color(0xFF34463A)
+private val TodayPrimary = Mint
+private val TodayProtein = ProteinRose
+private val TodayFat = FatSand
+private val TodayCarbs = CarbsBlue
 private val TodayGreen = Color(0xFF81C784)
 private val TodayYellow = Color(0xFFFFC107)
 private val TodayRed = Color(0xFFEF5350)
-private val TodayRingTrack = Color(0xFF3A3142)
-private val TodayRingGreen = Color(0xFF4CAF50)
-private val TodayRingAmber = Color(0xFFFF9800)
+private val TodayRingTrack = Color(0xFF3E624D)
 private val TodayEmber = Color(0xFFFF8A3D)
-private val TodayEmberText = Color(0xFFFFD8B8)
-private val TodayEmberBorder = Color(0xFF6D3826)
-private val TodayEmberBackground = Color(0xFF32170F)
 
 private val todayDateFormatter = DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale("ru"))
 
@@ -155,8 +160,8 @@ internal fun TodayDesignedContent(
                 .weight(1f)
                 .fillMaxWidth()
                 .testTag("today_feed"),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             item(key = "hero") {
                 TodayHeroCard(
@@ -252,27 +257,22 @@ private fun TodayHeader(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 4.dp, top = 5.dp, end = 4.dp, bottom = 2.dp),
+                .padding(start = 20.dp, top = 12.dp, end = 12.dp, bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onTodayClick) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Сегодня",
-                    tint = TodayOnSurface
-                )
-            }
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .clickable { showDatePicker = true }
             ) {
+                Text("ПИТАНИЕ И БАЛАНС", color = Mint, fontSize = 10.sp,
+                    lineHeight = 14.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 2.sp)
                 Text(
-                    text = "Сегодня",
+                    text = if (date == today) "Сегодня" else "Дневник",
                     color = TodayOnSurface,
-                    fontSize = 22.sp,
-                    lineHeight = 28.sp,
-                    fontWeight = FontWeight.Medium
+                    fontSize = 30.sp,
+                    lineHeight = 38.sp,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = formatHeaderDate(date),
@@ -281,9 +281,14 @@ private fun TodayHeader(
                     lineHeight = 16.sp
                 )
             }
+            if (date != today) {
+                IconButton(onClick = onTodayClick) {
+                    Icon(Icons.Filled.Today, "Вернуться к сегодня", tint = Mint)
+                }
+            }
             IconButton(onClick = { showDatePicker = true }) {
                 Icon(
-                    imageVector = Icons.Filled.MoreVert,
+                    imageVector = Icons.Filled.CalendarMonth,
                     contentDescription = "Выбрать дату",
                     tint = TodayOnSurface
                 )
@@ -321,7 +326,8 @@ private fun TodayHeader(
                     day = day,
                     status = status,
                     selected = day == date,
-                    onClick = { onDateSelected(day) }
+                    onClick = { onDateSelected(day) },
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -360,45 +366,63 @@ private fun DesignedWeekDay(
     day: LocalDate,
     status: DayStatus,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(if (selected) Mint else Color.Transparent)
+            .clickable(enabled = status != DayStatus.FUTURE, onClick = onClick)
+            .semantics {
+                contentDescription = "${formatHeaderDate(day)}, ${dayStatusLabel(status)}"
+                this.selected = selected
+            }
+            .padding(horizontal = 4.dp, vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = weekDayLetter(day.dayOfWeek),
-            color = if (selected) TodayOnSurface else TodayOnSurfaceVariant,
+            color = if (selected) Ink else TodayOnSurfaceVariant,
             fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 0.5.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
         Box(
             modifier = Modifier
-                .then(if (selected) Modifier.shadow(12.dp, CircleShape) else Modifier)
-                .size(40.dp)
-                .clip(CircleShape)
-                .then(
-                    if (status == DayStatus.FUTURE && !selected) {
-                        Modifier.border(1.dp, TodayOutlineVariant, CircleShape)
-                    } else {
-                        Modifier.background(weekDayBackground(status, selected))
-                    }
-                )
-                .clickable(onClick = onClick),
+                .size(32.dp),
             contentAlignment = Alignment.Center
         ) {
-            DesignedWeekDayContent(day = day, status = status, selected = selected)
+            Text(day.dayOfMonth.toString(), color = when {
+                selected -> Ink
+                status == DayStatus.FUTURE -> TodayOnSurfaceVariant.copy(alpha = 0.45f)
+                else -> TodayOnSurface
+            }, fontSize = 16.sp, lineHeight = 20.sp, fontWeight = FontWeight.SemiBold)
         }
+        Box(Modifier.size(4.dp).clip(CircleShape).background(
+            if (selected) Ink else weekDayBackground(status, false)
+        ))
     }
 }
 
 private fun weekDayLetter(dayOfWeek: DayOfWeek): String = when (dayOfWeek) {
-    DayOfWeek.MONDAY -> "П"
-    DayOfWeek.TUESDAY -> "В"
-    DayOfWeek.WEDNESDAY -> "С"
-    DayOfWeek.THURSDAY -> "Ч"
-    DayOfWeek.FRIDAY -> "П"
-    DayOfWeek.SATURDAY -> "С"
-    DayOfWeek.SUNDAY -> "В"
+    DayOfWeek.MONDAY -> "ПН"
+    DayOfWeek.TUESDAY -> "ВТ"
+    DayOfWeek.WEDNESDAY -> "СР"
+    DayOfWeek.THURSDAY -> "ЧТ"
+    DayOfWeek.FRIDAY -> "ПТ"
+    DayOfWeek.SATURDAY -> "СБ"
+    DayOfWeek.SUNDAY -> "ВС"
+}
+
+private fun dayStatusLabel(status: DayStatus): String = when (status) {
+    DayStatus.FUTURE -> "Будущий день"
+    DayStatus.GRAY_LOGGED -> "Мало записей"
+    DayStatus.GREEN -> "В пределах цели"
+    DayStatus.YELLOW -> "Рядом с целью"
+    DayStatus.RED -> "За пределами цели"
 }
 
 private fun weekDayBackground(status: DayStatus, selected: Boolean): Color = when {
@@ -411,72 +435,47 @@ private fun weekDayBackground(status: DayStatus, selected: Boolean): Color = whe
 }
 
 @Composable
-private fun DesignedWeekDayContent(day: LocalDate, status: DayStatus, selected: Boolean) {
-    when {
-        selected || status == DayStatus.GRAY_LOGGED -> Text(
-            text = day.dayOfMonth.toString(),
-            color = TodayOnSurface,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
-        )
-        status == DayStatus.GREEN -> Icon(
-            imageVector = Icons.Filled.Check,
-            contentDescription = null,
-            tint = Color(0xFF123C16),
-            modifier = Modifier.size(20.dp)
-        )
-        status == DayStatus.YELLOW -> Text(
-            text = "!",
-            color = Color.Black,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-        status == DayStatus.RED -> Icon(
-            imageVector = Icons.Filled.Close,
-            contentDescription = null,
-            tint = Color.Black,
-            modifier = Modifier.size(20.dp)
-        )
-    }
-}
-
-@Composable
 private fun TodayHeroCard(summary: DailySummary, goals: DailyGoals, streak: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(28.dp))
-            .background(TodaySurface)
-            .border(1.dp, TodayOutlineVariant, RoundedCornerShape(28.dp))
-            .padding(horizontal = 18.dp, vertical = 18.dp)
+            .background(Brush.linearGradient(listOf(Color(0xFF2C4838), TodaySurface)))
+            .border(1.dp, Color(0xFF44604C), RoundedCornerShape(28.dp))
+            .padding(18.dp)
     ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text("ЭНЕРГИЯ ДНЯ", color = Mint, fontSize = 10.sp, lineHeight = 14.sp,
+                fontWeight = FontWeight.Bold, letterSpacing = 1.6.sp, modifier = Modifier.weight(1f))
+            StreakChip(streak = streak)
+        }
+        Spacer(Modifier.height(12.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             CalorieRing(
                 consumed = summary.totalCalories,
                 goal = goals.calories,
-                modifier = Modifier.size(146.dp)
+                modifier = Modifier.size(116.dp)
             )
             Spacer(modifier = Modifier.width(14.dp))
             Column(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                StreakChip(streak = streak)
                 QuickCalorieStats(summary = summary, goals = goals)
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(18.dp))
                 .background(TodaySurfaceContainer)
-                .padding(horizontal = 14.dp, vertical = 13.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            DesignedMacroBar("Белки", summary.totalProtein, goals.proteinMin, goals.proteinMax, TodayProtein)
-            DesignedMacroBar("Жиры", summary.totalFat, goals.fatMin, goals.fatMax, TodayFat)
-            DesignedMacroBar("Углеводы", summary.totalCarbs, goals.carbsMin, goals.carbsMax, TodayCarbs)
+            DesignedMacroBar("Белки", summary.totalProtein, goals.proteinMin, goals.proteinMax, TodayProtein, Modifier.weight(1f))
+            DesignedMacroBar("Жиры", summary.totalFat, goals.fatMin, goals.fatMax, TodayFat, Modifier.weight(1f))
+            DesignedMacroBar("Углеводы", summary.totalCarbs, goals.carbsMin, goals.carbsMax, TodayCarbs, Modifier.weight(1f))
         }
     }
 }
@@ -484,10 +483,9 @@ private fun TodayHeroCard(summary: DailySummary, goals: DailyGoals, streak: Int)
 @Composable
 private fun CalorieRing(consumed: Float, goal: Float, modifier: Modifier = Modifier) {
     val progress = if (goal > 0f) (consumed / goal).coerceIn(0f, 1f) else 0f
-    val remaining = (goal - consumed).roundToInt()
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val stroke = 14.dp.toPx()
+            val stroke = 8.dp.toPx()
             val arcSize = Size(size.width - stroke, size.height - stroke)
             val topLeft = Offset(stroke / 2f, stroke / 2f)
             drawArc(
@@ -500,10 +498,7 @@ private fun CalorieRing(consumed: Float, goal: Float, modifier: Modifier = Modif
                 style = Stroke(width = stroke, cap = StrokeCap.Round)
             )
             drawArc(
-                brush = Brush.sweepGradient(
-                    colors = listOf(TodayRingGreen, Color(0xFF9EAA30), TodayRingAmber),
-                    center = center
-                ),
+                color = if (consumed > goal && goal > 0f) TodayEmber else Mint,
                 startAngle = -90f,
                 sweepAngle = progress * 360f,
                 useCenter = false,
@@ -516,21 +511,23 @@ private fun CalorieRing(consumed: Float, goal: Float, modifier: Modifier = Modif
             Text(
                 text = formatNumber(consumed),
                 color = TodayOnSurface,
-                fontSize = 30.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.SemiBold,
                 lineHeight = 34.sp
             )
             Text(
                 text = "ИЗ ${formatNumber(goal)} ККАЛ",
                 color = TodayOnSurfaceVariant,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
+                lineHeight = 14.sp,
                 fontWeight = FontWeight.Medium,
-                letterSpacing = 0.4.sp
+                letterSpacing = 0.sp
             )
             Text(
-                text = if (remaining >= 0) "осталось $remaining" else "сверх ${-remaining}",
-                color = if (remaining >= 0) TodayEmber else TodayRed,
+                text = "съедено",
+                color = Mint,
                 fontSize = 12.sp,
+                lineHeight = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
         }
@@ -541,10 +538,8 @@ private fun CalorieRing(consumed: Float, goal: Float, modifier: Modifier = Modif
 private fun StreakChip(streak: Int) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
             .clip(CircleShape)
-            .background(TodayEmberBackground)
-            .border(1.dp, TodayEmberBorder, CircleShape)
+            .background(Mint.copy(alpha = 0.09f))
             .padding(horizontal = 8.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -552,14 +547,15 @@ private fun StreakChip(streak: Int) {
         Icon(
             imageVector = Icons.Filled.LocalFireDepartment,
             contentDescription = null,
-            tint = TodayEmber,
+            tint = FatSand,
             modifier = Modifier.size(17.dp)
         )
         Spacer(modifier = Modifier.width(5.dp))
         Text(
             text = if (streak == 0) "Начните серию" else "$streak ${daysWord(streak)} подряд",
-            color = TodayEmberText,
-            fontSize = 13.sp,
+            color = SoftWhite,
+            fontSize = 11.sp,
+            lineHeight = 14.sp,
             fontWeight = FontWeight.Medium,
             maxLines = 1
         )
@@ -568,44 +564,45 @@ private fun StreakChip(streak: Int) {
 
 @Composable
 private fun QuickCalorieStats(summary: DailySummary, goals: DailyGoals) {
-    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        StatLine(label = "Съедено", value = "${formatNumber(summary.totalCalories)} ккал")
-        StatLine(label = "Сожжено", value = "— ккал")
-        StatLine(label = "Норма", value = "${formatNumber(goals.calories)} ккал")
+    val remaining = (goals.calories - summary.totalCalories).roundToInt()
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(if (remaining >= 0) "Осталось на день" else "Сверх цели", color = MutedSage, fontSize = 12.sp, lineHeight = 16.sp)
+        Text(formatNumber(kotlin.math.abs(remaining).toFloat()), color = if (remaining >= 0) SoftWhite else TodayEmber,
+            fontSize = 32.sp, lineHeight = 38.sp, fontWeight = FontWeight.Bold)
+        Text("ккал", color = MutedSage, fontSize = 12.sp, lineHeight = 16.sp)
+        Spacer(Modifier.height(4.dp))
+        Text(if (goals.calories > 0f) "${(summary.totalCalories / goals.calories * 100).roundToInt()}% дневной цели" else "Цель не задана",
+            color = Mint, fontSize = 11.sp, lineHeight = 14.sp)
     }
 }
 
 @Composable
-private fun StatLine(label: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = label, color = TodayOnSurfaceVariant, fontSize = 13.sp)
-        Text(
-            text = value,
-            color = TodayOnSurface,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-    }
-}
-
-@Composable
-private fun DesignedMacroBar(label: String, value: Float, min: Float, max: Float, color: Color) {
+private fun DesignedMacroBar(
+    label: String,
+    value: Float,
+    min: Float,
+    max: Float,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
     val displayMaximum = (max * 1.25f).coerceAtLeast(1f)
     val progress = (value / displayMaximum).coerceIn(0f, 1f)
     val minProgress = (min / displayMaximum).coerceIn(0f, 1f)
     val maxProgress = (max / displayMaximum).coerceIn(0f, 1f)
     val actualColor = if (value > max) TodayRed else color
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = label, color = TodayOnSurfaceVariant, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+    Column(modifier.semantics(mergeDescendants = true) {
+        contentDescription = "$label: ${value.roundToInt()} г, цель от ${min.roundToInt()} до ${max.roundToInt()} г"
+    }, verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            Text(text = label, color = color, fontSize = 11.sp, lineHeight = 14.sp, fontWeight = FontWeight.Medium)
             Text(
-                text = "${value.roundToInt()}/${max.roundToInt()} г",
+                text = "${value.roundToInt()} г",
                 color = TodayOnSurface,
-                fontSize = 15.sp,
+                fontSize = 18.sp,
+                lineHeight = 22.sp,
                 fontWeight = FontWeight.SemiBold
             )
-        }
-        Canvas(modifier = Modifier.fillMaxWidth().height(10.dp)) {
+            Text("${min.roundToInt()}–${max.roundToInt()} г", color = MutedSage, fontSize = 10.sp, lineHeight = 14.sp)
+        Canvas(modifier = Modifier.fillMaxWidth().height(5.dp)) {
             val corner = CornerRadius(4.dp.toPx(), 4.dp.toPx())
             drawRoundRect(color = TodaySurfaceHigh, size = size, cornerRadius = corner)
             drawRect(
@@ -733,7 +730,7 @@ private fun DesignedMealCard(
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = "Добавить",
-                    tint = TodayOnSurface
+                    tint = if (entries.isEmpty()) Ink else Mint
                 )
             }
         }

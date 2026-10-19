@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -35,8 +36,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -56,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.k.shavrin.diethelper.domain.model.Product
 import com.k.shavrin.diethelper.domain.model.SavedMeal
+import com.k.shavrin.diethelper.presentation.components.PillTabs
 import com.k.shavrin.diethelper.presentation.screen.today.ErrorState
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
 import com.k.shavrin.diethelper.presentation.util.formatCalories
@@ -92,23 +92,8 @@ fun ProductSearchScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            TabRow(selectedTabIndex = selectedTab) {
-                Tab(
-                    selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 },
-                    text = { Text("Моя база") }
-                )
-                Tab(
-                    selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
-                    text = { Text("Каталог") }
-                )
-                Tab(
-                    selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 },
-                    text = { Text("Блюда") }
-                )
-            }
+            PillTabs(listOf("Моя база", "Каталог", "Блюда"), selectedTab, { selectedTab = it },
+                Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
             when (selectedTab) {
                 0 -> {
@@ -120,7 +105,12 @@ fun ProductSearchScreen(
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                         placeholder = { Text("Поиск на русском и сербском") },
                         singleLine = true,
-                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) }
+                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                        trailingIcon = if (query.isNotEmpty()) {
+                            { IconButton(onClick = { viewModel.setQuery("") }) {
+                                Icon(Icons.Filled.Close, "Очистить поиск")
+                            } }
+                        } else null
                     )
 
                     when (val s = state) {
