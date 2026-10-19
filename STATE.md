@@ -14,8 +14,9 @@
 
 - **Current iteration:** Personal training support, version 1.1 (2026-10-19),
   implemented directly at the owner's request without MP.
-- **In progress:** Telegram delivery of the verified version 1.1 APK. Weekly availability
-  and an individualized replacement/re-entry prescription remain open. The
+- **In progress:** none for this delivery. Version 1.1 APK was sent to the owner's
+  Telegram Saved Messages via tgsend. Weekly availability and an individualized
+  replacement/re-entry prescription remain open. The
   original SRC7 waves are retained; no automatic maximum increase is active.
 - **Latest runtime validation:** all 435 tests, screenshot verification, Lint,
   Detekt and debug assembly passed. Emulator upgrade 3→4 preserved all old table
@@ -23,6 +24,9 @@
   sets/RPE, bodyweight extras, partial finish/day advance and MD/JSON sharing.
   Forms and session transitions also pass at 130% font; final day advancement
   resets the list to the first approach. Normal font scale was restored.
+- **Artifact:** `MyDietHelper-training-v1.1-debug.apk`, 18.5 MB, versionName 1.1 /
+  versionCode 2; source feature commit `d54f05f`. Personal intake and QA/export
+  files remain Git-ignored under `.local/training/` and are not packaged in it.
 - **Latest product delivery:** preserved SRC7 waves with an overview of all 57
   populated days; dated actual-set journal, exercise changes/preferences,
   modified/stopped completion, next-day follow-up and explainable suggestions.

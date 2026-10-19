@@ -1,8 +1,10 @@
 # Training feedback and adaptive coaching — proposed design
 
-Status: researched proposal, 2026-10-19. No runtime behavior below is implemented
-by this document. Owner preferences are known; weekly schedule, re-entry dose
-and replacement exercise choices still need discussion.
+Status: design and roadmap, 2026-10-19. The factual journal, partial finish,
+exercise feedback, next-day follow-up, conservative suggestions and export are
+implemented in version 1.1; see implementation.md for exact behavior and limits.
+The later program/automation sections remain proposals. Weekly schedule,
+re-entry dose and replacement exercise choices still need discussion.
 
 ## Product goal
 
@@ -203,10 +205,11 @@ created by this research task. Claude transport should be evaluated separately.
    audit in this document.
 2. NEXT: settle practical time constraints and a conservative re-entry draft;
    use next-day tolerability feedback and any relevant assessment advice.
-3. Implement dated factual logging, actual values, partial finish and export.
-   Verify migration preservation, history snapshots and null/missing semantics
-   with meaningful fakes-based tests; verify affected UI and build.
-4. Add symptom/recovery follow-up and explainable manual adjustment proposals.
+3. DONE in 1.1: dated factual logging, actual values, partial finish and export;
+   migration preservation, history snapshots and null/missing semantics verified
+   through tests and native device QA. Repeated-template sessions remain future.
+4. DONE in 1.1: symptom/recovery follow-up and explainable conservative suggestions.
+   Longitudinal, movement-specific proposal history remains future.
 5. Add technique observation history and nutrition/training summaries.
 6. Consider voice extraction, validated AI suggestion import, and a computer
    bridge only after the basic journal is useful and reliable.
