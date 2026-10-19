@@ -22,6 +22,18 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindFoodCatalogRepository(
+        impl: com.k.shavrin.diethelper.data.repository.OpenFoodFactsRepository
+    ): com.k.shavrin.diethelper.domain.repository.FoodCatalogRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindWorkoutRepository(
+        impl: com.k.shavrin.diethelper.data.repository.WorkoutRepositoryImpl
+    ): com.k.shavrin.diethelper.domain.repository.WorkoutRepository
+
+    @Binds
+    @Singleton
     abstract fun bindProductRepository(impl: ProductRepositoryImpl): ProductRepository
 
     @Binds

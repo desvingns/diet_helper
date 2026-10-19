@@ -15,9 +15,10 @@ import com.k.shavrin.diethelper.presentation.screen.history.HistoryScreen
 import com.k.shavrin.diethelper.presentation.screen.product.AddProductScreen
 import com.k.shavrin.diethelper.presentation.screen.product.ProductSearchScreen
 import com.k.shavrin.diethelper.presentation.screen.settings.SettingsScreen
-import com.k.shavrin.diethelper.presentation.screen.stats.StatsScreen
+import com.k.shavrin.diethelper.presentation.screen.stats.ProgressScreen
 import com.k.shavrin.diethelper.presentation.screen.today.TodayScreen
 import com.k.shavrin.diethelper.presentation.screen.weight.WeightScreen
+import com.k.shavrin.diethelper.presentation.screen.workout.WorkoutScreen
 
 @Composable
 fun AppNavHost(
@@ -29,6 +30,7 @@ fun AppNavHost(
         startDestination = Routes.TODAY,
         modifier = Modifier.padding(contentPadding)
     ) {
+        composable(Routes.WORKOUTS) { WorkoutScreen() }
         composable(Routes.TODAY) {
             TodayScreen(
                 onNavigateToProductSearch = { date, mealType ->
@@ -46,7 +48,7 @@ fun AppNavHost(
         }
 
         composable(Routes.STATISTICS) {
-            StatsScreen()
+            ProgressScreen()
         }
 
         composable(Routes.WEIGHT) {

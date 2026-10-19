@@ -1,6 +1,7 @@
 package com.k.shavrin.diethelper.presentation.screen.product
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,6 +25,7 @@ import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -55,6 +59,7 @@ import com.k.shavrin.diethelper.domain.model.SavedMeal
 import com.k.shavrin.diethelper.presentation.screen.today.ErrorState
 import com.k.shavrin.diethelper.presentation.screen.today.LoadingState
 import com.k.shavrin.diethelper.presentation.util.formatCalories
+import com.k.shavrin.diethelper.presentation.util.formatMacro
 import com.k.shavrin.diethelper.presentation.util.mealTypeLabel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,12 +96,17 @@ fun ProductSearchScreen(
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    text = { Text("Продукты") }
+                    text = { Text("Моя база") }
                 )
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    text = { Text("Сохранённые") }
+                    text = { Text("Каталог") }
+                )
+                Tab(
+                    selected = selectedTab == 2,
+                    onClick = { selectedTab = 2 },
+                    text = { Text("Блюда") }
                 )
             }
 
@@ -108,7 +118,7 @@ fun ProductSearchScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp),
-                        placeholder = { Text("Название продукта") },
+                        placeholder = { Text("Поиск на русском и сербском") },
                         singleLine = true,
                         leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) }
                     )
@@ -127,7 +137,8 @@ fun ProductSearchScreen(
                         )
                     }
                 }
-                1 -> {
+                1 -> FoodCatalogScreen(onAdded = onNavigateBack)
+                2 -> {
                     when (val s = state) {
                         ProductUiState.Loading -> LoadingState()
                         is ProductUiState.Error -> ErrorState(s.message)
@@ -160,12 +171,32 @@ private fun ProductSearchContent(
     }
 
     var selected by remember { mutableStateOf<Product?>(null) }
+    var filter by remember { mutableIntStateOf(0) }
+    val filtered = state.products.filter { product ->
+        when (filter) {
+            1 -> product.source == "diary"
+            2 -> "lidl" in product.aliases.lowercase() || "лидл" in product.aliases.lowercase()
+            3 -> product.isFavorite
+            4 -> "en:serbia" in product.aliases || "Сербия" in product.aliases
+            else -> true
+        }
+    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        items(state.products, key = { it.id }) { product ->
+        item {
+            Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                listOf("Все", "Из дневников", "Lidl", "Избранное", "Сербия").forEachIndexed { index, label ->
+                    FilterChip(selected = filter == index, onClick = { filter = index }, label = { Text(label) })
+                }
+            }
+            Text("${filtered.size} продуктов · КБЖУ по исходным данным", style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(8.dp))
+            if (filtered.isEmpty()) Text("Ничего не найдено. Измените фильтр или попробуйте вкладку «Каталог».", Modifier.padding(12.dp))
+        }
+        items(filtered, key = { it.id }) { product ->
             ProductRow(
                 product = product,
                 onClick = { selected = product; onProductClick(product) },
@@ -327,10 +358,12 @@ private fun ProductRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(text = product.name, style = MaterialTheme.typography.bodyLarge)
             Text(
-                text = "${formatCalories(product.caloriesPer100g)} / 100 г",
+                text = "${formatCalories(product.caloriesPer100g)} / ${product.referenceLabel}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Text("Б ${formatMacro(product.proteinPer100g)} · Ж ${formatMacro(product.fatPer100g)} · У ${formatMacro(product.carbsPer100g)}",
+                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         IconButton(onClick = onToggleFavorite) {
             Icon(
@@ -344,15 +377,17 @@ private fun ProductRow(
 }
 
 @Composable
-private fun AddEntryDialog(
+internal fun AddEntryDialog(
     product: Product,
     mealLabel: String,
     onDismiss: () -> Unit,
     onConfirm: (grams: Float) -> Unit
 ) {
-    var text by remember { mutableStateOf("100") }
-    val parsed = text.toFloatOrNull()
-    val isValid = parsed != null && parsed > 0f
+    var text by remember(product) { mutableStateOf(if (product.portionLabel.isBlank()) "100" else "1") }
+    val parsed = text.replace(',', '.').toFloatOrNull()
+    val isValid = parsed != null && parsed.isFinite() && parsed > 0f && parsed <= 100_000f
+    val multiplier = product.multiplierForAmount(parsed?.takeIf { isValid } ?: 0f)
+    val uriHandler = LocalUriHandler.current
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -363,11 +398,21 @@ private fun AddEntryDialog(
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = { Text("Граммы") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = { Text(if (product.portionLabel.isNotBlank()) "Количество порций" else if (product.unit == "мл") "Миллилитры" else "Граммы") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     isError = !isValid
                 )
+                if (product.portionLabel.isNotBlank()) Text("Одна порция: ${product.portionLabel}", style = MaterialTheme.typography.bodySmall)
+                Text(formatCalories(product.caloriesPer100g * multiplier), style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.secondary)
+                Text("Б ${formatMacro(product.proteinPer100g * multiplier)} · Ж ${formatMacro(product.fatPer100g * multiplier)} · У ${formatMacro(product.carbsPer100g * multiplier)}",
+                    style = MaterialTheme.typography.bodySmall)
+                if (product.nutritionNote.isNotBlank()) Text(product.nutritionNote, style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (product.sourceUrl.startsWith("https://world.openfoodfacts.org/product/")) {
+                    TextButton(onClick = { uriHandler.openUri(product.sourceUrl) }) { Text("Посмотреть этикетку и источник") }
+                }
             }
         },
         confirmButton = {

@@ -78,7 +78,7 @@ import com.k.shavrin.diethelper.domain.model.DayStatus
 import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
 import com.k.shavrin.diethelper.presentation.util.formatCalories
-import com.k.shavrin.diethelper.presentation.util.formatGrams
+import com.k.shavrin.diethelper.presentation.util.formatEntryAmount
 import com.k.shavrin.diethelper.presentation.util.formatMacro
 import com.k.shavrin.diethelper.presentation.util.mealTypeLabel
 import java.text.NumberFormat
@@ -807,7 +807,7 @@ private fun DesignedFoodEntryRow(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "${formatGrams(entry.multiplier)} · Б ${macroNumber(entry.product.proteinPer100g * entry.multiplier)} · " +
+                    text = "${formatEntryAmount(entry)} · Б ${macroNumber(entry.product.proteinPer100g * entry.multiplier)} · " +
                         "Ж ${macroNumber(entry.product.fatPer100g * entry.multiplier)} · " +
                         "У ${macroNumber(entry.product.carbsPer100g * entry.multiplier)}",
                     color = TodayOnSurfaceVariant,
@@ -856,10 +856,12 @@ private fun DesignedFoodEntryRow(
 
     if (showEditDialog) {
         EditGramsDialog(
-            initialGrams = (entry.multiplier * 100f).roundToInt(),
+            initialGrams = entry.product.amountForMultiplier(entry.multiplier).roundToInt(),
+            initialAmount = entry.product.amountForMultiplier(entry.multiplier),
+            amountLabel = if (entry.product.portionLabel.isNotBlank()) "Количество порций" else if (entry.product.unit == "мл") "Миллилитры" else "Граммы",
             onDismiss = { showEditDialog = false },
             onConfirm = { grams ->
-                onUpdateMultiplier(grams / 100f)
+                onUpdateMultiplier(entry.product.multiplierForAmount(grams))
                 showEditDialog = false
             }
         )

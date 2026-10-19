@@ -76,7 +76,7 @@ import com.k.shavrin.diethelper.presentation.components.DailySummaryCard
 import com.k.shavrin.diethelper.presentation.util.ClipboardSnapshot
 import com.k.shavrin.diethelper.presentation.util.formatCalories
 import com.k.shavrin.diethelper.presentation.util.formatDate
-import com.k.shavrin.diethelper.presentation.util.formatGrams
+import com.k.shavrin.diethelper.presentation.util.formatEntryAmount
 import com.k.shavrin.diethelper.presentation.util.formatIsoDate
 import com.k.shavrin.diethelper.presentation.util.formatMacro
 import com.k.shavrin.diethelper.presentation.util.formatWeekDateHeader
@@ -768,7 +768,7 @@ private fun FoodEntryRow(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = formatGrams(entry.multiplier),
+                    text = formatEntryAmount(entry),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -822,10 +822,12 @@ private fun FoodEntryRow(
 
     if (showEditDialog) {
         EditGramsDialog(
-            initialGrams = (entry.multiplier * 100f).roundToInt(),
+            initialGrams = entry.product.amountForMultiplier(entry.multiplier).roundToInt(),
+            initialAmount = entry.product.amountForMultiplier(entry.multiplier),
+            amountLabel = if (entry.product.portionLabel.isNotBlank()) "Количество порций" else if (entry.product.unit == "мл") "Миллилитры" else "Граммы",
             onDismiss = { showEditDialog = false },
             onConfirm = { grams ->
-                onUpdateMultiplier(grams / 100f)
+                onUpdateMultiplier(entry.product.multiplierForAmount(grams))
                 showEditDialog = false
             }
         )
@@ -862,21 +864,23 @@ private fun FoodEntryRow(
 internal fun EditGramsDialog(
     initialGrams: Int,
     onDismiss: () -> Unit,
-    onConfirm: (Float) -> Unit
+    onConfirm: (Float) -> Unit,
+    initialAmount: Float = initialGrams.toFloat(),
+    amountLabel: String = "Граммы"
 ) {
-    var text by remember { mutableStateOf(initialGrams.toString()) }
-    val parsed = text.toFloatOrNull()
-    val isValid = parsed != null && parsed > 0f
+    var text by remember { mutableStateOf(if (initialAmount % 1f == 0f) initialAmount.toInt().toString() else initialAmount.toString()) }
+    val parsed = text.replace(',', '.').toFloatOrNull()
+    val isValid = parsed != null && parsed.isFinite() && parsed > 0f && parsed <= 100_000f
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Изменить граммы") },
+        title = { Text(if (amountLabel == "Граммы") "Изменить граммы" else "Изменить количество") },
         text = {
             OutlinedTextField(
                 value = text,
                 onValueChange = { text = it },
-                label = { Text("Граммы") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                label = { Text(amountLabel) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 isError = !isValid,
                 singleLine = true
             )

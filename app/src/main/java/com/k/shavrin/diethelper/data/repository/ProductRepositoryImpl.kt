@@ -4,6 +4,7 @@ import com.k.shavrin.diethelper.data.local.dao.ProductDao
 import com.k.shavrin.diethelper.data.mapper.toDomain
 import com.k.shavrin.diethelper.data.mapper.toEntity
 import com.k.shavrin.diethelper.domain.model.Product
+import com.k.shavrin.diethelper.domain.model.matchesQuery
 import com.k.shavrin.diethelper.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,7 @@ class ProductRepositoryImpl @Inject constructor(
         productDao.getAllProducts().map { entities -> entities.toDomain() }
 
     override fun searchProducts(query: String): Flow<List<Product>> =
-        productDao.searchProducts(query).map { entities -> entities.toDomain() }
+        productDao.getAllProducts().map { entities -> entities.toDomain().filter { it.matchesQuery(query) } }
 
     override suspend fun getProductById(id: Long): Product? =
         productDao.getProductById(id)?.toDomain()

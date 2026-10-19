@@ -81,13 +81,17 @@ class ExportReportUseCase @Inject constructor(
 
     private fun FoodEntry.toReportEntry(): ReportEntry {
         val m = multiplier
+        val amount = product.amountForMultiplier(m)
+        val quantity = if (amount % 1f == 0f) amount.toInt().toString() else amount.toString()
+        val amountLabel = if (product.portionLabel.isBlank()) "$quantity ${product.unit}" else "$quantity порц. (${product.portionLabel})"
         return ReportEntry(
             productName = product.name,
             grams = (m * 100f).roundToInt(),
             calories = product.caloriesPer100g * m,
             protein = product.proteinPer100g * m,
             fat = product.fatPer100g * m,
-            carbs = product.carbsPer100g * m
+            carbs = product.carbsPer100g * m,
+            amountLabel = amountLabel
         )
     }
 

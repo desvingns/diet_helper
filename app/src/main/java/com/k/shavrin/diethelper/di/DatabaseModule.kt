@@ -28,8 +28,7 @@ object DatabaseModule {
             DietHelperDatabase::class.java,
             DietHelperDatabase.NAME
         )
-            .addMigrations(DietHelperDatabase.MIGRATION_1_2)
-            .fallbackToDestructiveMigration()
+            .addMigrations(DietHelperDatabase.MIGRATION_1_2, DietHelperDatabase.MIGRATION_2_3)
             .build()
 
     @Provides

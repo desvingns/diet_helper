@@ -1,0 +1,2763 @@
+[
+  {
+    "code": "5906425121137",
+    "brands": [
+      "McDonald's",
+      "Develey"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 25.8,
+      "energy-kj_100g": 472,
+      "fat_100g": 0.2,
+      "proteins_100g": 1.6,
+      "salt_100g": 2.1,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.84,
+      "sugars_100g": 21.1
+    },
+    "product_name": "Ketchup"
+  },
+  {
+    "code": "5400113541240",
+    "brands": [
+      "Delhaize"
+    ],
+    "stores": [
+      "Maxi",
+      " Delhaize"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 78,
+      "energy-kj_100g": 1485,
+      "fat_100g": 0.6,
+      "fiber_100g": 1.4,
+      "proteins_100g": 7.4,
+      "salt_100g": 0,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0,
+      "sugars_100g": 0.3
+    },
+    "product_name": "Basmati"
+  },
+  {
+    "code": "5400113620426",
+    "brands": [
+      "Delhaize"
+    ],
+    "stores": [
+      "Delhaize",
+      "Maxi"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 11,
+      "energy-kcal_100g": 75,
+      "energy-kj_100g": 320,
+      "fat_100g": 0.5,
+      "fiber_100g": 5.3,
+      "proteins_100g": 4.5,
+      "salt_100g": 0.3,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.12,
+      "sugars_100g": 1.2
+    },
+    "product_name": "Haricots noirs"
+  },
+  {
+    "code": "8600043025873",
+    "brands": [
+      "Bambi"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 62,
+      "energy-kcal_100g": 451,
+      "fat_100g": 17,
+      "proteins_100g": 11,
+      "salt_100g": 3.46,
+      "saturated-fat_100g": 3.9,
+      "sodium_100g": 1.384,
+      "sugars_100g": 7.7
+    },
+    "product_name": "Plazma slana"
+  },
+  {
+    "code": "4056489140474",
+    "brands": [
+      "vitasia"
+    ],
+    "stores": [
+      "lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 25.6,
+      "energy-kcal_100g": 217,
+      "fat_100g": 10.7,
+      "proteins_100g": 3.4,
+      "salt_100g": 0.17,
+      "saturated-fat_100g": 8.8,
+      "sodium_100g": 0.068,
+      "sugars_100g": 22.9
+    },
+    "product_name": "Coconut ice cream"
+  },
+  {
+    "code": "8600043023619",
+    "brands": [
+      "Bambi"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 63,
+      "energy-kj_100g": 1933,
+      "fat_100g": 18.9,
+      "fiber_100g": 7.6,
+      "proteins_100g": 5.9,
+      "salt_100g": 0.9,
+      "saturated-fat_100g": 9.2,
+      "sodium_100g": 0.36,
+      "sugars_100g": 21.7
+    },
+    "product_name": "Wellness digestive"
+  },
+  {
+    "code": "8606106808735",
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "energy-kcal_100g": 352,
+      "carbohydrates_100g": 75.459999084473,
+      "saturated-fat_100g": 0.49000000953674,
+      "proteins_100g": 9.1599998474121,
+      "sugars_100g": 1.3999999761581,
+      "fat_100g": 1.0700000524521
+    },
+    "product_name": "Spaghetti"
+  },
+  {
+    "code": "5291088000364",
+    "brands": [
+      "Pepsi",
+      "Pepsico"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "sugars_100g": 10.8,
+      "carbohydrates_100g": 10.8,
+      "proteins_100g": 0,
+      "energy-kj_100g": 174,
+      "sodium_100g": 0.04,
+      "fat_100g": 0,
+      "saturated-fat_100g": 0,
+      "salt_100g": 0.1
+    },
+    "product_name": "Pepsi twist"
+  },
+  {
+    "code": "5310005004145",
+    "brands": [
+      "Vitaminka"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "proteins_100g": 4.6,
+      "sugars_100g": 45.3,
+      "carbohydrates_100g": 64.2,
+      "fiber_100g": 2.5,
+      "fat_100g": 28.5,
+      "salt_100g": 0.2,
+      "saturated-fat_100g": 16.6,
+      "energy-kj_100g": 2255,
+      "sodium_100g": 0.08
+    },
+    "product_name": "Choco stobi flips"
+  },
+  {
+    "code": "5413546329859",
+    "brands": [
+      "Paté Grand-mère"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "sugars_100g": 3.2,
+      "carbohydrates_100g": 10,
+      "proteins_100g": 12,
+      "sodium_100g": 0.72,
+      "energy-kj_100g": 1201,
+      "saturated-fat_100g": 9.4,
+      "salt_100g": 1.7999999999999998,
+      "fat_100g": 23
+    },
+    "product_name": "Pašteta sa brusnicama"
+  },
+  {
+    "code": "5900915013094",
+    "brands": [
+      "Terravita"
+    ],
+    "stores": [
+      "Aroma"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 62,
+      "sugars_100g": 60,
+      "proteins_100g": 4.4,
+      "sodium_100g": 0.1,
+      "energy-kj_100g": 2153,
+      "saturated-fat_100g": 17,
+      "salt_100g": 0.25,
+      "fat_100g": 27
+    },
+    "product_name": "Pytania"
+  },
+  {
+    "code": "59469889",
+    "brands": [
+      "Nescafe",
+      "Nestle"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "proteins_100g": 10.4,
+      "carbohydrates_100g": 73.6,
+      "sugars_100g": 69.4,
+      "salt_100g": 0.8,
+      "saturated-fat_100g": 2.7,
+      "fiber_100g": 4.3,
+      "fat_100g": 3.1,
+      "sodium_100g": 0.32,
+      "energy-kj_100g": 1579
+    },
+    "product_name": "Frappe"
+  },
+  {
+    "code": "3800078011567",
+    "brands": [
+      "compass"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 0,
+      "energy-kcal_100g": 91,
+      "energy-kj_100g": 388,
+      "fat_100g": 0.6,
+      "proteins_100g": 22
+    },
+    "product_name": "Tuna komadi u sopstvenom sosu"
+  },
+  {
+    "code": "8607100510433",
+    "brands": [
+      "Nestle"
+    ],
+    "countries_tags": [
+      "en:bosnia-and-herzegovina",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 26.8,
+      "energy-kj_100g": 596,
+      "fat_100g": 0.4,
+      "fiber_100g": 3.5,
+      "proteins_100g": 5.7,
+      "salt_100g": 58.5,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 23.4,
+      "sugars_100g": 23
+    },
+    "product_name": "Začin C"
+  },
+  {
+    "code": "8600197373370",
+    "brands": [
+      "MAXI"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 42,
+      "energy-kcal_100g": 350,
+      "fat_100g": 16.1,
+      "fiber_100g": 4.3,
+      "proteins_100g": 6.7,
+      "salt_100g": 0.935,
+      "saturated-fat_100g": 7.4,
+      "sodium_100g": 0.374,
+      "sugars_100g": 1.5
+    },
+    "product_name": "Čia trouglići"
+  },
+  {
+    "code": "8607000169496",
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "fat_100g": 5.0700001716614,
+      "sugars_100g": 0.40000000596046,
+      "proteins_100g": 13,
+      "energy-kcal_100g": 115,
+      "sodium_100g": 0,
+      "salt_100g": 0,
+      "carbohydrates_100g": 0.69999998807907,
+      "saturated-fat_100g": 2.5499999523163
+    },
+    "product_name": "JAJA"
+  },
+  {
+    "code": "8606015852713",
+    "brands": [
+      "Jumbo"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "proteins_100g": 30,
+      "energy-kcal_100g": 300,
+      "carbohydrates_100g": 11,
+      "sugars_100g": 4.1,
+      "saturated-fat_100g": 11,
+      "salt_100g": 0.04,
+      "fat_100g": 24,
+      "fiber_100g": 7.1,
+      "sodium_100g": 0.016
+    },
+    "product_name": "neslani kikiriki"
+  },
+  {
+    "code": "20971298",
+    "brands": [
+      "Paroni"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 0,
+      "energy-kcal_100g": 240,
+      "fat_100g": 20,
+      "proteins_100g": 15,
+      "salt_100g": 2.9,
+      "saturated-fat_100g": 6.1,
+      "sodium_100g": 1.16
+    },
+    "product_name": "Chicken and turkey hot dog sausages"
+  },
+  {
+    "code": "68072100",
+    "brands": [
+      "Maxi"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 54.3,
+      "energy-kcal_100g": 274,
+      "fat_100g": 1.4,
+      "proteins_100g": 8.2,
+      "salt_100g": 1.03,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.412,
+      "sugars_100g": 1.9
+    },
+    "product_name": "Hlebić"
+  },
+  {
+    "code": "3095757224011",
+    "brands": [
+      "Fleury Michon"
+    ],
+    "stores": [
+      "Lidl",
+      "Carrefour"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 0.5,
+      "energy-kcal_100g": 109,
+      "energy-kj_100g": 460,
+      "fat_100g": 2.1,
+      "proteins_100g": 22,
+      "salt_100g": 1.8,
+      "saturated-fat_100g": 0.5,
+      "sodium_100g": 0.72,
+      "sugars_100g": 0.5
+    },
+    "product_name": "Roti de poulet cuit Halal"
+  },
+  {
+    "code": "8717438745664",
+    "brands": [
+      "Tuttle & company"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 66,
+      "energy-kcal_100g": 160,
+      "energy-kj_100g": 667,
+      "fat_100g": 0.5,
+      "proteins_100g": 0.5,
+      "salt_100g": 0.01,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.004,
+      "sugars_100g": 0
+    },
+    "product_name": "Barkleys Intense chewing gum"
+  },
+  {
+    "code": "6430033524077",
+    "brands": [
+      "Deliciest"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "fat_100g": 12.7,
+      "proteins_100g": 9.8,
+      "sugars_100g": 0.5,
+      "carbohydrates_100g": 27.6,
+      "saturated-fat_100g": 6.1,
+      "salt_100g": 0.9,
+      "energy-kcal_100g": 263,
+      "sodium_100g": 0.36
+    },
+    "product_name": "Villen lammaspelmenit"
+  },
+  {
+    "code": "8606002116279",
+    "brands": [
+      "Dukat"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "energy-kcal_100g": 56,
+      "carbohydrates_100g": 4.6,
+      "saturated-fat_100g": 1.8,
+      "fat_100g": 2.8,
+      "proteins_100g": 3.2,
+      "sugars_100g": 4.6
+    },
+    "product_name": "sveze mleko"
+  },
+  {
+    "code": "8607000188503",
+    "brands": [
+      "Koza Nostra"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 61.6,
+      "energy-kcal_100g": 441,
+      "energy-kj_100g": 1845,
+      "fat_100g": 15.3,
+      "proteins_100g": 14.1
+    },
+    "product_name": "Liofilizovana Kozja Surutka"
+  },
+  {
+    "code": "8606107775272",
+    "brands": [
+      "PAN power whey"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 7.53,
+      "energy-kcal_100g": 437,
+      "fat_100g": 10.4,
+      "proteins_100g": 80,
+      "salt_100g": 0,
+      "saturated-fat_100g": 7.47,
+      "sodium_100g": 0,
+      "sugars_100g": 6.73
+    },
+    "product_name": "Whey"
+  },
+  {
+    "code": "8606105157513",
+    "brands": [
+      "Amstel"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 4.1,
+      "energy-kcal_100g": 44,
+      "energy-kj_100g": 183,
+      "fat_100g": 0,
+      "proteins_100g": 0.3,
+      "salt_100g": 0,
+      "saturated-fat_100g": 0,
+      "sodium_100g": 0,
+      "sugars_100g": 0
+    },
+    "product_name": "Amstel bier"
+  },
+  {
+    "code": "4056489509097",
+    "brands": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 3,
+      "energy-kcal_100g": 524,
+      "energy-kj_100g": 2190,
+      "fat_100g": 55,
+      "proteins_100g": 4.2
+    },
+    "product_name": "Mladi Kajmak"
+  },
+  {
+    "code": "5011546177601",
+    "brands": [
+      "Nescafe",
+      "Nescafé"
+    ],
+    "countries_tags": [
+      "en:bosnia-and-herzegovina",
+      "en:montenegro",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 67.1,
+      "energy-kj_100g": 1613,
+      "fat_100g": 7.5,
+      "fiber_100g": 4.8,
+      "proteins_100g": 8.9,
+      "salt_100g": 0.83,
+      "saturated-fat_100g": 6.7,
+      "sodium_100g": 0.332,
+      "sugars_100g": 50.5
+    },
+    "product_name": "Cappuccino"
+  },
+  {
+    "code": "8605002326442",
+    "brands": [
+      "Zlatiborski Jogurt"
+    ],
+    "stores": [
+      "Mercator"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 4.2,
+      "energy-kcal_100g": 54,
+      "fat_100g": 2.8,
+      "proteins_100g": 3.1,
+      "saturated-fat_100g": 1.9,
+      "sugars_100g": 4.2
+    },
+    "product_name": "Yogurt"
+  },
+  {
+    "code": "59463535",
+    "brands": [
+      "Nescafe"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 74.6,
+      "energy-kj_100g": 1814,
+      "fat_100g": 13.1,
+      "fiber_100g": 3.1,
+      "proteins_100g": 1.5,
+      "salt_100g": 0.78,
+      "saturated-fat_100g": 11.9,
+      "sodium_100g": 0.312,
+      "sugars_100g": 56.7
+    },
+    "product_name": "Nescafe 3in1 brown sugar"
+  },
+  {
+    "code": "3800205875604",
+    "brands": [
+      "Maretti"
+    ],
+    "stores": [
+      "Penny"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:czech-republic",
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 68,
+      "energy-kcal_100g": 457,
+      "energy-kj_100g": 1919,
+      "fat_100g": 16,
+      "fiber_100g": 2.9,
+      "proteins_100g": 8.7,
+      "salt_100g": 2.5,
+      "saturated-fat_100g": 1.4,
+      "sodium_100g": 1,
+      "sugars_100g": 4.5
+    },
+    "product_name": "Печени хлебни кръгчета с вкус Селекция от отлични сирена"
+  },
+  {
+    "code": "8606006080088",
+    "brands": [
+      "Frikom"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 25,
+      "energy-kcal_100g": 226,
+      "energy-kj_100g": 944,
+      "fat_100g": 13,
+      "fiber_100g": 1.1,
+      "proteins_100g": 2.3,
+      "salt_100g": 0.07,
+      "saturated-fat_100g": 11,
+      "sodium_100g": 0.028,
+      "sugars_100g": 23
+    },
+    "product_name": "kapri"
+  },
+  {
+    "code": "8607000206405",
+    "brands": [
+      "Vegapčić"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 27.3,
+      "energy-kcal_100g": 131,
+      "energy-kj_100g": 548,
+      "fat_100g": 0.5,
+      "proteins_100g": 4.2,
+      "salt_100g": 1,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.4,
+      "sugars_100g": 0.5
+    },
+    "product_name": "Ćevap od proklijalog žita"
+  },
+  {
+    "code": "3850104008597",
+    "brands": [
+      "Podravka",
+      "Podravka (EDEKA)",
+      "."
+    ],
+    "stores": [
+      "Maxi",
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:albania",
+      "en:croatia",
+      "en:france",
+      "en:germany",
+      "en:italy",
+      "en:montenegro",
+      "en:north-macedonia",
+      "en:serbia",
+      "en:spain",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 27,
+      "energy-kcal_100g": 157,
+      "energy-kj_100g": 662,
+      "fat_100g": 0.5,
+      "fiber_100g": 5,
+      "proteins_100g": 8.5,
+      "salt_100g": 56.9,
+      "saturated-fat_100g": 0.3,
+      "sodium_100g": 22.76,
+      "sugars_100g": 22
+    },
+    "product_name": "Vegeta - Würzmischung mit Gemüse"
+  },
+  {
+    "code": "8607000084850",
+    "brands": [
+      "Maxi pijaca"
+    ],
+    "stores": [
+      "Delhaize"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 3.9,
+      "energy-kcal_100g": 22,
+      "energy-kj_100g": 92,
+      "fat_100g": 0.4,
+      "fiber_100g": 1.3,
+      "proteins_100g": 2.1,
+      "salt_100g": 0.02,
+      "saturated-fat_100g": 1,
+      "sodium_100g": 0.008,
+      "sugars_100g": 2.5
+    },
+    "product_name": "Seckani šampinjoni"
+  },
+  {
+    "code": "8606011899828",
+    "brands": [
+      "Ribella"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 3,
+      "energy-kj_100g": 1367,
+      "fat_100g": 30,
+      "proteins_100g": 12,
+      "salt_100g": 1,
+      "saturated-fat_100g": 3.5,
+      "sodium_100g": 0.4,
+      "sugars_100g": 0.4
+    },
+    "product_name": "Fresh Pâté losos"
+  },
+  {
+    "code": "8593894809740",
+    "brands": [
+      "Opavia"
+    ],
+    "countries_tags": [
+      "en:czech-republic",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 58,
+      "energy-kcal_100g": 522,
+      "energy-kj_100g": 2181,
+      "fat_100g": 29,
+      "fiber_100g": 4,
+      "proteins_100g": 5,
+      "salt_100g": 0.13,
+      "saturated-fat_100g": 19,
+      "sodium_100g": 0.052,
+      "sugars_100g": 42
+    },
+    "product_name": "Miňonky kakaové"
+  },
+  {
+    "code": "4056489362081",
+    "brands": [
+      "Snack Day"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 52,
+      "energy-kcal_100g": 543,
+      "fat_100g": 34,
+      "fiber_100g": 5.5,
+      "proteins_100g": 4.5999999046326,
+      "salt_100g": 1.61,
+      "saturated-fat_100g": 3.7000000476837,
+      "sodium_100g": 0.644,
+      "sugars_100g": 3.2999999523163
+    },
+    "product_name": "Snack day"
+  },
+  {
+    "code": "8600197251265",
+    "brands": [
+      "Premia"
+    ],
+    "stores": [
+      "Maxi",
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 34.2,
+      "energy-kj_100g": 1424,
+      "fat_100g": 19.5,
+      "proteins_100g": 6.1,
+      "salt_100g": 1.4,
+      "saturated-fat_100g": 10.3,
+      "sodium_100g": 0.56,
+      "sugars_100g": 0.3
+    },
+    "product_name": "Lisnato testo"
+  },
+  {
+    "code": "4056489362098",
+    "brands": [
+      "Snack Day"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 52,
+      "energy-kcal_100g": 535,
+      "energy-kj_100g": 2229,
+      "fat_100g": 33,
+      "fiber_100g": 5.7,
+      "proteins_100g": 4.6,
+      "salt_100g": 1.61,
+      "saturated-fat_100g": 2.9,
+      "sodium_100g": 0.644,
+      "sugars_100g": 3.4
+    },
+    "product_name": "Chips saveur Cheeseburger"
+  },
+  {
+    "code": "20948955",
+    "brands": [
+      "Snack Day"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:romania",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 52,
+      "energy-kcal_100g": 459,
+      "energy-kj_100g": 1922,
+      "fat_100g": 24,
+      "fiber_100g": 2.7,
+      "proteins_100g": 8.3,
+      "salt_100g": 3,
+      "saturated-fat_100g": 12,
+      "sodium_100g": 1.2,
+      "sugars_100g": 0
+    },
+    "product_name": "Солени пуканки"
+  },
+  {
+    "code": "20251031",
+    "brands": [
+      "Kania",
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:finland",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 25.7,
+      "energy-kcal_100g": 111,
+      "energy-kj_100g": 467,
+      "fat_100g": 0.1,
+      "proteins_100g": 1.5,
+      "salt_100g": 2.69,
+      "saturated-fat_100g": 0,
+      "sodium_100g": 1.076,
+      "sugars_100g": 21.3
+    },
+    "product_name": "Ketchup"
+  },
+  {
+    "code": "20654054",
+    "brands": [
+      "Chef Select"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "energy-kj_100g": 1134,
+      "energy-kcal_100g": 271,
+      "sodium_100g": 0.5,
+      "salt_100g": 1.25,
+      "saturated-fat_100g": 5.6,
+      "carbohydrates_100g": 28.6,
+      "fat_100g": 13.6,
+      "sugars_100g": 3.6,
+      "proteins_100g": 7.8
+    },
+    "product_name": "Twisted cheese pie"
+  },
+  {
+    "code": "20661120",
+    "brands": [
+      "First Nice"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "energy-kj_100g": 1827,
+      "sodium_100g": 0.032,
+      "fat_100g": 14,
+      "fiber_100g": 0.4,
+      "saturated-fat_100g": 9.7,
+      "salt_100g": 0.08,
+      "sugars_100g": 70,
+      "carbohydrates_100g": 75,
+      "proteins_100g": 2
+    },
+    "product_name": "RUM bars"
+  },
+  {
+    "code": "20058548",
+    "brands": [
+      "Bellarom"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:hungary",
+      "en:serbia",
+      "en:united-kingdom"
+    ],
+    "nutriments": {
+      "salt_100g": 0.525,
+      "sodium_100g": 0.21000000000000002,
+      "sugars_100g": 13,
+      "fat_100g": 33,
+      "energy-kcal_100g": 552,
+      "proteins_100g": 1.8,
+      "saturated-fat_100g": 33,
+      "carbohydrates_100g": 62,
+      "energy-kj_100g": 2306
+    },
+    "product_name": "Bellarom creampre"
+  },
+  {
+    "code": "4056489268208",
+    "brands": [
+      "Combino"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "sodium_100g": 0,
+      "energy-kcal_100g": 350,
+      "energy-kj_100g": 1483,
+      "saturated-fat_100g": 0.3,
+      "carbohydrates_100g": 71,
+      "salt_100g": 0,
+      "proteins_100g": 12,
+      "fiber_100g": 3.5,
+      "sugars_100g": 3.2,
+      "fat_100g": 1.2
+    },
+    "product_name": "Spaghetti"
+  },
+  {
+    "code": "5449000214911",
+    "brands": [
+      "Coca-Cola"
+    ],
+    "stores": [
+      "Monoprix",
+      "Lidl",
+      "Carrefour"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:france",
+      "en:germany",
+      "en:hungary",
+      "en:italy",
+      "en:serbia",
+      "en:spain",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 10.6,
+      "energy-kcal_100g": 42,
+      "energy-kj_100g": 180,
+      "fat_100g": 0,
+      "proteins_100g": 0,
+      "salt_100g": 0,
+      "saturated-fat_100g": 0,
+      "sodium_100g": 0,
+      "sugars_100g": 10.6
+    },
+    "product_name": "Coca-Cola"
+  },
+  {
+    "code": "4056489010579",
+    "brands": [
+      "milbona"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 18,
+      "energy-kcal_100g": 139,
+      "energy-kj_100g": 581,
+      "fat_100g": 6,
+      "proteins_100g": 3.2,
+      "salt_100g": 0.1,
+      "saturated-fat_100g": 3.9,
+      "sodium_100g": 0.04,
+      "sugars_100g": 15
+    },
+    "product_name": "Bio crème dessert vanille"
+  },
+  {
+    "code": "40875774",
+    "brands": [
+      "Snack Day",
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 50.5,
+      "energy-kcal_100g": 540,
+      "energy-kj_100g": 2251,
+      "fat_100g": 34,
+      "proteins_100g": 6,
+      "salt_100g": 1.1,
+      "saturated-fat_100g": 2.7,
+      "sodium_100g": 0.44,
+      "sugars_100g": 0.5
+    },
+    "product_name": "Chips craquantes paysannes"
+  },
+  {
+    "code": "5449000133335",
+    "brands": [
+      "Coca-Cola",
+      "Coke Zero"
+    ],
+    "stores": [
+      "Migros",
+      "Coop",
+      "City Gross",
+      "Lidl",
+      "Spar"
+    ],
+    "countries_tags": [
+      "en:austria",
+      "en:belgium",
+      "en:france",
+      "en:germany",
+      "en:greece",
+      "en:luxembourg",
+      "en:poland",
+      "en:serbia",
+      "en:slovenia",
+      "en:spain",
+      "en:sweden",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 0,
+      "energy-kcal_100g": 0.2,
+      "energy-kj_100g": 0.9,
+      "fat_100g": 0,
+      "fiber_100g": 0,
+      "proteins_100g": 0,
+      "salt_100g": 0.02,
+      "saturated-fat_100g": 0,
+      "sodium_100g": 0.008,
+      "sugars_100g": 0
+    },
+    "product_name": "Coca Cola Zero Sugar"
+  },
+  {
+    "code": "20130626",
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:czech-republic",
+      "en:france",
+      "en:germany",
+      "en:italy",
+      "en:portugal",
+      "en:serbia",
+      "en:slovakia",
+      "en:slovenia",
+      "en:spain",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 7.2,
+      "energy-kcal_100g": 51,
+      "energy-kj_100g": 214,
+      "fat_100g": 0.9,
+      "fiber_100g": 1.7,
+      "proteins_100g": 1.1,
+      "salt_100g": 0.03,
+      "saturated-fat_100g": 0.3,
+      "sodium_100g": 0.012,
+      "sugars_100g": 7.2
+    },
+    "product_name": "Himbeeren"
+  },
+  {
+    "code": "20297022",
+    "brands": [
+      "Snack Day"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "energy-kcal_100g": 553,
+      "proteins_100g": 5.4,
+      "carbohydrates_100g": 51,
+      "sugars_100g": 0.5,
+      "fat_100g": 35,
+      "saturated-fat_100g": 3.1,
+      "salt_100g": 1.6,
+      "energy-kj_100g": 2303,
+      "sodium_100g": 0.64
+    },
+    "product_name": "Snack Day Saveur Fromage"
+  },
+  {
+    "code": "20012335",
+    "brands": [
+      "Saint Alby",
+      "Dulano"
+    ],
+    "stores": [
+      "LIDL",
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "sugars_100g": 0.5,
+      "carbohydrates_100g": 1,
+      "energy-kcal_100g": 260,
+      "proteins_100g": 13,
+      "energy-kj_100g": 1075,
+      "sodium_100g": 0.8,
+      "fat_100g": 22.5,
+      "saturated-fat_100g": 9,
+      "salt_100g": 2
+    },
+    "product_name": "Saucisse de Jambon en tranches"
+  },
+  {
+    "code": "4056489193715",
+    "brands": [
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "fat_100g": 5.7,
+      "fiber_100g": 0.9,
+      "saturated-fat_100g": 2.2,
+      "salt_100g": 0.7,
+      "energy-kj_100g": 558,
+      "sodium_100g": 0.27999999999999997,
+      "energy-kcal_100g": 133,
+      "proteins_100g": 6,
+      "carbohydrates_100g": 14,
+      "sugars_100g": 0.9
+    },
+    "product_name": "Penne au Saumon"
+  },
+  {
+    "code": "3355570004161",
+    "brands": [
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "fat_100g": 3.1,
+      "saturated-fat_100g": 0.5,
+      "sugars_100g": 1.3,
+      "proteins_100g": 7.9,
+      "carbohydrates_100g": 15.8,
+      "sodium_100g": 0.3544,
+      "fiber_100g": 0.8,
+      "salt_100g": 0.886,
+      "energy-kj_100g": 523,
+      "energy-kcal_100g": 124
+    },
+    "product_name": "Poulet à la japonaise"
+  },
+  {
+    "code": "69699757",
+    "brands": [
+      "Lidl",
+      "Vemondo"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:czech-republic",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "proteins_100g": 9.7,
+      "sugars_100g": 2.3,
+      "fat_100g": 6.3,
+      "saturated-fat_100g": 0.7,
+      "carbohydrates_100g": 8.7,
+      "salt_100g": 1.5,
+      "sodium_100g": 0.6,
+      "energy-kcal_100g": 138
+    },
+    "product_name": "Veganes Gyros"
+  },
+  {
+    "code": "20633714",
+    "brands": [
+      "Deluxe"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:france",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 42.3,
+      "energy-kcal_100g": 476,
+      "energy-kj_100g": 1993,
+      "fat_100g": 31.2,
+      "proteins_100g": 5.7,
+      "salt_100g": 0.1,
+      "saturated-fat_100g": 17.9,
+      "sodium_100g": 0.04,
+      "sugars_100g": 30.8
+    },
+    "product_name": "Шоколадово суфле"
+  },
+  {
+    "code": "20636838",
+    "brands": [
+      "Favorina",
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:hungary",
+      "en:lithuania",
+      "en:poland",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 58.5,
+      "energy-kcal_100g": 525,
+      "fat_100g": 29.1,
+      "proteins_100g": 6.5,
+      "salt_100g": 0.4,
+      "saturated-fat_100g": 17.8,
+      "sodium_100g": 0.16,
+      "sugars_100g": 57.9
+    },
+    "product_name": "coniglio pasquale"
+  },
+  {
+    "code": "4056489550617",
+    "brands": [
+      "chef select"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 11.1,
+      "energy-kcal_100g": 264,
+      "energy-kj_100g": 1094,
+      "fat_100g": 19.2,
+      "fiber_100g": 0,
+      "proteins_100g": 8.1,
+      "salt_100g": 1.65,
+      "saturated-fat_100g": 2.2,
+      "sodium_100g": 0.66,
+      "sugars_100g": 4.4
+    },
+    "product_name": "bio organic humus"
+  },
+  {
+    "code": "5997347556800",
+    "brands": [
+      "Mogyi"
+    ],
+    "stores": [
+      "lidl"
+    ],
+    "countries_tags": [
+      "en:hungary",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 53,
+      "energy-kcal_100g": 463,
+      "energy-kj_100g": 1939,
+      "fat_100g": 24,
+      "proteins_100g": 8.3,
+      "salt_100g": 3,
+      "saturated-fat_100g": 12,
+      "sodium_100g": 1.2,
+      "sugars_100g": 0
+    },
+    "product_name": "Popcorn burro"
+  },
+  {
+    "code": "20056018",
+    "brands": [
+      "deluxe"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 52,
+      "energy-kcal_100g": 553,
+      "energy-kj_100g": 2304,
+      "fat_100g": 35,
+      "proteins_100g": 5,
+      "salt_100g": 1.2,
+      "saturated-fat_100g": 3.5,
+      "sodium_100g": 0.48,
+      "sugars_100g": 1
+    },
+    "product_name": "Chips aux cèpes"
+  },
+  {
+    "code": "4056489024279",
+    "brands": [
+      "Lord Nelson"
+    ],
+    "stores": [
+      "LIDL"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:cyprus",
+      "en:france",
+      "en:germany",
+      "en:greece",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 0.5,
+      "energy-kcal_100g": 2,
+      "energy-kj_100g": 7,
+      "fat_100g": 0.5,
+      "fiber_100g": 0.5,
+      "proteins_100g": 0.5,
+      "salt_100g": 0.01,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.004,
+      "sugars_100g": 0.5
+    },
+    "product_name": "fruit infusion"
+  },
+  {
+    "code": "80761761",
+    "brands": [
+      "FERRERO SCANDINAVIA AB"
+    ],
+    "stores": [
+      "Lidl",
+      "Kaufland",
+      "Leclerc",
+      "Carrefour",
+      "Auchan",
+      "Consum"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:bulgaria",
+      "en:france",
+      "en:germany",
+      "en:hungary",
+      "en:italy",
+      "en:poland",
+      "en:romania",
+      "en:serbia",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 53,
+      "energy-kcal_100g": 571,
+      "energy-kj_100g": 2380,
+      "fat_100g": 35.9,
+      "proteins_100g": 8.5,
+      "salt_100g": 0.33,
+      "saturated-fat_100g": 16.8,
+      "sodium_100g": 0.132,
+      "sugars_100g": 43.9
+    },
+    "product_name": "Kinder Bueno White 39g"
+  },
+  {
+    "code": "20154691",
+    "brands": [
+      "Lidl",
+      "Favorina",
+      "Aachener Zucker und Backwaren Paul Schaeffer"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:czech-republic",
+      "en:france",
+      "en:germany",
+      "en:italy",
+      "en:luxembourg",
+      "en:poland",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 66,
+      "energy-kcal_100g": 358,
+      "fat_100g": 7.7,
+      "fiber_100g": 3.6,
+      "proteins_100g": 4.3,
+      "salt_100g": 0.25,
+      "saturated-fat_100g": 4.7,
+      "sodium_100g": 0.1,
+      "sugars_100g": 40
+    },
+    "product_name": "Gingerbread Hearts Dark Chocolate"
+  },
+  {
+    "code": "20047238",
+    "brands": [
+      "Alesto",
+      "Lidl",
+      " Alesto Selection",
+      " Alesto Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:bulgaria",
+      "en:croatia",
+      "en:czech-republic",
+      "en:france",
+      "en:germany",
+      "en:hungary",
+      "en:italy",
+      "en:poland",
+      "en:romania",
+      "en:serbia",
+      "en:spain",
+      "en:sweden",
+      "en:switzerland",
+      "en:united-kingdom"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 6.4,
+      "energy-kcal_100g": 646,
+      "energy-kj_100g": 2705,
+      "fat_100g": 58,
+      "fiber_100g": 8.5,
+      "proteins_100g": 20.4,
+      "salt_100g": 0.01,
+      "saturated-fat_100g": 6.4,
+      "sodium_100g": 0.004,
+      "sugars_100g": 4.2
+    },
+    "product_name": "Królewska mieszanka orzechów"
+  },
+  {
+    "code": "20367343",
+    "brands": [
+      "Milbona"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:france",
+      "en:hungary",
+      "en:portugal",
+      "en:serbia",
+      "en:slovenia",
+      "en:united-kingdom"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 4.3,
+      "energy-kcal_100g": 107,
+      "energy-kj_100g": 442,
+      "fat_100g": 8.5,
+      "proteins_100g": 3.2,
+      "salt_100g": 0.11,
+      "saturated-fat_100g": 5.4,
+      "sodium_100g": 0.044,
+      "sugars_100g": 3.6
+    },
+    "product_name": "Greek Yoghurt"
+  },
+  {
+    "code": "4056489022527",
+    "brands": [
+      "Milbona"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 22,
+      "energy-kcal_100g": 150,
+      "energy-kj_100g": 627,
+      "fat_100g": 5,
+      "proteins_100g": 4.2,
+      "salt_100g": 0.1,
+      "saturated-fat_100g": 3.2,
+      "sodium_100g": 0.04,
+      "sugars_100g": 20
+    },
+    "product_name": "Crème dessert"
+  },
+  {
+    "code": "4056489113553",
+    "brands": [
+      "Combino"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:france",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 70.5,
+      "energy-kcal_100g": 350,
+      "fat_100g": 1.2,
+      "fiber_100g": 3.5,
+      "proteins_100g": 12.5,
+      "salt_100g": 0,
+      "saturated-fat_100g": 0.3,
+      "sodium_100g": 0,
+      "sugars_100g": 3.2
+    },
+    "product_name": "Nudeln Fusili Pasta 100% Hartweizengrieß"
+  },
+  {
+    "code": "40896243",
+    "brands": [
+      "Fairglobe"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:bulgaria",
+      "en:france",
+      "en:germany",
+      "en:italy",
+      "en:portugal",
+      "en:serbia",
+      "en:spain"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 35.3,
+      "energy-kcal_100g": 572,
+      "energy-kj_100g": 2373,
+      "fat_100g": 41.6,
+      "fiber_100g": 11.1,
+      "proteins_100g": 8.5,
+      "salt_100g": 0.01,
+      "saturated-fat_100g": 25,
+      "sodium_100g": 0.004,
+      "sugars_100g": 28
+    },
+    "product_name": "Bio Chocolat Noir Cacao 70%"
+  },
+  {
+    "code": "4056489283195",
+    "brands": [
+      "Lidl Stiftung & Co. KG"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 82,
+      "energy-kcal_100g": 376,
+      "energy-kj_100g": 1579,
+      "fat_100g": 0.8,
+      "fiber_100g": 1.1,
+      "proteins_100g": 9.7,
+      "salt_100g": 0.01,
+      "saturated-fat_100g": 0.2,
+      "sodium_100g": 0.004,
+      "sugars_100g": 1.8
+    },
+    "product_name": "Snack day Giraffes corn flips"
+  },
+  {
+    "code": "20809676",
+    "brands": [
+      "chef select",
+      " lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:france",
+      "en:germany",
+      "en:hungary",
+      "en:romania",
+      "en:serbia",
+      "en:switzerland",
+      "en:united-kingdom"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 25.8,
+      "energy-kcal_100g": 169,
+      "energy-kj_100g": 713,
+      "fat_100g": 4.1,
+      "fiber_100g": 1.9,
+      "proteins_100g": 6.3,
+      "salt_100g": 0.91,
+      "saturated-fat_100g": 0.8,
+      "sodium_100g": 0.364,
+      "sugars_100g": 0.4
+    },
+    "product_name": "schwäbische sprätzle g.g.a."
+  },
+  {
+    "code": "4000607850004",
+    "brands": [
+      "Schogetten"
+    ],
+    "stores": [
+      "Lidl",
+      "Stokrotka"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:poland",
+      "en:serbia",
+      "en:slovakia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 55,
+      "energy-kcal_100g": 560,
+      "energy-kj_100g": 2337,
+      "fat_100g": 35,
+      "proteins_100g": 5.4,
+      "salt_100g": 0.14,
+      "saturated-fat_100g": 22,
+      "sodium_100g": 0.056,
+      "sugars_100g": 55
+    },
+    "product_name": "Schogetten alpine milk chocolate"
+  },
+  {
+    "code": "4056489067726",
+    "brands": [
+      "Vemondo"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:austria",
+      "en:poland",
+      "en:serbia",
+      "en:united-kingdom"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 6.5,
+      "energy-kcal_100g": 176,
+      "energy-kj_100g": 729,
+      "fat_100g": 13,
+      "fiber_100g": 2.3,
+      "proteins_100g": 7,
+      "salt_100g": 1.3,
+      "saturated-fat_100g": 1.1,
+      "sodium_100g": 0.52,
+      "sugars_100g": 0.7
+    },
+    "product_name": "Vegan spread mexican style"
+  },
+  {
+    "code": "20208189",
+    "brands": [
+      "sondey",
+      "Gut Bartenhof"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 58,
+      "energy-kcal_100g": 437,
+      "energy-kj_100g": 1833,
+      "fat_100g": 20,
+      "proteins_100g": 5.6,
+      "salt_100g": 0.89,
+      "saturated-fat_100g": 2.3,
+      "sodium_100g": 0.356,
+      "sugars_100g": 26
+    },
+    "product_name": "Gulasch halb&halb"
+  },
+  {
+    "code": "8000300410464",
+    "brands": [
+      "KitKat",
+      " Nestlé"
+    ],
+    "stores": [
+      "Auchan",
+      "Lidl",
+      "Carrefour",
+      "Franprix",
+      "Cora"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 55.4,
+      "proteins_100g": 6.2,
+      "sugars_100g": 51,
+      "saturated-fat_100g": 17.4,
+      "fat_100g": 31.6,
+      "energy-kj_100g": 2247,
+      "energy-kcal_100g": 538,
+      "fiber_100g": 2.9,
+      "salt_100g": 0.23,
+      "sodium_100g": 0.092
+    },
+    "product_name": "Calendrier"
+  },
+  {
+    "code": "3302740059292",
+    "brands": [
+      "Fleury Michon"
+    ],
+    "stores": [
+      "Carrefour",
+      "Carrefour Market",
+      "Carrefour City",
+      "Carrefour Contact",
+      "E.leclerc",
+      "Auchan",
+      "Cora",
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "saturated-fat_100g": 2.8,
+      "sugars_100g": 1.8,
+      "fat_100g": 6.4,
+      "carbohydrates_100g": 14,
+      "proteins_100g": 8,
+      "fiber_100g": 0.8,
+      "salt_100g": 0.74,
+      "sodium_100g": 0.296,
+      "energy-kj_100g": 625,
+      "energy-kcal_100g": 149
+    },
+    "product_name": "Coquillettes au Jambon Supérieur façon Risotto"
+  },
+  {
+    "code": "4056489512936",
+    "brands": [
+      "snack Day"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 51,
+      "energy-kcal_100g": 536,
+      "energy-kj_100g": 2234,
+      "fat_100g": 33,
+      "proteins_100g": 6,
+      "salt_100g": 1.4,
+      "saturated-fat_100g": 2.7,
+      "sodium_100g": 0.56,
+      "sugars_100g": 0.5
+    },
+    "product_name": "Snack Day multipack"
+  },
+  {
+    "code": "20289874",
+    "brands": [
+      "toque du chef"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 6.8,
+      "energy-kcal_100g": 152,
+      "fat_100g": 11,
+      "proteins_100g": 6,
+      "salt_100g": 0.82,
+      "saturated-fat_100g": 7.4,
+      "sodium_100g": 0.328,
+      "sugars_100g": 3.3
+    },
+    "product_name": "Coquilles aux noix de saint-jacques a la bretonne"
+  },
+  {
+    "code": "20054144",
+    "brands": [
+      "lidl"
+    ],
+    "stores": [
+      "lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 51,
+      "energy-kcal_100g": 534,
+      "fat_100g": 33,
+      "proteins_100g": 5.7,
+      "salt_100g": 1.25,
+      "saturated-fat_100g": 3,
+      "sodium_100g": 0.5,
+      "sugars_100g": 2.64
+    },
+    "product_name": "Chips Bolognaise"
+  },
+  {
+    "code": "20881061",
+    "brands": [
+      "Milbona",
+      "Arla Foods"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:croatia",
+      "en:france",
+      "en:germany",
+      "en:serbia",
+      "en:slovenia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 4.6,
+      "energy-kcal_100g": 56,
+      "energy-kj_100g": 239,
+      "fat_100g": 0.2,
+      "fiber_100g": 0,
+      "proteins_100g": 8.9,
+      "salt_100g": 0.1,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.04,
+      "sugars_100g": 3.9
+    },
+    "product_name": "Skyr Rasberry"
+  },
+  {
+    "code": "20117153",
+    "brands": [
+      "Nixe"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:croatia",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 0,
+      "energy-kcal_100g": 111,
+      "energy-kj_100g": 468,
+      "fat_100g": 0.7,
+      "proteins_100g": 26,
+      "salt_100g": 1.12,
+      "saturated-fat_100g": 0,
+      "sodium_100g": 0.448,
+      "sugars_100g": 0
+    },
+    "product_name": "Tuna Lidl Thunfisch im eigenem Saft"
+  },
+  {
+    "code": "4056489514336",
+    "brands": [
+      "Deluxe"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 51,
+      "energy-kcal_100g": 517,
+      "energy-kj_100g": 2158,
+      "fat_100g": 31,
+      "fiber_100g": 5,
+      "proteins_100g": 6.1,
+      "salt_100g": 1.4,
+      "saturated-fat_100g": 2.6,
+      "sodium_100g": 0.56,
+      "sugars_100g": 0.8
+    },
+    "product_name": "Chips aux cèpes"
+  },
+  {
+    "code": "20601812",
+    "brands": [
+      "Lidl",
+      "Favorina",
+      "Carstens"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 44,
+      "energy-kcal_100g": 486,
+      "fat_100g": 28.1,
+      "fiber_100g": 7.1,
+      "proteins_100g": 9.3,
+      "salt_100g": 0,
+      "saturated-fat_100g": 6.7,
+      "sodium_100g": 0,
+      "sugars_100g": 43.3
+    },
+    "product_name": "Lübecker Edel-Marzipan Rum"
+  },
+  {
+    "code": "20198107",
+    "brands": [
+      "Freshona",
+      "Campo Largo",
+      "Baresa",
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:croatia",
+      "en:france",
+      "en:germany",
+      "en:hungary",
+      "en:poland",
+      "en:portugal",
+      "en:serbia",
+      "en:slovenia",
+      "en:spain",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 3,
+      "energy-kcal_100g": 22,
+      "energy-kj_100g": 91,
+      "fat_100g": 0.1,
+      "fiber_100g": 1.2,
+      "proteins_100g": 1.2,
+      "salt_100g": 0.05,
+      "saturated-fat_100g": 0,
+      "sodium_100g": 0.02,
+      "sugars_100g": 3
+    },
+    "product_name": "Peeled Tomatoes"
+  },
+  {
+    "code": "20399405",
+    "brands": [
+      "Vitasia"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:croatia",
+      "en:cyprus",
+      "en:czech-republic",
+      "en:france",
+      "en:germany",
+      "en:greece",
+      "en:romania",
+      "en:serbia",
+      "en:slovakia",
+      "en:slovenia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 40.6,
+      "energy-kcal_100g": 511,
+      "energy-kj_100g": 2320,
+      "fat_100g": 31.5,
+      "fiber_100g": 4.7,
+      "proteins_100g": 14.1,
+      "salt_100g": 2.54,
+      "saturated-fat_100g": 4.3,
+      "sodium_100g": 1.016,
+      "sugars_100g": 8.5
+    },
+    "product_name": "Wasabi Crispy Coated Peanuts"
+  },
+  {
+    "code": "20003258",
+    "brands": [
+      "Allen fest style (Lidl)"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:czech-republic",
+      "en:germany",
+      "en:hungary",
+      "en:serbia",
+      "en:slovakia",
+      "en:slovenia",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 26,
+      "energy-kcal_100g": 131,
+      "energy-kj_100g": 555,
+      "fat_100g": 0.7,
+      "fiber_100g": 1.5,
+      "proteins_100g": 4.4,
+      "salt_100g": 1.2,
+      "saturated-fat_100g": 0.3,
+      "sodium_100g": 0.48,
+      "sugars_100g": 1.4
+    },
+    "product_name": "semmelknödel"
+  },
+  {
+    "code": "20294229",
+    "brands": [
+      "Toque du Chef"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 9.1,
+      "energy-kcal_100g": 161,
+      "fat_100g": 10,
+      "proteins_100g": 7.7,
+      "salt_100g": 0.93,
+      "saturated-fat_100g": 5.5,
+      "sodium_100g": 0.372,
+      "sugars_100g": 1.8
+    },
+    "product_name": "Parmentier de bœuf et pomme de terre"
+  },
+  {
+    "code": "3341181022021",
+    "brands": [
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 19,
+      "energy-kcal_100g": 348,
+      "energy-kj_100g": 1451,
+      "fat_100g": 22,
+      "fiber_100g": 1.4,
+      "proteins_100g": 16,
+      "salt_100g": 1.2,
+      "saturated-fat_100g": 12,
+      "sodium_100g": 0.48,
+      "sugars_100g": 0.9
+    },
+    "product_name": "Bouchées de la Tomme de montagne"
+  },
+  {
+    "code": "4056489063766",
+    "brands": [
+      "Crownfield"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:czech-republic",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 65,
+      "energy-kcal_100g": 459,
+      "energy-kj_100g": 1925,
+      "fat_100g": 17,
+      "fiber_100g": 6.6,
+      "proteins_100g": 8.1,
+      "salt_100g": 0.03,
+      "saturated-fat_100g": 2.6,
+      "sodium_100g": 0.012,
+      "sugars_100g": 16
+    },
+    "product_name": "Müsli chia, goji a quinoa"
+  },
+  {
+    "code": "4056489039624",
+    "brands": [
+      "toque du chef"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 8.7,
+      "energy-kcal_100g": 164,
+      "energy-kj_100g": 681,
+      "fat_100g": 11.7,
+      "proteins_100g": 5.4,
+      "salt_100g": 0.99,
+      "saturated-fat_100g": 2.6,
+      "sodium_100g": 0.396,
+      "sugars_100g": 0.9
+    },
+    "product_name": "Brandade de morue"
+  },
+  {
+    "code": "20841713",
+    "brands": [
+      "DELUXE",
+      "LIDL"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "sodium_100g": 0.19,
+      "salt_100g": 0.475,
+      "saturated-fat_100g": 5.3,
+      "fiber_100g": 0.06,
+      "fat_100g": 7.5,
+      "sugars_100g": 13.7,
+      "carbohydrates_100g": 15.3,
+      "proteins_100g": 2.5,
+      "energy-kcal_100g": 140
+    },
+    "product_name": "Yaourt brassé sur lit au caramel beurre salé"
+  },
+  {
+    "code": "20965044",
+    "brands": [
+      "Saguaro"
+    ],
+    "stores": [
+      "lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "fat_100g": 0,
+      "proteins_100g": 0,
+      "fiber_100g": 0,
+      "sugars_100g": 0,
+      "energy-kcal_100g": 0,
+      "sodium_100g": 0,
+      "saturated-fat_100g": 0,
+      "carbohydrates_100g": 0,
+      "salt_100g": 0
+    },
+    "product_name": "Water"
+  },
+  {
+    "code": "4056489316138",
+    "brands": [
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 55,
+      "energy-kcal_100g": 540,
+      "energy-kj_100g": 2254,
+      "fat_100g": 32,
+      "fiber_100g": 0,
+      "proteins_100g": 6.5,
+      "salt_100g": 1.3,
+      "saturated-fat_100g": 3.3,
+      "sodium_100g": 0.52,
+      "sugars_100g": 2
+    },
+    "product_name": "Snack day salted chips"
+  },
+  {
+    "code": "20094508",
+    "brands": [
+      "Milbona"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:germany",
+      "en:hungary",
+      "en:lithuania",
+      "en:romania",
+      "en:serbia",
+      "en:switzerland"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 3,
+      "energy-kcal_100g": 245,
+      "fat_100g": 23,
+      "proteins_100g": 6,
+      "salt_100g": 1.3,
+      "saturated-fat_100g": 16.1,
+      "sodium_100g": 0.52,
+      "sugars_100g": 3
+    },
+    "product_name": "Crefee mit feinen  Kräutern"
+  },
+  {
+    "code": "20236946",
+    "brands": [
+      "Snack Day",
+      "Lidl",
+      "Nova"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 64.4,
+      "energy-kcal_100g": 472,
+      "fat_100g": 20,
+      "proteins_100g": 6.6,
+      "salt_100g": 1.2,
+      "saturated-fat_100g": 2,
+      "sodium_100g": 0.48,
+      "sugars_100g": 2
+    },
+    "product_name": "tortilla"
+  },
+  {
+    "code": "20713973",
+    "brands": [
+      "Milbona"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 12.6,
+      "energy-kcal_100g": 134,
+      "fat_100g": 7.6,
+      "proteins_100g": 2.4,
+      "salt_100g": 0.11,
+      "saturated-fat_100g": 5.1,
+      "sodium_100g": 0.044,
+      "sugars_100g": 12.6
+    },
+    "product_name": "Creamy Kefir mild"
+  },
+  {
+    "code": "3760032004915",
+    "brands": [
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 16.2,
+      "energy-kcal_100g": 125,
+      "energy-kj_100g": 525,
+      "fat_100g": 5.7,
+      "proteins_100g": 1.7,
+      "salt_100g": 0.4,
+      "saturated-fat_100g": 0.6,
+      "sodium_100g": 0.16,
+      "sugars_100g": 0.2
+    },
+    "product_name": "Frites aux herbes"
+  },
+  {
+    "code": "20561864",
+    "brands": [
+      "Vitasia (Lidl)"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:czech-republic",
+      "en:france",
+      "en:germany",
+      "en:poland",
+      "en:serbia",
+      "en:slovenia",
+      "en:spain"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 69.6,
+      "energy-kcal_100g": 346,
+      "fat_100g": 1.4,
+      "fiber_100g": 3.3,
+      "proteins_100g": 12,
+      "salt_100g": 1.495,
+      "saturated-fat_100g": 0.4,
+      "sodium_100g": 0.598,
+      "sugars_100g": 2.1
+    },
+    "product_name": "soba noodles"
+  },
+  {
+    "code": "20818661",
+    "brands": [
+      "Tastino"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:france",
+      "en:germany",
+      "en:poland",
+      "en:serbia",
+      "en:slovenia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 39.4,
+      "energy-kcal_100g": 219,
+      "energy-kj_100g": 924,
+      "fat_100g": 3.4,
+      "fiber_100g": 6,
+      "proteins_100g": 4.7,
+      "salt_100g": 1.45,
+      "saturated-fat_100g": 0.3,
+      "sodium_100g": 0.58,
+      "sugars_100g": 1.6
+    },
+    "product_name": "free from white bread"
+  },
+  {
+    "code": "4056489067719",
+    "brands": [
+      "Vemondo"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:czech-republic",
+      "en:serbia",
+      "en:slovakia",
+      "en:united-kingdom"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 3.3,
+      "energy-kcal_100g": 136,
+      "energy-kj_100g": 564,
+      "fat_100g": 9,
+      "proteins_100g": 8.5,
+      "salt_100g": 1.1,
+      "saturated-fat_100g": 0.8,
+      "sodium_100g": 0.44,
+      "sugars_100g": 0.5
+    },
+    "product_name": "Vegan spread French style"
+  },
+  {
+    "code": "20279721",
+    "brands": [
+      "Hatherwood",
+      " British style"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:bulgaria",
+      "en:croatia",
+      "en:serbia",
+      "en:spain"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 60,
+      "energy-kcal_100g": 250,
+      "fat_100g": 0.1,
+      "proteins_100g": 0.4,
+      "salt_100g": 0.03,
+      "saturated-fat_100g": 0.1,
+      "sodium_100g": 0.012,
+      "sugars_100g": 52
+    },
+    "product_name": "Confitura Extra di ribes neri"
+  },
+  {
+    "code": "20202866",
+    "brands": [
+      "Crownfield (Lidl)"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:croatia",
+      "en:france",
+      "en:germany",
+      "en:greece",
+      "en:serbia",
+      "en:spain"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 66.7,
+      "energy-kcal_100g": 382,
+      "energy-kj_100g": 1611,
+      "fat_100g": 7.1,
+      "fiber_100g": 8.7,
+      "proteins_100g": 8.5,
+      "salt_100g": 0.07,
+      "saturated-fat_100g": 2.3,
+      "sodium_100g": 0.028,
+      "sugars_100g": 25.1
+    },
+    "product_name": "premium müsli"
+  },
+  {
+    "code": "40882291",
+    "brands": [
+      "Toque du Chef"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:france",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 14,
+      "energy-kcal_100g": 99,
+      "energy-kj_100g": 416,
+      "fat_100g": 1.9,
+      "fiber_100g": 2,
+      "proteins_100g": 5.4,
+      "salt_100g": 0.71,
+      "saturated-fat_100g": 0.4,
+      "sodium_100g": 0.284,
+      "sugars_100g": 2.1
+    },
+    "product_name": "Nouilles chinoises au poulet et légumes croquants"
+  },
+  {
+    "code": "20529963",
+    "brands": [
+      "Alesto"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:croatia",
+      "en:france",
+      "en:germany",
+      "en:hungary",
+      "en:lithuania",
+      "en:serbia",
+      "en:slovenia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 44.2,
+      "energy-kcal_100g": 555,
+      "energy-kj_100g": 2311,
+      "fat_100g": 34.3,
+      "proteins_100g": 14.9,
+      "salt_100g": 2.54,
+      "saturated-fat_100g": 4,
+      "sodium_100g": 1.016,
+      "sugars_100g": 9
+    },
+    "product_name": "cruspies wasabi"
+  },
+  {
+    "code": "4056489273547",
+    "brands": [
+      "Crownfield"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:hungary",
+      "en:serbia",
+      "en:spain"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 64.4,
+      "energy-kcal_100g": 367,
+      "energy-kj_100g": 1549,
+      "fat_100g": 5.4,
+      "fiber_100g": 9.1,
+      "proteins_100g": 10.7,
+      "salt_100g": 0.27,
+      "saturated-fat_100g": 0.8,
+      "sodium_100g": 0.108,
+      "sugars_100g": 1.8
+    },
+    "product_name": "6 CEREALES MIX & MATCH"
+  },
+  {
+    "code": "20009618",
+    "brands": [
+      "Safeway"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:france",
+      "en:italy",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 0,
+      "energy-kcal_100g": 245,
+      "fat_100g": 17,
+      "proteins_100g": 23,
+      "salt_100g": 1,
+      "saturated-fat_100g": 3,
+      "sodium_100g": 0.4,
+      "sugars_100g": 0
+    },
+    "product_name": "Nixe Tuna in Olive Oil"
+  },
+  {
+    "code": "4056489300786",
+    "brands": [
+      "Crownfield",
+      "Lidl"
+    ],
+    "stores": [
+      "Lidl"
+    ],
+    "countries_tags": [
+      "en:belgium",
+      "en:france",
+      "en:germany",
+      "en:serbia"
+    ],
+    "nutriments": {
+      "carbohydrates_100g": 59.8,
+      "energy-kcal_100g": 447,
+      "energy-kj_100g": 1880,
+      "fat_100g": 16.2,
+      "fiber_100g": 9.1,
+      "proteins_100g": 10.9,
+      "salt_100g": 0.41,
+      "saturated-fat_100g": 5.8,
+      "sodium_100g": 0.164,
+      "sugars_100g": 13.7
+    },
+    "product_name": "Knusper Müsli Schoko"
+  }
+]

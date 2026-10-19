@@ -58,7 +58,7 @@ data/
                     SavedMealWithItems, SavedMealItemWithProduct)
     dao/          — DAOs (ProductDao, FoodEntryDao, WeightEntryDao, SavedMealDao)
     converter/    — Converters.kt: LocalDate → Long epochDay via TypeConverter
-    DietHelperDatabase.kt (v2)
+    DietHelperDatabase.kt (v3)
     GoalsDataSource.kt  — DataStore wrapper
     DatabaseSeeder.kt   — seed data on first launch
   mapper/         — entity ↔ domain mappers:

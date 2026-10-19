@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import com.k.shavrin.diethelper.domain.model.DailyGoals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -45,6 +46,12 @@ class GoalsDataSource @Inject constructor(
 
     suspend fun setSeeded() {
         dataStore.edit { prefs -> prefs[KEY_IS_SEEDED] = true }
+    }
+
+    suspend fun catalogVersion(): Int = dataStore.data.first()[intPreferencesKey("catalog_version")] ?: 0
+
+    suspend fun setCatalogVersion(version: Int) {
+        dataStore.edit { it[intPreferencesKey("catalog_version")] = version }
     }
 
     companion object {

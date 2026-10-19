@@ -1,20 +1,59 @@
 package com.k.shavrin.diethelper.data.local
 
+import android.content.Context
+import androidx.room.withTransaction
+import com.k.shavrin.diethelper.data.mapper.toEntity
+import com.k.shavrin.diethelper.data.repository.OpenFoodFactsRepository
 import com.k.shavrin.diethelper.domain.model.Product
 import com.k.shavrin.diethelper.domain.repository.ProductRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
+import org.json.JSONArray
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DatabaseSeeder @Inject constructor(
     private val productRepository: ProductRepository,
-    private val goalsDataSource: GoalsDataSource
+    private val goalsDataSource: GoalsDataSource,
+    @ApplicationContext private val context: Context,
+    private val database: DietHelperDatabase
 ) {
 
     suspend fun seedIfNeeded() {
-        if (goalsDataSource.isSeeded()) return
-        DEFAULT_PRODUCTS.forEach { productRepository.addProduct(it) }
+        if (goalsDataSource.catalogVersion() >= 3) return
+        val rows = JSONArray(context.assets.open("diary-products.json").bufferedReader().use { it.readText() })
+        val diary = List(rows.length()) { index ->
+            val item = rows.getJSONObject(index)
+            Product(
+                name = item.getString("name"), caloriesPer100g = item.getDouble("calories").toFloat(),
+                proteinPer100g = item.getDouble("protein").toFloat(), fatPer100g = item.getDouble("fat").toFloat(),
+                carbsPer100g = item.getDouble("carbs").toFloat(), aliases = item.getString("aliases"), source = "diary",
+                nutritionNote = item.getString("note"), portionLabel = item.getString("portionLabel"), unit = item.getString("unit")
+            )
+        }
+        val regionalRows = JSONArray(context.assets.open("regional-products.json").bufferedReader().use { it.readText() })
+        val regional = List(regionalRows.length()) { index ->
+            OpenFoodFactsRepository.parseProduct(regionalRows.getJSONObject(index))
+        }.filterNotNull()
+        database.withTransaction {
+            val products = productRepository.getAllProducts().first()
+            val existing = products.map { it.name.lowercase() }.toMutableSet()
+            val diaryNames = products.filter { it.source == "diary" }.map { it.name.lowercase() }.toMutableSet()
+            diary.forEach { product ->
+                if (diaryNames.add(product.name.lowercase())) database.productDao().insertProduct(product.toEntity())
+                existing.add(product.name.lowercase())
+            }
+            DEFAULT_PRODUCTS.forEach { product ->
+                if (existing.add(product.name.lowercase())) database.productDao().insertProduct(product.copy(source = "reference").toEntity())
+            }
+            val barcodes = products.map { it.barcode }.toMutableSet()
+            regional.forEach { product ->
+                if (barcodes.add(product.barcode)) database.productDao().insertProduct(product.toEntity())
+            }
+        }
         goalsDataSource.setSeeded()
+        goalsDataSource.setCatalogVersion(3)
     }
 
     companion object {

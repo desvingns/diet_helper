@@ -8,7 +8,8 @@ data class ReportEntry(
     val calories: Float,
     val protein: Float,
     val fat: Float,
-    val carbs: Float
+    val carbs: Float,
+    val amountLabel: String = "$grams г"
 )
 
 data class ReportDay(

@@ -1,0 +1,5560 @@
+{
+  "title": "СРЦ7 · 1 в день",
+  "sourceUrl": "https://docs.google.com/spreadsheets/d/1XUjSjMRlWZDY_bSzxbbpLvxjwk6fR6UKCpmhROFg8L8/edit#gid=848117894",
+  "sourceDate": "2026-10-19",
+  "referenceMaxima": {
+    "squat": 230,
+    "bench": 160,
+    "deadlift": 240
+  },
+  "days": [
+    {
+      "id": 0,
+      "cycle": 1,
+      "day": 1,
+      "notes": "Разгибание голени, трицепс на блоке, наружное вращение плеча, лодочка",
+      "exercises": [
+        {
+          "id": 4,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.54
+            },
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.74
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Присед на груди",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 0.75,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.66
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Наклоны",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.55,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "cycle": 1,
+      "day": 2,
+      "notes": "Упражнения для икр, лодочка, планка",
+      "exercises": [
+        {
+          "id": 13,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.77
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.6,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 5,
+              "percent": 0.59
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "Жим средним хватом",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.85,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.76
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.46699999999999997,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "cycle": 1,
+      "day": 3,
+      "notes": "Верхняя и нижняя тяга, пресс",
+      "exercises": [
+        {
+          "id": 22,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.61
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "cycle": 1,
+      "day": 4,
+      "notes": "Кроссовер для груди, трицепс на блоке, лодочка",
+      "exercises": [
+        {
+          "id": 31,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 32,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.61
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.78
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "name": "Жим на наклонной",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 34,
+          "name": "Присед",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "name": "Жим гантелей",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.32,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2.0,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "cycle": 1,
+      "day": 5,
+      "notes": "Сгибание голени, лодочка, планка",
+      "exercises": [
+        {
+          "id": 40,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 41,
+          "name": "Опциональная тяга (см. инстр)",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 42,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 43,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.75,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "cycle": 2,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 60,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.56
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.67
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.78
+            }
+          ]
+        },
+        {
+          "id": 61,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 62,
+          "name": "Присед на груди",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 0.75375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 63,
+          "name": "Наклоны",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.55275,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "cycle": 2,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 69,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 70,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.603,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.62
+            }
+          ]
+        },
+        {
+          "id": 71,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8542500000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 72,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.46933499999999995,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 5,
+              "percent": 0.35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "cycle": 2,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 78,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.005,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 79,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 80,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.804,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        },
+        {
+          "id": 81,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "cycle": 2,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 87,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 88,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 3,
+              "percent": 0.54
+            }
+          ]
+        },
+        {
+          "id": 89,
+          "name": "Жим на наклонной",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8039999999999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.62
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 90,
+          "name": "Присед",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        },
+        {
+          "id": 91,
+          "name": "Жим гантелей",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.3216,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "cycle": 2,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 96,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.77
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.82
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.87
+            }
+          ]
+        },
+        {
+          "id": 97,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9045000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 98,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0050000000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 5,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 99,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.75375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "cycle": 3,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 116,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.010025,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 117,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0100250000000002,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 118,
+          "name": "Присед на груди",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 0.75751875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 3,
+              "sets": 4,
+              "percent": 0.67
+            }
+          ]
+        },
+        {
+          "id": 119,
+          "name": "Наклоны",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.5555137499999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.35
+            },
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "cycle": 3,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 125,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0100250000000002,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 3,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 126,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.606015,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.54
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 127,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8585212500000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.58
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.67
+            }
+          ]
+        },
+        {
+          "id": 128,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.47168167499999997,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "cycle": 3,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 134,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.010025,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.67
+            },
+            {
+              "reps": 2,
+              "sets": 4,
+              "percent": 0.76
+            }
+          ]
+        },
+        {
+          "id": 135,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0100250000000002,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 136,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8080200000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.49
+            }
+          ]
+        },
+        {
+          "id": 137,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0100250000000002,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "cycle": 3,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 143,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0100250000000002,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 144,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.010025,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.77
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.9
+            }
+          ]
+        },
+        {
+          "id": 145,
+          "name": "Жим на наклонной",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.80802,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 3,
+              "sets": 5,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 146,
+          "name": "Присед",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 1.010025,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.49
+            }
+          ]
+        },
+        {
+          "id": 147,
+          "name": "Жим гантелей",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.323208,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.49
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "cycle": 3,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 152,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0100250000000002,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.64
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.74
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 153,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9090225000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 154,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0100250000000002,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 155,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.75751875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "cycle": 4,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 172,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0150751252173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 173,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 174,
+          "name": "Присед на груди",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 0.7613063439130434,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 175,
+          "name": "Наклоны",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.5582913187499999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "cycle": 4,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 181,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.45
+            },
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.5
+            }
+          ]
+        },
+        {
+          "id": 182,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.6090450749999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 183,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8628138562500001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 184,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.474040083375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "cycle": 4,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 190,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 191,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 192,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8120601,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 193,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.57
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "cycle": 4,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 199,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.62
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 200,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0150751252173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.87
+            }
+          ]
+        },
+        {
+          "id": 201,
+          "name": "Жим на наклонной",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.8120601000000001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 202,
+          "name": "Присед",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 1.0150751252173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 203,
+          "name": "Жим гантелей",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.32482404,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "cycle": 4,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 208,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 3,
+              "sets": 5,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 209,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9135676125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 210,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.015075125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 211,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.7613063439130434,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "cycle": 5,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 228,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0201505004347826,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 3,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 229,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.020150500625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 230,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.7651128756521739,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.35
+            }
+          ]
+        },
+        {
+          "id": 231,
+          "name": "Наклоны",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.5610827754166666,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "cycle": 5,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 237,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.020150500625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 238,
+          "name": "Жим стоя",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.612090300375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 239,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.867127925625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 240,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.4764102838125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "cycle": 5,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 246,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.0201505008333334,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.6
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 247,
+          "name": "Жим лежа",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 1.020150500625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.4
+            },
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.45
+            }
+          ]
+        },
+        {
+          "id": 248,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8161204004166667,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 3,
+              "percent": 0.45
+            }
+          ]
+        },
+        {
+          "id": 249,
+          "name": "Жим лежа",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 1.020150500625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "cycle": 5,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 264,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.020150500625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 265,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9181354504166667,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 2,
+              "sets": 4,
+              "percent": 0.5
+            }
+          ]
+        },
+        {
+          "id": 266,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.020150500625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 267,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.7651128756521739,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "cycle": 6,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 284,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0252512530434783,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 285,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.025251253125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 286,
+          "name": "Присед на груди",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 0.7689384399999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.77
+            }
+          ]
+        },
+        {
+          "id": 287,
+          "name": "Наклоны",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.5638881891666667,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 3,
+              "percent": 0.45
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "cycle": 6,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 293,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.025251253125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.77
+            }
+          ]
+        },
+        {
+          "id": 294,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.615150751875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 295,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.871463565,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.58
+            },
+            {
+              "reps": 3,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 296,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.47879233518750003,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "cycle": 6,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 302,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.0252512533333333,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 303,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.025251253125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.57
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 304,
+          "name": "Тяга на прямых ногах",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.8202010024999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 3,
+              "percent": 0.5
+            }
+          ]
+        },
+        {
+          "id": 305,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.025251253125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "cycle": 6,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 311,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.025251253125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 312,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0252512530434783,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 313,
+          "name": "Жим на наклонной",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.8202010024999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 314,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0252512530434783,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.77
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 315,
+          "name": "Жим гантелей",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.328080401,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "cycle": 6,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 320,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.025251253125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 321,
+          "name": "Опциональная тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 0.9227261279166666,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.77
+            }
+          ]
+        },
+        {
+          "id": 322,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.025251253125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 323,
+          "name": "Присед на груди",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 0.7689384399999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "cycle": 7,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 340,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0303775095652175,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.54
+            },
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.74
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 341,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.030377509375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 342,
+          "name": "Присед на груди",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 0.772783132173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.66
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 343,
+          "name": "Наклоны",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.56670763,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "cycle": 7,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 349,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.030377509375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.72
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.77
+            }
+          ]
+        },
+        {
+          "id": 350,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.618226505625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 5,
+              "percent": 0.59
+            }
+          ]
+        },
+        {
+          "id": 351,
+          "name": "Жим средним хватом",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.8758208831250001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.76
+            }
+          ]
+        },
+        {
+          "id": 352,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.481186296875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.3
+            },
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "cycle": 7,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 358,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.0303775095833332,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.61
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 359,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.030377509375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 360,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8243020075,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        },
+        {
+          "id": 361,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.030377509375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "cycle": 7,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 367,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.030377509375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.62
+            }
+          ]
+        },
+        {
+          "id": 368,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0303775095652175,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.61
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.78
+            }
+          ]
+        },
+        {
+          "id": 369,
+          "name": "Жим на наклонной",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.8243020075,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.67
+            }
+          ]
+        },
+        {
+          "id": 370,
+          "name": "Присед",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 1.0303775095652175,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 371,
+          "name": "Жим гантелей",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.329720803,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "cycle": 7,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 376,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.030377509375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 377,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9273397583333334,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 378,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.030377509375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 379,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.772783132173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "cycle": 8,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 396,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0355293969565216,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.5
+            }
+          ]
+        },
+        {
+          "id": 397,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0355293968750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 4,
+              "percent": 0.63
+            }
+          ]
+        },
+        {
+          "id": 398,
+          "name": "Присед на груди",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 0.776647047826087,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.5
+            }
+          ]
+        },
+        {
+          "id": 399,
+          "name": "Наклоны",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.5695411683333333,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "cycle": 8,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 405,
+          "name": "Жим лежа",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 1.0355293968750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.4
+            },
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.44
+            }
+          ]
+        },
+        {
+          "id": 406,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.6213176381875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.52
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 407,
+          "name": "Жим средним хватом",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.8801999875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        },
+        {
+          "id": 408,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.48359222837500004,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "cycle": 8,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 414,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.0355293970833332,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 415,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0355293968750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.57
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.68
+            }
+          ]
+        },
+        {
+          "id": 416,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8284235175,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 417,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0355293968750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "cycle": 8,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 423,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0355293968750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 424,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0355293969565216,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 3,
+              "percent": 0.54
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.58
+            }
+          ]
+        },
+        {
+          "id": 425,
+          "name": "Жим на наклонной",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8284235174999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.62
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 426,
+          "name": "Присед",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 1.0355293969565216,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 427,
+          "name": "Жим гантелей",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.331369407,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.45
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "cycle": 8,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 432,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0355293968750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 433,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9319764570833333,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 5,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 434,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0355293968750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 435,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.776647047826087,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "cycle": 9,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 452,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0407070439130435,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.56
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.67
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.78
+            }
+          ]
+        },
+        {
+          "id": 453,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 454,
+          "name": "Присед на груди",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 0.7805302830434782,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 455,
+          "name": "Наклоны",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.5723888741666666,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "cycle": 9,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 461,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.5
+            },
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 462,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.6244242263750001,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.62
+            }
+          ]
+        },
+        {
+          "id": 463,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8846009875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 464,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.48601018949999997,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "cycle": 9,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 470,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 471,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 472,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.832565635,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.47
+            }
+          ]
+        },
+        {
+          "id": 473,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "cycle": 9,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 479,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 480,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0407070439130435,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 5,
+              "percent": 0.54
+            }
+          ]
+        },
+        {
+          "id": 481,
+          "name": "Жим на наклонной",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8325656349999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.62
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 482,
+          "name": "Присед",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 1.0407070439130435,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        },
+        {
+          "id": 483,
+          "name": "Жим гантелей",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.3330262540625,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "cycle": 9,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 488,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.77
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.82
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.87
+            }
+          ]
+        },
+        {
+          "id": 489,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.9366363395833334,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 490,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.04070704375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 4,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 491,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.7805302830434782,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "cycle": 10,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 508,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0459105791304348,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.53
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.68
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 509,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.045910579375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.67
+            }
+          ]
+        },
+        {
+          "id": 510,
+          "name": "Присед на груди",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 0.784432934347826,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.77
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.82
+            }
+          ]
+        },
+        {
+          "id": 511,
+          "name": "Наклоны",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.5752508183333334,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.4
+            },
+            {
+              "reps": 3,
+              "sets": 4,
+              "percent": 0.48
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "cycle": 10,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 517,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.045910579375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.62
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.72
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 518,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.6275463474999999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 519,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8890239925,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 4,
+              "percent": 0.67
+            }
+          ]
+        },
+        {
+          "id": 520,
+          "name": "Французский жим",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.4884402404375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 2,
+              "percent": 0.35
+            },
+            {
+              "reps": 5,
+              "sets": 2,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "cycle": 10,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 526,
+          "name": "Становая тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 1.0459105791666667,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.57
+            },
+            {
+              "reps": 3,
+              "sets": 2,
+              "percent": 0.67
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.87
+            }
+          ]
+        },
+        {
+          "id": 527,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.045910579375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.57
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 528,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8367284633333333,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 529,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.045910579375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.58
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.62
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "cycle": 10,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 535,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.045910579375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 536,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0459105791304348,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 537,
+          "name": "Жим на наклонной",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.8367284631249999,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 538,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.0459105791304348,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.77
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.85
+            }
+          ]
+        },
+        {
+          "id": 539,
+          "name": "Жим гантелей",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.3346913853125,
+          "rounding": 1.0,
+          "equipmentMultiplier": 2,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "cycle": 10,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 544,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.045910579375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.78
+            }
+          ]
+        },
+        {
+          "id": 545,
+          "name": "Опциональная тяга",
+          "load": "Тяжелая",
+          "base": "deadlift",
+          "factor": 0.94131952125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 1,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.77
+            }
+          ]
+        },
+        {
+          "id": 546,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.045910579375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 547,
+          "name": "Присед на груди",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 0.784432934347826,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "cycle": 11,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 564,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.051140132173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.72
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.8
+            }
+          ]
+        },
+        {
+          "id": 565,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.051140131875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.5
+            }
+          ]
+        },
+        {
+          "id": 566,
+          "name": "Присед на груди",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 0.7883550991304348,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.57
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.67
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.81
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "cycle": 11,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 573,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.051140131875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.6
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.67
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.75
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.82
+            }
+          ]
+        },
+        {
+          "id": 574,
+          "name": "Жим стоя",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.630684079375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 575,
+          "name": "Жим средним хватом",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 0.8934691125,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.65
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.75
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "cycle": 11,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 582,
+          "name": "Становая тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 1.0511401320833333,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.55
+            }
+          ]
+        },
+        {
+          "id": 583,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.051140131875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 584,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.8409121058333333,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 6,
+              "sets": 4,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 585,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.051140131875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 2,
+              "percent": 0.62
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.7
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.72
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "cycle": 11,
+      "day": 4,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 591,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.051140131875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.57
+            },
+            {
+              "reps": 4,
+              "sets": 3,
+              "percent": 0.62
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 592,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.051140132173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.52
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 593,
+          "name": "Жим на наклонной",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.840912105625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 594,
+          "name": "Присед",
+          "load": "Тяжелая",
+          "base": "squat",
+          "factor": 1.051140132173913,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.75
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "cycle": 11,
+      "day": 5,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 600,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.051140131875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.6
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.7
+            },
+            {
+              "reps": 2,
+              "sets": 3,
+              "percent": 0.74
+            }
+          ]
+        },
+        {
+          "id": 601,
+          "name": "Опциональная тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 0.94602611875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 5,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 602,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.051140131875,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 5,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 603,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.7883550991304348,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "cycle": 12,
+      "day": 1,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 620,
+          "name": "Присед",
+          "load": "Средняя",
+          "base": "squat",
+          "factor": 1.0563958326086957,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            }
+          ]
+        },
+        {
+          "id": 621,
+          "name": "Жим лежа",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 1.0563958325,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 622,
+          "name": "Присед на груди",
+          "load": "Легкая",
+          "base": "squat",
+          "factor": 0.7922968743478261,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "cycle": 12,
+      "day": 2,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 629,
+          "name": "Жим лежа",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 1.0563958325,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 2,
+              "sets": 2,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 2,
+              "percent": 0.7
+            }
+          ]
+        },
+        {
+          "id": 630,
+          "name": "Жим стоя",
+          "load": "Легкая",
+          "base": "bench",
+          "factor": 0.633837499375,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.4
+            }
+          ]
+        },
+        {
+          "id": 631,
+          "name": "Жим средним хватом",
+          "load": "Средняя",
+          "base": "bench",
+          "factor": 0.8979364575,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 4,
+              "percent": 0.55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "cycle": 12,
+      "day": 3,
+      "notes": "",
+      "exercises": [
+        {
+          "id": 638,
+          "name": "Становая тяга",
+          "load": "Средняя",
+          "base": "deadlift",
+          "factor": 1.0563958325,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 3,
+              "sets": 1,
+              "percent": 0.5
+            },
+            {
+              "reps": 2,
+              "sets": 4,
+              "percent": 0.6
+            }
+          ]
+        },
+        {
+          "id": 639,
+          "name": "Жим лежа",
+          "load": "Тяжелая",
+          "base": "bench",
+          "factor": 1.0563958325,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 4,
+              "sets": 1,
+              "percent": 0.55
+            },
+            {
+              "reps": 3,
+              "sets": 3,
+              "percent": 0.65
+            },
+            {
+              "reps": 1,
+              "sets": 3,
+              "percent": 0.75
+            }
+          ]
+        },
+        {
+          "id": 640,
+          "name": "Тяга на прямых ногах",
+          "load": "Легкая",
+          "base": "deadlift",
+          "factor": 0.84511666625,
+          "rounding": 2.5,
+          "equipmentMultiplier": 1,
+          "groups": [
+            {
+              "reps": 5,
+              "sets": 5,
+              "percent": 0.45
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

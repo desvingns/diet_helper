@@ -2,6 +2,7 @@ package com.k.shavrin.diethelper.presentation.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Settings
@@ -14,16 +15,17 @@ sealed class BottomNavItem(
     val label: String
 ) {
     object Today : BottomNavItem(Routes.TODAY, Icons.Filled.Today, "Сегодня")
+    object Workouts : BottomNavItem(Routes.WORKOUTS, Icons.Filled.FitnessCenter, "Тренинг")
     object History : BottomNavItem(Routes.HISTORY, Icons.Filled.History, "История")
-    object Statistics : BottomNavItem(Routes.STATISTICS, Icons.Filled.BarChart, "Статистика")
+    object Statistics : BottomNavItem(Routes.STATISTICS, Icons.Filled.BarChart, "Прогресс")
     object Weight : BottomNavItem(Routes.WEIGHT, Icons.Filled.MonitorWeight, "Вес")
     object Settings : BottomNavItem(Routes.SETTINGS, Icons.Filled.Settings, "Настройки")
 }
 
 val BottomNavItems = listOf(
     BottomNavItem.Today,
+    BottomNavItem.Workouts,
     BottomNavItem.History,
     BottomNavItem.Statistics,
-    BottomNavItem.Weight,
     BottomNavItem.Settings
 )

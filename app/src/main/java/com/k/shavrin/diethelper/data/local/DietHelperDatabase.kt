@@ -24,7 +24,7 @@ import com.k.shavrin.diethelper.data.local.entity.WeightEntryEntity
         SavedMealEntity::class,
         SavedMealItemEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -36,6 +36,16 @@ abstract class DietHelperDatabase : RoomDatabase() {
 
     companion object {
         const val NAME = "diet_helper.db"
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                listOf("aliases", "sourceUrl", "barcode", "nutritionNote", "portionLabel").forEach { column ->
+                    db.execSQL("ALTER TABLE products ADD COLUMN $column TEXT NOT NULL DEFAULT ''")
+                }
+                db.execSQL("ALTER TABLE products ADD COLUMN source TEXT NOT NULL DEFAULT 'custom'")
+                db.execSQL("ALTER TABLE products ADD COLUMN unit TEXT NOT NULL DEFAULT 'г'")
+            }
+        }
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {

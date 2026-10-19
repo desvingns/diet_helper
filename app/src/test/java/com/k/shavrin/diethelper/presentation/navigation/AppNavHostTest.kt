@@ -100,7 +100,7 @@ class AppNavHostTest {
     fun `BottomNavItems list order matches the canonical tab order`() {
         val order = BottomNavItems.map { it.route }
         assertEquals(
-            listOf(Routes.TODAY, Routes.HISTORY, Routes.STATISTICS, Routes.WEIGHT, Routes.SETTINGS),
+            listOf(Routes.TODAY, Routes.WORKOUTS, Routes.HISTORY, Routes.STATISTICS, Routes.SETTINGS),
             order
         )
     }
@@ -112,6 +112,7 @@ class AppNavHostTest {
         val source = readAppNavHostSource()
         // Each top-level route appears in a composable(...) call.
         val expectedComposables = listOf(
+            "composable(Routes.WORKOUTS)",
             "composable(Routes.TODAY)",
             "composable(Routes.HISTORY)",
             "composable(Routes.STATISTICS)",

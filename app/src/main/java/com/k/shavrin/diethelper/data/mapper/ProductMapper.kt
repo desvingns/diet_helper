@@ -10,7 +10,14 @@ fun ProductEntity.toDomain(): Product = Product(
     proteinPer100g = proteinPer100g,
     fatPer100g = fatPer100g,
     carbsPer100g = carbsPer100g,
-    isFavorite = isFavorite
+    isFavorite = isFavorite,
+    aliases = aliases,
+    source = source,
+    sourceUrl = sourceUrl,
+    barcode = barcode,
+    nutritionNote = nutritionNote,
+    portionLabel = portionLabel,
+    unit = unit
 )
 
 fun Product.toEntity(): ProductEntity = ProductEntity(
@@ -20,7 +27,14 @@ fun Product.toEntity(): ProductEntity = ProductEntity(
     proteinPer100g = proteinPer100g,
     fatPer100g = fatPer100g,
     carbsPer100g = carbsPer100g,
-    isFavorite = isFavorite
+    isFavorite = isFavorite,
+    aliases = aliases,
+    source = source,
+    sourceUrl = sourceUrl,
+    barcode = barcode,
+    nutritionNote = nutritionNote,
+    portionLabel = portionLabel,
+    unit = unit
 )
 
 fun List<ProductEntity>.toDomain(): List<Product> = map { it.toDomain() }

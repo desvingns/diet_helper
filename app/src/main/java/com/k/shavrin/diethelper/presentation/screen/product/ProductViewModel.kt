@@ -93,7 +93,7 @@ class ProductViewModel @Inject constructor(
                     product = product,
                     date = date,
                     mealType = mealType,
-                    multiplier = grams / 100f
+                    multiplier = product.multiplierForAmount(grams)
                 )
             )
             onComplete()

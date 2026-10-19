@@ -301,10 +301,10 @@ class PdfReportRenderer @Inject constructor(
     private fun drawDayMeals(ctx: PdfPageContext, day: ReportDay, data: ReportData) {
         for (mealType in MealType.values()) {
             val mealEntries = day.entriesByMeal[mealType] ?: continue
-            ensureSpace(ctx, data, PdfReportLayout.LINE_SPACING * (mealEntries.size + 1))
+            ensureSpace(ctx, data, PdfReportLayout.LINE_SPACING * (mealEntries.size * 2 + 1))
             drawMealHeader(ctx, mealType)
             for (entry in mealEntries) {
-                ensureSpace(ctx, data, PdfReportLayout.LINE_SPACING)
+                ensureSpace(ctx, data, PdfReportLayout.LINE_SPACING * 2)
                 drawEntryLine(ctx, entry)
             }
         }
@@ -325,12 +325,22 @@ class PdfReportRenderer @Inject constructor(
         val rightPaint = paint(PdfReportLayout.SMALL_BODY_SIZE, PdfReportLayout.COLOR_TEXT_SECONDARY).apply {
             textAlign = Paint.Align.RIGHT
         }
-        canvas.drawText("${entry.productName}  ${entry.grams} г", left, ctx.currentY, textPaint)
         val rightText = "${entry.calories.roundToInt()}/" +
             "${entry.protein.roundToInt()}/" +
             "${entry.fat.roundToInt()}/" +
             "${entry.carbs.roundToInt()}"
+        val available = PdfReportLayout.PAGE_WIDTH - PdfReportLayout.MARGIN - left
+        canvas.drawText(fitEntryText(entry.productName, textPaint, available - rightPaint.measureText(rightText) - 14f), left, ctx.currentY, textPaint)
         canvas.drawText(rightText, PdfReportLayout.PAGE_WIDTH - PdfReportLayout.MARGIN, ctx.currentY, rightPaint)
+        ctx.currentY += PdfReportLayout.LINE_SPACING
+        val amountPaint = paint(PdfReportLayout.SMALL_BODY_SIZE, PdfReportLayout.COLOR_TEXT_MUTED)
+        canvas.drawText(fitEntryText(entry.amountLabel, amountPaint, available), left, ctx.currentY, amountPaint)
+    }
+
+    private fun fitEntryText(text: String, textPaint: Paint, width: Float): String {
+        if (textPaint.measureText(text) <= width) return text
+        val count = textPaint.breakText(text, true, (width - textPaint.measureText("…")).coerceAtLeast(0f), null)
+        return text.take(count).trimEnd() + "…"
     }
 
     private fun drawDayTotal(ctx: PdfPageContext, day: ReportDay) {

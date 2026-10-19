@@ -12,9 +12,10 @@
 
 ## Now
 
-- **Current iteration:** 7 — Audit backlog (6 improvement epics filed, ready to implement)
-- **In progress:** idle — backlog board is loaded; next action is `/mp --feature --next`
-- **Last completed:** all 6 audit epics decomposed onto `.claude/specs/backlog/` via
+- **Current iteration:** Food catalog and workouts, implemented directly at the user's request without MP (2026-10-19).
+- **In progress:** none; product implementation, 408 tests, Lint, Detekt, debug assembly and live emulator search verified.
+- **Latest product delivery:** 132 PDF diary foods; 107 Serbian catalog products (73 Lidl); live name/barcode search; 57 imported workout days, personal maxima, full plan, set progress and persistent rest timer. Explicit Room 2→3 migration preserves existing food data. Details: `docs/food-and-workouts.md`.
+- **Previous pipeline work:** all 6 audit epics decomposed onto `.claude/specs/backlog/` via
   `/mp-spec --feature` (2026-07-06) — **37 SPECs across 6 epics**, each grounded (file:line
   facts), grilled (locked decisions), and light-eval-passed. Recommended implement order:
   data-safety (8) → testability (8) → quality-gates (5) → i18n-strings (5) → a11y (3) →
@@ -34,7 +35,7 @@
 
 All of the code-level debt below is tracked as epics on the SPEC board (2026-07-06 audit):
 
-- **data-safety epic:** `fallbackToDestructiveMigration()` active; `exportSchema = false`
+- **data-safety epic:** destructive migration fallback removed in the 2026-10-19 product update; `exportSchema = false`
   (schema history not committed); non-transactional DatabaseSeeder and `saveMeal`
   delete-then-insert; DataStore IOException uncaught; PDF partial file not cleaned on failure;
   `allowBackup=true` without `dataExtractionRules`; unsafe `enumValueOf` nav-arg parse;

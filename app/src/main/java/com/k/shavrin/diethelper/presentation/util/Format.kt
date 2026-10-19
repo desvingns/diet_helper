@@ -1,5 +1,6 @@
 package com.k.shavrin.diethelper.presentation.util
 
+import com.k.shavrin.diethelper.domain.model.FoodEntry
 import com.k.shavrin.diethelper.domain.model.MealType
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -44,6 +45,13 @@ fun parseIsoDate(value: String): LocalDate = LocalDate.parse(value, isoDateForma
 fun formatGrams(multiplier: Float): String {
     val grams = (multiplier * 100f).roundToInt()
     return "$grams г"
+}
+
+fun formatEntryAmount(entry: FoodEntry): String {
+    val product = entry.product
+    val amount = product.amountForMultiplier(entry.multiplier)
+    return if (product.portionLabel.isBlank()) "${formatMacro(amount, product.unit)}"
+        else "${formatMacro(amount, "порц.")} (${product.portionLabel})"
 }
 
 fun formatCalories(value: Float): String = "${value.roundToInt()} ккал"
