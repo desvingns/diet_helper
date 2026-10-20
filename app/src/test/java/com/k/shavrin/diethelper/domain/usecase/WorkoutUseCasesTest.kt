@@ -4,6 +4,7 @@ import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutExercise
 import com.k.shavrin.diethelper.domain.model.WorkoutGroup
 import com.k.shavrin.diethelper.domain.model.WorkoutPlan
+import com.k.shavrin.diethelper.domain.model.WorkoutProgram
 import com.k.shavrin.diethelper.domain.model.WorkoutProgress
 import com.k.shavrin.diethelper.domain.repository.WorkoutRepository
 import com.k.shavrin.diethelper.domain.usecase.workout.CompleteWorkoutUseCase
@@ -71,18 +72,24 @@ class WorkoutUseCasesTest {
 
 private class FakeWorkoutRepository(private val day: WorkoutDay) : WorkoutRepository {
     override val progress = MutableStateFlow(WorkoutProgress(maxima = mapOf("squat" to 230.0, "bench" to 160.0, "deadlift" to 240.0)))
-    override suspend fun getPlan() = WorkoutPlan("Test", listOf(day))
+    override suspend fun getPlan(program: WorkoutProgram) = WorkoutPlan("Test", listOf(day), program)
+    override suspend fun selectProgram(program: WorkoutProgram) {
+        progress.value = progress.value.copy(program = program)
+    }
+    override suspend fun saveReturnWeekLoads(week: Int, loads: Map<String, Double>) {
+        progress.value = progress.value.copy(returnWeekLoads = progress.value.returnWeekLoads + (week to loads))
+    }
     override suspend fun saveMaxima(maxima: Map<String, Double>) {
         progress.value = progress.value.copy(maxima = maxima)
     }
-    override suspend fun setCompleted(key: String, completed: Boolean, restDeadline: Long) {
+    override suspend fun setCompleted(key: String, completed: Boolean, restDeadline: Long, program: WorkoutProgram) {
         progress.value = progress.value.copy(completedSets = if (completed) progress.value.completedSets + key else progress.value.completedSets - key,
             restDeadline = restDeadline)
     }
-    override suspend fun completeDay(id: Int) {
+    override suspend fun completeDay(id: Int, program: WorkoutProgram) {
         progress.value = progress.value.copy(completedDays = progress.value.completedDays + id)
     }
-    override suspend fun setRest(seconds: Int, deadline: Long, pausedSeconds: Int) {
+    override suspend fun setRest(seconds: Int, deadline: Long, pausedSeconds: Int, program: WorkoutProgram) {
         progress.value = progress.value.copy(restSeconds = seconds, restDeadline = deadline, pausedRestSeconds = pausedSeconds)
     }
 }

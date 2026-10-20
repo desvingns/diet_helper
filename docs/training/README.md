@@ -15,6 +15,8 @@ exhaustive systematic review or a claim to have found a universally best plan.
   including volume/intensity differences and incomplete-cycle caveats.
 - [Version 1.1 implementation](implementation.md): shipped behavior, persistence
   and explicit scope limits; delivery verification is in STATE.md.
+- [Separate workout programs, version 1.2](workout-programs.md): independent SRC7
+  and return-to-training blocks, weekly working weights and migration details.
 - [Product and coaching design](adaptation-design.md): current implementation,
   proposed behavior, acceptance examples and delivery order.
 - [Session check-in template](templates/session-checkin.md): feedback before,
@@ -22,7 +24,7 @@ exhaustive systematic review or a claim to have found a universally best plan.
 - [Technique review template](templates/technique-review.md): filming guidance
   and an observation ledger with timestamps and confidence.
 - [Export example](templates/coaching-export.example.json): illustrative future
-  payload; no runtime exporter or importer exists yet.
+  payload, distinct from the implemented runtime exporter; no importer exists yet.
 
 Private, Git-ignored owner context lives in
 `../../.local/training/athlete-profile.md` and
@@ -55,11 +57,15 @@ exercise changes/preferences, next-day feedback, explainable suggestions and
 Markdown/JSON export. Room 3→4 migration preserves the previous data. The full
 435-test suite, screenshot verification, Lint, Detekt and APK assembly passed.
 
-PENDING: settling the weekly schedule and individualized re-entry prescription;
+DONE in 1.2: separate programs and a reviewable return template with
+locally configured weekly working weights. An owner-specific first-week coaching
+proposal is kept privately; it is not automatically imported or accepted.
+
+PENDING: confirming the proposed weekly schedule and revising it from real reports;
 real owner feedback/video review; repeated-template sessions, richer nutrition
 exports, voice parsing, validated suggestion import and an optional agent bridge.
-The original wave progression is preserved. No replacement program or automatic
-weight progression has been activated. Delivery status is in STATE.md.
+The original wave progression is preserved. No automatic weight progression
+has been activated. Delivery status is in STATE.md.
 
 No paywalled programs, full copyrighted books or full research articles are
 bundled here. The repository contains original summaries and bibliographic

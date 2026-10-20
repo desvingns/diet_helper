@@ -29,7 +29,7 @@ import com.k.shavrin.diethelper.data.local.entity.WeightEntryEntity
         TrainingSessionEntity::class,
         TrainingSetEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

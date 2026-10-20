@@ -8,9 +8,9 @@ import javax.inject.Inject
 class RecordWorkoutSetUseCase @Inject constructor(private val repository: WorkoutRepository) {
     suspend operator fun invoke(day: WorkoutDay, key: String, completed: Boolean, now: Long) {
         val progress = repository.progress.first()
-        require(progress.configured && day.id !in progress.completedDays)
+        require(progress.configuredFor(day) && day.id !in progress.completedDays)
         require(day.sets().any { it.key == key })
         val deadline = if (completed) now + progress.restSeconds * 1000L else 0L
-        repository.setCompleted(key, completed, deadline)
+        repository.setCompleted(key, completed, deadline, day.program)
     }
 }

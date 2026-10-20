@@ -8,7 +8,8 @@ import javax.inject.Inject
 class CompleteWorkoutUseCase @Inject constructor(private val repository: WorkoutRepository) {
     suspend operator fun invoke(day: WorkoutDay) {
         val progress = repository.progress.first()
+        require(progress.program == day.program)
         require(day.sets().isNotEmpty() && day.sets().all { it.key in progress.completedSets })
-        repository.completeDay(day.id)
+        repository.completeDay(day.id, day.program)
     }
 }

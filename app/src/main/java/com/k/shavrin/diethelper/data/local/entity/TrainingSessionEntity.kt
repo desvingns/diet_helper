@@ -2,6 +2,7 @@
 
 package com.k.shavrin.diethelper.data.local.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -27,7 +28,8 @@ data class TrainingSessionEntity(
     val recovery: String,
     val notes: String,
     val nextDayRecovery: String,
-    val nextDayNotes: String
+    val nextDayNotes: String,
+    @ColumnInfo(defaultValue = "'src7'") val programId: String = "src7"
 )
 
 @Entity(

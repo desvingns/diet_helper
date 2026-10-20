@@ -9,13 +9,13 @@ object TrainingJournalMarkdown {
     fun render(sessions: List<TrainingSession>): String = buildString {
         appendLine("# MyDietHelper — training journal")
         appendLine()
-        appendLine("Original SRC7 waves are preserved. Actual sets are separate from the plan.")
+        appendLine("SRC7 and return-to-training have separate progress. Actual sets are separate from the plan.")
         appendLine("Unknown values are not inferred. Start time is the first logged set or a manual finish, not gym arrival.")
         sessions.forEach { session ->
             val zone = runCatching { ZoneId.of(session.zoneId) }.getOrDefault(ZoneId.of("UTC"))
             val date = Instant.ofEpochMilli(session.startedAt).atZone(zone).toLocalDate()
             appendLine()
-            appendLine("## $date — cycle ${session.cycle}, day ${session.day} — ${session.outcome}")
+            appendLine("## $date — ${session.program.title} (${session.program.id}) — cycle ${session.cycle}, day ${session.day} — ${session.outcome}")
             appendLine("ID: ${session.id}; timezone: ${session.zoneId}")
             appendLine("Gym: ${session.gymMinutes ?: "unknown"} min; social: ${session.socialMinutes ?: "unknown"} min; " +
                 "training including set rests: ${session.trainingMinutes ?: "unknown"} min")

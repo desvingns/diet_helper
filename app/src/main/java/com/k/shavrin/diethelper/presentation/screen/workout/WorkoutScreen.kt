@@ -88,6 +88,7 @@ import com.k.shavrin.diethelper.domain.model.TrainingLoadBasis
 import com.k.shavrin.diethelper.domain.model.TrainingSession
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutExercise
+import com.k.shavrin.diethelper.domain.model.WorkoutProgram
 import com.k.shavrin.diethelper.domain.model.WorkoutProgress
 import com.k.shavrin.diethelper.domain.model.WorkoutSet
 import com.k.shavrin.diethelper.domain.model.completedTrainingPlanKeys
@@ -112,7 +113,8 @@ fun WorkoutScreen(viewModel: WorkoutViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val activeSession = journal.sessions.firstOrNull { it.outcome == com.k.shavrin.diethelper.domain.model.TrainingOutcome.ACTIVE }
     LaunchedEffect(activeSession?.id, state.plan) {
-        activeSession?.let { active -> state.plan?.days?.firstOrNull { it.id == active.planDayId }?.let(viewModel::selectDay) }
+        activeSession?.let { active -> state.plan?.takeIf { it.program == active.program }?.days
+            ?.firstOrNull { it.id == active.planDayId }?.let(viewModel::selectDay) }
     }
     LaunchedEffect(journal.completedDayId) {
         if (journal.completedDayId != null) {
@@ -134,7 +136,8 @@ fun WorkoutScreen(viewModel: WorkoutViewModel = hiltViewModel()) {
     WorkoutContent(state, viewModel::selectDay, viewModel::toggleSet,
         viewModel::saveMaximums, viewModel::timer, viewModel::clearError, journal,
         TrainingJournalActions(journalViewModel::record, journalViewModel::undo, journalViewModel::finish,
-            journalViewModel::followUp, journalViewModel::export, journalViewModel::clearError))
+            journalViewModel::followUp, journalViewModel::export, journalViewModel::clearError),
+        WorkoutProgramActions(viewModel::select, viewModel::saveReturnWeek))
 }
 
 @Composable
@@ -146,27 +149,27 @@ fun WorkoutContent(
     onTimer: (Int, Long, Int) -> Unit,
     onClearError: () -> Unit,
     journal: TrainingJournalUiState,
-    actions: TrainingJournalActions
+    actions: TrainingJournalActions,
+    programs: WorkoutProgramActions
 ) {
-    var tab by rememberSaveable { mutableIntStateOf(0) }
-    var showMaxima by rememberSaveable { mutableStateOf(false) }
-    var cycle by rememberSaveable { mutableIntStateOf(1) }
+    var tab by rememberSaveable(state.progress.program) { mutableIntStateOf(0) }
+    var showMaxima by rememberSaveable(state.progress.program) { mutableStateOf(false) }
+    var cycle by rememberSaveable(state.progress.program) { mutableIntStateOf(1) }
+    var editingWeek by rememberSaveable(state.progress.program) { mutableIntStateOf(1) }
     val day = state.selectedDay
     val progress = state.progress
+    val returning = progress.program == WorkoutProgram.RETURN
+    val configure = { editingWeek = configurationWeek(tab, cycle, day); showMaxima = true }
     val activity = LocalContext.current as? Activity
-    DisposableEffect(activity, tab, day?.id, progress.configured) {
-        if (tab == 0 && day != null && progress.configured) {
+    DisposableEffect(activity, tab, day?.id, day?.let(progress::configuredFor)) {
+        if (tab == 0 && day != null && progress.configuredFor(day)) {
             activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
         onDispose { activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
     }
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        Row(Modifier.fillMaxWidth().padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
-            ScreenHeading("ДВИЖЕНИЕ И СИЛА", "Тренировки", "СРЦ7 · волны и личный журнал", Modifier.weight(1f), artwork = R.drawable.art_training)
-            FilledTonalIconButton(onClick = { showMaxima = true }) {
-                Icon(Icons.Default.Tune, contentDescription = "Рабочие максимумы")
-            }
-        }
+        WorkoutHeading(returning, !state.saving && !journal.saving, configure)
+        WorkoutProgramPicker(progress.program, !state.saving && !journal.saving, programs.select)
         PillTabs(listOf("Тренировка", "Весь план", "Журнал"), tab, {
             if (it == 1) cycle = day?.cycle ?: cycle
             tab = it
@@ -194,36 +197,58 @@ fun WorkoutContent(
                     Button(onClick = { tab = 1 }) { Text("Посмотреть план") }
                 }
             } else {
-                key(day.id) {
-                    SessionContent(day, state, onSet, onTimer, { showMaxima = true }, journal, actions)
+                key(progress.program, day.id) {
+                    SessionContent(day, state, onSet, onTimer, configure,
+                        if (journal.program == progress.program) journal else TrainingJournalUiState(program = progress.program), actions)
                 }
             }
         } else if (tab == 2) {
-            TrainingJournalContent(journal, actions)
+            if (journal.program == progress.program) TrainingJournalContent(journal, actions)
         } else {
-            val plan = state.plan
-            LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                item {
-                    Text("${plan?.days?.size ?: 0} тренировок · ${plan?.days?.maxOfOrNull { it.cycle } ?: 0} микроциклов", style = MaterialTheme.typography.titleMedium)
-                    Text("Волны, коэффициенты упражнений и округление сохранены из таблицы. Рабочие ориентиры задаёшь ты.",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                    Row(Modifier.horizontalScroll(rememberScrollState()).padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        (plan?.days?.map { it.cycle }?.distinct().orEmpty()).forEach { number ->
-                            FilterChip(selected = cycle == number, onClick = { cycle = number }, label = { Text("Цикл $number") })
-                        }
-                    }
-                    Text("В таблице заполнены 57 тренировок. Пустые заготовки циклов 13–25 не добавлены.",
-                        style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                item { WorkoutWaveOverview(state.waves, cycle) }
-                items(plan?.days.orEmpty().filter { it.cycle == cycle }, key = { it.id }) { plannedDay ->
-                    PlanDayCard(plannedDay, progress, onOpen = { onSelect(plannedDay); tab = 0 })
-                }
-            }
+            WorkoutPlanContent(state, cycle, { cycle = it }, { onSelect(it); tab = 0 }, configure)
         }
     }
     if (showMaxima) {
-        MaximaDialog(progress, onDismiss = { showMaxima = false }, onSave = { onMaxima(it); showMaxima = false })
+        if (returning) ReturnWeekLoadsDialog(editingWeek, progress, onDismiss = { showMaxima = false }, onSave = {
+            programs.saveWeek(editingWeek, it); showMaxima = false
+        }) else MaximaDialog(progress, onDismiss = { showMaxima = false }, onSave = { onMaxima(it); showMaxima = false })
+    }
+}
+
+@Composable
+private fun WorkoutPlanContent(
+    state: WorkoutUiState,
+    cycle: Int,
+    onCycle: (Int) -> Unit,
+    onOpen: (WorkoutDay) -> Unit,
+    configure: () -> Unit
+) {
+    val progress = state.progress
+    val returning = progress.program == WorkoutProgram.RETURN
+    val plan = state.plan
+    LazyColumn(contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        item {
+            Text("${plan?.days?.size ?: 0} тренировок · ${plan?.days?.maxOfOrNull { it.cycle } ?: 0} " +
+                if (returning) "недель" else "микроциклов", style = MaterialTheme.typography.titleMedium)
+            Text(if (returning) "Пять посещений, включая короткий необязательный день. Веса каждой недели выбираются после отчёта."
+                else "Волны, коэффициенты упражнений и округление сохранены из таблицы. Рабочие ориентиры задаёшь ты.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+            Row(Modifier.horizontalScroll(rememberScrollState()).padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                (plan?.days?.map { it.cycle }?.distinct().orEmpty()).forEach { number ->
+                    FilterChip(selected = cycle == number, onClick = { onCycle(number) }, label = { Text(if (returning) "Неделя $number" else "Цикл $number") })
+                }
+            }
+            Text(if (returning) "План можно пересматривать. Старые рекорды не определяют веса этого блока."
+                else "В таблице заполнены 57 тренировок. Пустые заготовки циклов 13–25 не добавлены.",
+                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        item {
+            if (returning) ReturnWeekSummary(cycle, progress.returnWeekLoads[cycle] != null, configure)
+            else WorkoutWaveOverview(state.waves, cycle)
+        }
+        items(plan?.days.orEmpty().filter { it.cycle == cycle }, key = { it.id }) { plannedDay ->
+            PlanDayCard(plannedDay, progress, onOpen = { onOpen(plannedDay) })
+        }
     }
 }
 
@@ -238,6 +263,8 @@ private fun SessionContent(
     actions: TrainingJournalActions
 ) {
     val progress = state.progress
+    val configured = progress.configuredFor(day)
+    val localProgress = progress.copy(maxima = progress.loadsFor(day))
     val sets = remember(day) { day.sets() }
     val session = journal.sessions.firstOrNull { it.planDayId == day.id }
     val recorded = session?.sets.orEmpty().filter { it.planKey != null }.associateBy { requireNotNull(it.planKey) }
@@ -254,16 +281,11 @@ private fun SessionContent(
     LaunchedEffect(journal.changeVersion) { editingSet = null; adding = false; finishing = false }
     LazyColumn(state = listState, contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("МИКРОЦИКЛ ${day.cycle}  /  ДЕНЬ ${day.day}", color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
-                Text("$completed / ${sets.size} подходов", style = MaterialTheme.typography.labelMedium)
-            }
-            Spacer(Modifier.height(10.dp))
-            LinearProgressIndicator(progress = { completed.toFloat() / sets.size.coerceAtLeast(1) },
-                modifier = Modifier.fillMaxWidth().height(5.dp), color = Lavender)
+            TrainingDayHeading(day, completed, sets.size)
         }
         if (!finished) item { TrainingAdviceCard(journal.advice) }
-        if (!progress.configured) {
+        if (day.program == WorkoutProgram.RETURN) item { ReturnWeekSummary(day.cycle, configured, onConfigure) }
+        if (!configured && day.program == WorkoutProgram.SRC7) {
             item {
                 Card(shape = RoundedCornerShape(24.dp)) {
                     Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -274,33 +296,12 @@ private fun SessionContent(
                     }
                 }
             }
-        } else if (next != null && !finished) {
+        } else if (configured && next != null && !finished) {
             item {
-                Column(Modifier.fillMaxWidth().background(
-                    Brush.linearGradient(listOf(Color(0xFF3B2A53), Color(0xFF20192D))), RoundedCornerShape(28.dp)
-                ).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(if (completed == 0) "ПЕРВЫЙ ПОДХОД" else "СЛЕДУЮЩИЙ ПОДХОД", color = Lavender,
-                        style = MaterialTheme.typography.labelMedium, letterSpacing = 2.sp)
-                    Text(next.exercise.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(weightText(next.exercise.weight(progress.maxima, next.group.percent)),
-                            fontSize = 58.sp, fontWeight = FontWeight.Bold, color = Lavender)
-                        Text("кг × ${next.group.reps}", fontSize = 24.sp, modifier = Modifier.padding(bottom = 9.dp))
-                    }
-                    Text("${percentText(next.group.percent)} по схеме · ${next.exercise.load.lowercase()} нагрузка" +
-                        if (next.exercise.equipmentMultiplier == 2.0) " · вес одной гантели" else "",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                    Button(onClick = { actions.clearError(); editingSet = next }, enabled = editable,
-                        modifier = Modifier.fillMaxWidth().height(54.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Lavender, contentColor = Ink)) {
-                        Icon(Icons.Default.Check, null)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Записать подход", fontWeight = FontWeight.Bold)
-                    }
-                }
+                NextTrainingSetCard(day, next, localProgress, completed, editable) { actions.clearError(); editingSet = next }
             }
         }
-        if (progress.configured && !finished) {
+        if (configured && !finished) {
             item { RestTimer(progress, onTimer) }
             item {
                 OutlinedButton(onClick = { actions.clearError(); adding = true }, enabled = editable, modifier = Modifier.fillMaxWidth()) {
@@ -332,22 +333,18 @@ private fun SessionContent(
                     }
                     if (expanded || next?.exercise?.id == exercise.id) {
                         exerciseSets.forEachIndexed { index, set ->
-                            TrainingPlannedSetRow(index, set, recorded[set.key], progress, set.key in completedKeys, editable) {
+                            TrainingPlannedSetRow(index, set, recorded[set.key], localProgress,
+                                set.key in completedKeys, editable) {
                                 actions.clearError(); editingSet = set
                             }
                         }
                     } else {
-                        ExerciseGroups(exercise, progress)
+                        ExerciseGroups(exercise, localProgress)
                     }
                 }
             }
         }
-        if (day.notes.isNotBlank()) {
-            item {
-                Text("Дополнительно", style = MaterialTheme.typography.titleSmall, color = TrainingAccent)
-                Text(day.notes, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            }
-        }
+        item { TrainingDayNotes(day.notes) }
         item {
             Button(onClick = { actions.clearError(); finishing = true }, enabled = editable,
                 modifier = Modifier.fillMaxWidth().height(54.dp)) {
@@ -359,12 +356,83 @@ private fun SessionContent(
         }
     }
     if (editingSet != null || adding) {
-        SessionSetEditor(day, progress, journal, editingSet, recorded, actions,
+        SessionSetEditor(day, localProgress, journal, editingSet, recorded, actions,
             onLegacyUndo = { key -> onSet(day, key); editingSet = null },
             onDismiss = { editingSet = null; adding = false })
     }
     if (finishing) FinishTrainingDialog(next == null, session, journal.saving, journal.error,
         onSave = { actions.finish(day, it) }, onDismiss = { finishing = false })
+}
+
+private fun configurationWeek(tab: Int, cycle: Int, day: WorkoutDay?) = if (tab == 1) cycle else day?.cycle ?: 1
+
+@Composable
+private fun WorkoutHeading(returning: Boolean, enabled: Boolean, configure: () -> Unit) {
+    Row(Modifier.fillMaxWidth().padding(20.dp), verticalAlignment = Alignment.CenterVertically) {
+        ScreenHeading("ДВИЖЕНИЕ И СИЛА", "Тренировки", if (returning) "Возвращение · рабочие веса и отчёты" else "СРЦ7 · волны и личный журнал",
+            Modifier.weight(1f), artwork = R.drawable.art_training)
+        FilledTonalIconButton(onClick = configure, enabled = enabled) {
+            Icon(Icons.Default.Tune, contentDescription = if (returning) "Веса недели" else "Рабочие максимумы")
+        }
+    }
+}
+
+@Composable
+private fun TrainingDayHeading(day: WorkoutDay, completed: Int, total: Int) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text((if (day.program == WorkoutProgram.RETURN) "НЕДЕЛЯ" else "МИКРОЦИКЛ") + " ${day.cycle}  /  ДЕНЬ ${day.day}",
+            color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
+        Text("$completed / $total подходов", style = MaterialTheme.typography.labelMedium)
+    }
+    Spacer(Modifier.height(10.dp))
+    if (day.title.isNotBlank()) Text(day.title, style = MaterialTheme.typography.titleLarge)
+    LinearProgressIndicator(progress = { completed.toFloat() / total.coerceAtLeast(1) },
+        modifier = Modifier.fillMaxWidth().height(5.dp), color = Lavender)
+}
+
+@Composable
+private fun TrainingDayNotes(notes: String) {
+    if (notes.isNotBlank()) {
+        Text("Дополнительно", style = MaterialTheme.typography.titleSmall, color = TrainingAccent)
+        Text(notes, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+private fun NextTrainingSetCard(
+    day: WorkoutDay,
+    next: WorkoutSet,
+    progress: WorkoutProgress,
+    completed: Int,
+    editable: Boolean,
+    onEdit: () -> Unit
+) {
+    Column(Modifier.fillMaxWidth().background(
+        Brush.linearGradient(listOf(Color(0xFF3B2A53), Color(0xFF20192D))), RoundedCornerShape(28.dp)
+    ).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(if (completed == 0) "ПЕРВЫЙ ПОДХОД" else "СЛЕДУЮЩИЙ ПОДХОД", color = Lavender,
+            style = MaterialTheme.typography.labelMedium, letterSpacing = 2.sp)
+        Text(next.exercise.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(if (next.exercise.loadBasis == TrainingLoadBasis.BODYWEIGHT) "Свой вес"
+                else weightText(next.exercise.weight(progress.maxima, next.group.percent)),
+                fontSize = if (next.exercise.loadBasis == TrainingLoadBasis.BODYWEIGHT) 32.sp else 58.sp,
+                fontWeight = FontWeight.Bold, color = Lavender)
+            Text((if (next.exercise.loadBasis == TrainingLoadBasis.BODYWEIGHT) "× " else "кг × ") + "${next.group.reps}",
+                fontSize = 24.sp, modifier = Modifier.padding(bottom = 9.dp))
+        }
+        Text((if (day.program == WorkoutProgram.RETURN) "Рабочий подход · " else "${percentText(next.group.percent)} по схеме · ") +
+            "${next.exercise.load.lowercase()} нагрузка" +
+            if (next.exercise.equipmentMultiplier == 2.0) " · вес одной гантели" else "",
+            color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        Button(onClick = { onEdit() }, enabled = editable,
+            modifier = Modifier.fillMaxWidth().height(54.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Lavender, contentColor = Ink)) {
+            Icon(Icons.Default.Check, null)
+            Spacer(Modifier.width(8.dp))
+            Text("Записать подход", fontWeight = FontWeight.Bold)
+        }
+    }
 }
 
 @Composable
@@ -420,7 +488,8 @@ private fun TrainingPlannedSetRow(
             val load = if (it.loadBasis == TrainingLoadBasis.BODYWEIGHT) "Свой вес" else "${it.actualWeightKg?.let(::weightText) ?: "—"} кг"
             "${it.exerciseName}: $load × ${it.actualReps}"
         }
-        Text(actualText ?: if (progress.configured) "${weightText(set.exercise.weight(progress.maxima, set.group.percent))} кг × ${set.group.reps}"
+        Text(actualText ?: if (set.exercise.loadBasis == TrainingLoadBasis.BODYWEIGHT) "Свой вес × ${set.group.reps}"
+            else if (progress.configured) "${weightText(set.exercise.weight(progress.maxima, set.group.percent))} кг × ${set.group.reps}"
             else "— кг × ${set.group.reps}", Modifier.weight(1f), fontWeight = FontWeight.Medium)
         Text(percentText(set.group.percent), style = MaterialTheme.typography.labelMedium, color = TrainingAccent)
         Checkbox(checked = checked, onCheckedChange = { onEdit() }, enabled = editable)
@@ -481,9 +550,10 @@ private fun PlanDayCard(day: WorkoutDay, progress: WorkoutProgress, onOpen: () -
                 if (day.id in progress.completedDays) Icon(Icons.Default.CheckCircle, "Выполнена", tint = Mint)
                 else Text("${day.sets().size} подходов", color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
             }
+            if (day.title.isNotBlank()) Text(day.title, style = MaterialTheme.typography.titleMedium)
             day.exercises.forEach { exercise ->
                 Text(exercise.name, style = MaterialTheme.typography.titleSmall)
-                ExerciseGroups(exercise, progress)
+                ExerciseGroups(exercise, progress.copy(maxima = progress.loadsFor(day)))
             }
             OutlinedButton(onClick = onOpen, modifier = Modifier.fillMaxWidth()) { Text("Открыть тренировку") }
         }
@@ -495,7 +565,8 @@ private fun ExerciseGroups(exercise: WorkoutExercise, progress: WorkoutProgress)
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         exercise.groups.forEach { group ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(if (progress.configured) "${weightText(exercise.weight(progress.maxima, group.percent))} кг"
+                Text(if (exercise.loadBasis == TrainingLoadBasis.BODYWEIGHT) "Свой вес"
+                    else if (progress.configured) "${weightText(exercise.weight(progress.maxima, group.percent))} кг"
                     else "— кг", fontWeight = FontWeight.Medium)
                 Text("${group.sets} × ${group.reps}", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text(percentText(group.percent), color = TrainingAccent, style = MaterialTheme.typography.labelMedium)
@@ -535,7 +606,7 @@ internal fun weightText(value: Double): String = if (value % 1.0 < 0.00001) valu
 private fun percentText(value: Double): String = "${weightText(value * 100)}%"
 
 private fun WorkoutUiState.canEdit(day: WorkoutDay, journalSaving: Boolean): Boolean =
-    progress.configured && day.id !in progress.completedDays && !saving && !journalSaving
+    progress.configuredFor(day) && day.id !in progress.completedDays && !saving && !journalSaving
 
 private fun shareTrainingReport(context: Context, paths: List<String>) {
     val uris = ArrayList(paths.map { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", File(it)) })

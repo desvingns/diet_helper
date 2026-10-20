@@ -8,14 +8,16 @@ import java.time.ZoneId
 
 object TrainingJournalJsonCodec {
     fun encode(sessions: List<TrainingSession>): JSONObject = JSONObject().apply {
-        put("schema_version", 1)
+        put("schema_version", 2)
         put("source", "MyDietHelper")
-        put("source_plan", "SRC7 frozen import; original waves preserved")
+        put("source_plan", "Separate SRC7 and return-to-training programs; each session identifies its program")
         put("units", JSONObject().put("load", "kg").put("duration", "minutes"))
         put("missing_data", "null means not reported; legacy completion flags have no inferred actual weights or dates")
         put("sessions", JSONArray(sessions.map { session ->
             JSONObject().apply {
                 put("id", session.id)
+                put("program_id", session.program.id)
+                put("program_name", session.program.title)
                 put("plan_day_id", session.planDayId)
                 put("cycle", session.cycle)
                 put("day", session.day)

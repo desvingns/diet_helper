@@ -24,12 +24,13 @@ class FinishTrainingSessionUseCase @Inject constructor(
         require(feedback.gymMinutes == null || feedback.socialMinutes == null || feedback.socialMinutes <= feedback.gymMinutes)
         require(feedback.sessionRpe == null || feedback.sessionRpe.isFinite() && feedback.sessionRpe in 0.0..10.0)
         val progress = workouts.progress.first()
-        val sessions = journal.observeSessions().first().filter { it.planDayId == day.id }
+        require(progress.program == day.program)
+        val sessions = journal.observeSessions().first().filter { it.program == day.program && it.planDayId == day.id }
         val known = sessions.flatMap { it.sets }.mapNotNull { it.planKey }.toSet()
         val completed = completedTrainingPlanKeys(progress.completedSets, sessions.flatMap { it.sets })
         require(feedback.outcome != TrainingOutcome.COMPLETED || day.sets().all { it.key in completed })
         val legacyCount = day.sets().count { it.key in progress.completedSets && it.key !in known }
         journal.finish(day, feedback, legacyCount, clock.millis(), clock.zone.id)
-        workouts.completeDay(day.id)
+        workouts.completeDay(day.id, day.program)
     }
 }

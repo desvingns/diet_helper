@@ -99,7 +99,9 @@ internal fun TrainingSetForm(
     onDismiss: () -> Unit
 ) {
     val originalName = source?.exercise?.name.orEmpty()
-    val plannedWeight = remember { existing?.plannedWeightKg ?: source?.let { it.exercise.weight(maxima, it.group.percent) } }
+    val plannedWeight = remember { existing?.plannedWeightKg ?: source?.takeIf {
+        it.exercise.loadBasis != TrainingLoadBasis.BODYWEIGHT
+    }?.let { it.exercise.weight(maxima, it.group.percent) } }
     val initial = remember { initialSetInput(source, existing, legacyMarked, plannedWeight) }
     var name by rememberSaveable { mutableStateOf(initial.name) }
     var weight by rememberSaveable { mutableStateOf(initial.weight) }
@@ -114,7 +116,9 @@ internal fun TrainingSetForm(
         title = { Text(if (source == null) "Дополнительный подход" else "Фактический подход") },
         text = {
             Column(Modifier.heightIn(max = 520.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                if (source != null) Text("План: $originalName · ${weightText(plannedWeight ?: 0.0)} кг × ${source.group.reps}",
+                if (source != null) Text("План: $originalName · " +
+                    (if (source.exercise.loadBasis == TrainingLoadBasis.BODYWEIGHT) "свой вес" else "${plannedWeight?.let(::weightText) ?: "—"} кг") +
+                    " × ${source.group.reps}",
                     style = MaterialTheme.typography.bodySmall)
                 if (legacyMarked && existing == null) Text("Старая отметка: фактический вес и повторы не были записаны. Уточни их вручную.",
                     style = MaterialTheme.typography.bodySmall)
@@ -245,7 +249,7 @@ private fun JournalNumberField(value: String, onChange: (String) -> Unit, label:
 }
 
 @Composable
-private fun TrainingFormLayout(
+internal fun TrainingFormLayout(
     title: @Composable () -> Unit,
     text: @Composable () -> Unit,
     confirmButton: @Composable () -> Unit,
@@ -316,7 +320,8 @@ private fun initialSetInput(source: WorkoutSet?, existing: PerformedTrainingSet?
         if (unknown) "" else (existing?.actualReps ?: source?.group?.reps)?.toString().orEmpty(),
         existing?.rpe?.let(::weightText).orEmpty(), existing?.symptomNote.orEmpty(), existing?.notes.orEmpty(),
         existing?.preference ?: ExercisePreference.NEUTRAL,
-        existing?.loadBasis ?: if (source?.exercise?.equipmentMultiplier == 2.0) TrainingLoadBasis.PER_HAND_KG else TrainingLoadBasis.TOTAL_KG
+        existing?.loadBasis ?: if (source?.exercise?.equipmentMultiplier == 2.0) TrainingLoadBasis.PER_HAND_KG
+            else source?.exercise?.loadBasis ?: TrainingLoadBasis.TOTAL_KG
     )
 }
 

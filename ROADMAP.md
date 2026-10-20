@@ -54,7 +54,8 @@ manual adjustment suggestions and MD/JSON export. It does not automatically
 change weights or activate a new program. Personal intake remains in
 Git-ignored `.local/`.
 
-1. Settle practical weekly availability and review the re-entry approach.
+1. Version 1.2: separate SRC7 and return-to-training blocks with explicit weekly
+   working loads. Review actual reports and revise the proposed weekly schedule.
 2. SHIPPED in 1.1: dated actual-set journal, effort, accessories, modified/stopped
    sessions, history snapshots and Markdown/JSON export. Next: repeated-template
    sessions and editing closed performed-set details.

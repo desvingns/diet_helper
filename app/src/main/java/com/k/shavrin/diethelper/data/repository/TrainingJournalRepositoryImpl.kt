@@ -47,9 +47,9 @@ class TrainingJournalRepositoryImpl @Inject constructor(
 
     override suspend fun finish(day: WorkoutDay, feedback: TrainingSessionFeedback, legacySetCount: Int, now: Long, zoneId: String) {
         database.withTransaction {
-            val active = dao.activeSession()
+            val active = dao.activeSession(day.program.id)
             require(active == null || active.planDayId == day.id) { "Сначала завершите начатую тренировку" }
-            val session = active?.toDomain() ?: dao.latestForDay(day.id)?.toDomain()
+            val session = active?.toDomain() ?: dao.latestForDay(day.id, day.program.id)?.toDomain()
                 ?: activeOrNew(day, legacySetCount, now, zoneId)
             dao.saveSession(session.copy(
                 finishedAt = session.finishedAt ?: now, outcome = feedback.outcome,
@@ -68,14 +68,15 @@ class TrainingJournalRepositoryImpl @Inject constructor(
     }
 
     private suspend fun activeOrNew(day: WorkoutDay, legacySetCount: Int, now: Long, zoneId: String): TrainingSession {
-        val active = dao.activeSession()
+        val active = dao.activeSession(day.program.id)
         require(active == null || active.planDayId == day.id) { "Сначала завершите начатую тренировку" }
         if (active != null) return active.toDomain()
-        require(dao.latestForDay(day.id)?.outcome.let { it == null || it == TrainingOutcome.ACTIVE.name }) {
+        require(dao.latestForDay(day.id, day.program.id)?.outcome.let { it == null || it == TrainingOutcome.ACTIVE.name }) {
             "Это занятие уже сохранено"
         }
         val session = TrainingSession(
-            UUID.randomUUID().toString(), day.id, day.cycle, day.day, now, zoneId, day.sets().size, legacySetCount
+            UUID.randomUUID().toString(), day.id, day.cycle, day.day, now, zoneId, day.sets().size, legacySetCount,
+            program = day.program
         )
         dao.saveSession(session.toEntity())
         return session

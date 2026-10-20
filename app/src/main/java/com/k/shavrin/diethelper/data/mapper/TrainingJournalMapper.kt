@@ -9,6 +9,7 @@ import com.k.shavrin.diethelper.domain.model.RecoveryStatus
 import com.k.shavrin.diethelper.domain.model.TrainingLoadBasis
 import com.k.shavrin.diethelper.domain.model.TrainingOutcome
 import com.k.shavrin.diethelper.domain.model.TrainingSession
+import com.k.shavrin.diethelper.domain.model.WorkoutProgram
 
 fun TrainingSessionWithSets.toDomain() = session.toDomain(sets.map { it.toDomain() })
 
@@ -18,12 +19,12 @@ fun TrainingSessionEntity.toDomain(sets: List<PerformedTrainingSet> = emptyList(
     gymMinutes, socialMinutes, sessionRpe,
     RecoveryStatus.entries.firstOrNull { it.name == recovery } ?: RecoveryStatus.UNKNOWN,
     notes, RecoveryStatus.entries.firstOrNull { it.name == nextDayRecovery } ?: RecoveryStatus.UNKNOWN,
-    nextDayNotes, sets
+    nextDayNotes, sets, WorkoutProgram.fromId(programId)
 )
 
 fun TrainingSession.toEntity() = TrainingSessionEntity(
     id, planDayId, cycle, day, startedAt, zoneId, plannedSetCount, legacySetCount, finishedAt,
-    outcome.name, gymMinutes, socialMinutes, sessionRpe, recovery.name, notes, nextDayRecovery.name, nextDayNotes
+    outcome.name, gymMinutes, socialMinutes, sessionRpe, recovery.name, notes, nextDayRecovery.name, nextDayNotes, program.id
 )
 
 fun TrainingSetEntity.toDomain() = PerformedTrainingSet(

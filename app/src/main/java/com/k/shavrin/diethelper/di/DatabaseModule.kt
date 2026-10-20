@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.k.shavrin.diethelper.data.local.DietHelperDatabase
 import com.k.shavrin.diethelper.data.local.TrainingJournalMigration
+import com.k.shavrin.diethelper.data.local.WorkoutProgramsMigration
 import com.k.shavrin.diethelper.data.local.dao.FoodEntryDao
 import com.k.shavrin.diethelper.data.local.dao.ProductDao
 import com.k.shavrin.diethelper.data.local.dao.SavedMealDao
@@ -29,7 +30,8 @@ object DatabaseModule {
             DietHelperDatabase::class.java,
             DietHelperDatabase.NAME
         )
-            .addMigrations(DietHelperDatabase.MIGRATION_1_2, DietHelperDatabase.MIGRATION_2_3, TrainingJournalMigration)
+            .addMigrations(DietHelperDatabase.MIGRATION_1_2, DietHelperDatabase.MIGRATION_2_3,
+                TrainingJournalMigration, WorkoutProgramsMigration)
             .build()
 
     @Provides

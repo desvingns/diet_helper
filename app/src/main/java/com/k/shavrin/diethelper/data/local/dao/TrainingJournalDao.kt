@@ -15,11 +15,11 @@ interface TrainingJournalDao {
     @Query("SELECT * FROM training_sessions ORDER BY startedAt DESC, id DESC")
     fun observeSessions(): Flow<List<TrainingSessionWithSets>>
 
-    @Query("SELECT * FROM training_sessions WHERE outcome = 'ACTIVE' LIMIT 1")
-    suspend fun activeSession(): TrainingSessionEntity?
+    @Query("SELECT * FROM training_sessions WHERE outcome = 'ACTIVE' AND programId = :programId LIMIT 1")
+    suspend fun activeSession(programId: String = "src7"): TrainingSessionEntity?
 
-    @Query("SELECT * FROM training_sessions WHERE planDayId = :dayId ORDER BY startedAt DESC LIMIT 1")
-    suspend fun latestForDay(dayId: Int): TrainingSessionEntity?
+    @Query("SELECT * FROM training_sessions WHERE planDayId = :dayId AND programId = :programId ORDER BY startedAt DESC LIMIT 1")
+    suspend fun latestForDay(dayId: Int, programId: String = "src7"): TrainingSessionEntity?
 
     @Query("SELECT * FROM training_sessions WHERE id = :id")
     suspend fun session(id: String): TrainingSessionEntity?

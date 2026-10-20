@@ -12,6 +12,8 @@ Android-приложение для учёта калорий и БЖУ. Уче�
 - Сохранение подходов и тренировок; таймер отдыха с паузой и восстановлением после перезапуска
 - Личный журнал: фактические веса и повторы, RPE, варианты упражнений, заметки и самочувствие на следующий день
 - Сохранение изменённого или остановленного занятия, обзор волн нагрузки и экспорт журнала в Markdown/JSON
+- Separate SRC7 and six-week return-to-training blocks, with independent progress,
+  timers, journals and manually reviewed weekly working weights.
 - Ежедневный итог по калориям и макронутриентам с прогресс-барами
 - Недельная шапка со статусами дней и счётчик серии (streak)
 - Копирование приёма пищи на другой день; сохранённые блюда (наборы позиций)
@@ -50,7 +52,7 @@ app/src/main/java/com/k/shavrin/diethelper/
 │   │   ├── dao/        # ProductDao, FoodEntryDao, WeightEntryDao, SavedMealDao
 │   │   ├── entity/     # Room-сущности + @Relation-джоины
 │   │   ├── converter/  # LocalDate ↔ Long (epochDay)
-│   │   ├── DietHelperDatabase.kt (v4)
+│   │   ├── DietHelperDatabase.kt (v5)
 │   │   ├── GoalsDataSource.kt   # DataStore-обёртка
 │   │   └── DatabaseSeeder.kt    # Начальный набор продуктов
 │   ├── pdf/            # PdfReportRenderer (реализация ReportRenderer)

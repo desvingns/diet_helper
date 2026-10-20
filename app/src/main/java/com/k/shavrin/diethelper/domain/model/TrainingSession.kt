@@ -25,7 +25,8 @@ data class TrainingSession(
     val notes: String = "",
     val nextDayRecovery: RecoveryStatus = RecoveryStatus.UNKNOWN,
     val nextDayNotes: String = "",
-    val sets: List<PerformedTrainingSet> = emptyList()
+    val sets: List<PerformedTrainingSet> = emptyList(),
+    val program: WorkoutProgram = WorkoutProgram.SRC7
 ) {
     val trainingMinutes: Int? get() = gymMinutes?.let { total -> socialMinutes?.let { total - it } }
     val completedSets: List<PerformedTrainingSet> get() = sets.filter { it.completed }

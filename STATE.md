@@ -12,27 +12,30 @@
 
 ## Now
 
-- **Current iteration:** Personal training support, version 1.1 (2026-10-19),
+- **Current iteration:** Separate workout programs, version 1.2 (2026-10-20),
   implemented directly at the owner's request without MP.
-- **In progress:** none for this delivery. Version 1.1 APK was sent to the owner's
-  Telegram Saved Messages via tgsend. Weekly availability and an individualized
-  replacement/re-entry prescription remain open. The
-  original SRC7 waves are retained; no automatic maximum increase is active.
-- **Latest runtime validation:** all 435 tests, screenshot verification, Lint,
-  Detekt and debug assembly passed. Emulator upgrade 3→4 preserved all old table
-  row counts and byte-identical DataStore preferences. Native checks cover actual
-  sets/RPE, bodyweight extras, partial finish/day advance and MD/JSON sharing.
-  Forms and session transitions also pass at 130% font; final day advancement
-  resets the list to the first approach. Normal font scale was restored.
-- **Artifact:** `MyDietHelper-training-v1.1-debug.apk`, 18.5 MB, versionName 1.1 /
-  versionCode 2; source feature commit `d54f05f`. Personal intake and QA/export
-  files remain Git-ignored under `.local/training/` and are not packaged in it.
-- **Latest product delivery:** preserved SRC7 waves with an overview of all 57
-  populated days; dated actual-set journal, exercise changes/preferences,
-  modified/stopped completion, next-day follow-up and explainable suggestions.
-  Versioned Markdown/JSON exports preserve unknown values and weight snapshots.
-  Room version 4 has an explicit non-destructive 3→4 migration. See
-  `docs/training/implementation.md` and `docs/training/src7-wave-analysis.md`.
+- **In progress:** final APK delivery. Source SRC7 and the six-week return block
+  now have independent progress, timers, active sessions and journals. Each
+  return week requires explicit working weights after review; no automatic
+  weight increases or guaranteed six-week strength outcome are implemented.
+- **Latest runtime validation:** all 446 tests pass without skips, screenshot
+  verification, Lint, Detekt and debug assembly pass. A real emulator upgrade
+  4→5 preserved all previous rows/column values and byte-identical DataStore
+  preferences. Native checks cover switching/resuming independent active
+  sessions, weekly inputs, partial finish, planned bodyweight sets and scoped
+  MD/JSON sharing. New forms are usable at 100%/130% fonts; scale restored to 100%.
+- **Artifact:** `MyDietHelper-training-v1.2-debug.apk`, about 18.3 MiB,
+  versionName 1.2 / versionCode 3. Private intake, starter recommendations and
+  emulator QA data remain Git-ignored in `.local/` and are not packaged in it.
+- **Latest product delivery:** two program blocks, a six-week reviewable return
+  template, manual working weights for each week and program-scoped logging.
+  Room version5 has an explicit preserving 4→5 migration; old sessions belong
+  to SRC7. JSON schema2 identifies the program. See
+  `docs/training/workout-programs.md` for behavior and limits.
+- **Previous product delivery:** version 1.1 factual sets/RPE, preferences,
+  partial finish, next-day follow-up and export; original SRC7 waves unchanged.
+  Its APK was delivered to own Telegram Saved Messages. All 435 tests and its
+  migration 3→4 checks passed; see `docs/training/implementation.md`.
 - **Previous visual delivery:** midnight plum/lavender design with restrained mint status accents; seven generated illustrations for the diary, meals, training and journal/goals; rounded navigation icons and short native UI transitions. Artwork is bundled offline (376 KiB total). Details and final generation prompts: `docs/plum-art-direction.md`.
 - **Previous visual delivery:** cohesive screen chrome, improved diary/calendar, dated history cards, pinned goals actions, weight trend/validation and a custom adaptive launcher icon. Details: `docs/design-refresh.md`.
 - **Previous product delivery:** 132 PDF diary foods; 107 Serbian catalog products (73 Lidl); live name/barcode search; 57 imported workout days, personal maxima, full plan, set progress and persistent rest timer. Explicit Room 2→3 migration preserves existing food data. Details: `docs/food-and-workouts.md`.
@@ -83,10 +86,11 @@ All of the code-level debt below is tracked as epics on the SPEC board (2026-07-
 
 ## Up next (head of ROADMAP)
 
-- Owner priority: collect feedback from version 1.1, discuss the practical
-  training schedule and individualized re-entry approach, and review current
-  technique videos when supplied. The factual journal and export are delivered;
-  any automatic load changes remain future work. Keep private context local.
+- Owner priority: use the separate return block, review real weekly exports,
+  revise working weights/schedule and review current technique videos when
+  supplied. An individualized first-week proposal is stored privately; it is
+  not silently imported into the app or treated as an accepted outcome deadline.
+  Keep personal context local. Automatic AI plan import remains future work.
 
 - Implement the backlog via `/mp --feature --next`, recommended order:
   data-safety → testability → quality-gates → i18n-strings → a11y → ux-polish.

@@ -29,6 +29,14 @@ preserves existing nutrition and workout settings. The full 435-test suite,
 screenshots, Lint, Detekt and debug assembly pass. Automatic max increases,
 a replacement training program and a cloud agent bridge are not activated.
 
+The 2026-10-20 [two-program update](docs/training/workout-programs.md), version
+1.2, adds an independent return-to-training block while retaining SRC7. Its six
+weeks describe a revisable structure; working loads are explicitly set locally
+for each week after review. Progress, timers, active sessions and journal/export
+scope are independent. Room 4→5 assigns previous sessions to SRC7 without losing
+data. JSON schema2 identifies each session's program. Personal intake and starting
+recommendations remain local rather than becoming public app defaults.
+
 ---
 
 ## Domain Model

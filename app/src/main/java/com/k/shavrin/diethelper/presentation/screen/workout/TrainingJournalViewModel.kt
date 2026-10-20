@@ -8,9 +8,11 @@ import com.k.shavrin.diethelper.domain.model.TrainingOutcome
 import com.k.shavrin.diethelper.domain.model.TrainingSession
 import com.k.shavrin.diethelper.domain.model.TrainingSessionFeedback
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
+import com.k.shavrin.diethelper.domain.model.WorkoutProgram
 import com.k.shavrin.diethelper.domain.usecase.workout.ExportTrainingJournalUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.FinishTrainingSessionUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.GetTrainingJournalUseCase
+import com.k.shavrin.diethelper.domain.usecase.workout.GetWorkoutProgressUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.RecordTrainingSetUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.SaveTrainingFollowUpUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.SuggestTrainingAdjustmentUseCase
@@ -20,6 +22,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +34,8 @@ data class TrainingJournalUiState(
     val changeVersion: Int = 0,
     val exportPaths: List<String> = emptyList(),
     val advice: String = "",
-    val completedDayId: Int? = null
+    val completedDayId: Int? = null,
+    val program: WorkoutProgram = WorkoutProgram.SRC7
 )
 
 data class TrainingJournalActions(
@@ -51,17 +55,20 @@ class TrainingJournalViewModel @Inject constructor(
     private val finishSession: FinishTrainingSessionUseCase,
     private val saveFollowUp: SaveTrainingFollowUpUseCase,
     private val exportJournal: ExportTrainingJournalUseCase,
-    private val suggest: SuggestTrainingAdjustmentUseCase
+    private val suggest: SuggestTrainingAdjustmentUseCase,
+    getProgress: GetWorkoutProgressUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(TrainingJournalUiState())
     val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            getJournal().catch { _state.update { it.copy(error = "Не удалось открыть журнал тренировок") } }
-                .collect { sessions ->
+            combine(getJournal(), getProgress()) { sessions, progress ->
+                progress.program to sessions.filter { it.program == progress.program }
+            }.catch { _state.update { it.copy(error = "Не удалось открыть журнал тренировок") } }
+                .collect { (program, sessions) ->
                     _state.update {
-                        it.copy(sessions = sessions, advice = suggest(sessions.firstOrNull { s -> s.outcome == TrainingOutcome.ACTIVE }
+                        it.copy(program = program, sessions = sessions, advice = suggest(sessions.firstOrNull { s -> s.outcome == TrainingOutcome.ACTIVE }
                             ?: sessions.firstOrNull()))
                     }
                 }
@@ -76,7 +83,7 @@ class TrainingJournalViewModel @Inject constructor(
     }
     fun followUp(id: String, recovery: RecoveryStatus, notes: String) = mutate { saveFollowUp(id, recovery, notes) }
     fun export() = mutate {
-        val paths = exportJournal()
+        val paths = exportJournal(_state.value.program)
         _state.update { it.copy(exportPaths = paths) }
     }
     fun clearError() { _state.update { it.copy(error = null) } }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutPlan
+import com.k.shavrin.diethelper.domain.model.WorkoutProgram
 import com.k.shavrin.diethelper.domain.model.WorkoutProgress
 import com.k.shavrin.diethelper.domain.model.WorkoutWaveCycle
 import com.k.shavrin.diethelper.domain.usecase.workout.AnalyzeWorkoutWavesUseCase
@@ -11,14 +12,19 @@ import com.k.shavrin.diethelper.domain.usecase.workout.CompleteWorkoutUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.GetWorkoutPlanUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.GetWorkoutProgressUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.RecordWorkoutSetUseCase
+import com.k.shavrin.diethelper.domain.usecase.workout.SaveReturnWeekLoadsUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.SaveWorkoutMaximaUseCase
+import com.k.shavrin.diethelper.domain.usecase.workout.SelectWorkoutProgramUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.SetRestTimerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,7 +46,9 @@ class WorkoutViewModel @Inject constructor(
     private val recordSet: RecordWorkoutSetUseCase,
     private val completeWorkout: CompleteWorkoutUseCase,
     private val setTimer: SetRestTimerUseCase,
-    private val analyzeWaves: AnalyzeWorkoutWavesUseCase
+    private val analyzeWaves: AnalyzeWorkoutWavesUseCase,
+    private val selectProgram: SelectWorkoutProgramUseCase,
+    private val saveReturnLoads: SaveReturnWeekLoadsUseCase
 ) : ViewModel() {
     private val plan = MutableStateFlow<WorkoutPlan?>(null)
     private val selectedId = MutableStateFlow<Int?>(null)
@@ -49,16 +57,21 @@ class WorkoutViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            try {
-                plan.value = getPlan()
-            } catch (error: CancellationException) {
-                throw error
-            } catch (_: Exception) {
-                _state.value = _state.value.copy(loading = false, error = "Не удалось открыть тренировочный план")
+            getProgress().map { it.program }.distinctUntilChanged().collectLatest { program ->
+                plan.value = null
+                selectedId.value = null
+                try {
+                    plan.value = getPlan(program)
+                } catch (error: CancellationException) {
+                    throw error
+                } catch (_: Exception) {
+                    _state.value = _state.value.copy(loading = false, error = "Не удалось открыть тренировочный план")
+                }
             }
         }
         viewModelScope.launch {
-            combine(plan, getProgress(), selectedId) { program, progress, selected ->
+            combine(plan, getProgress(), selectedId) { loaded, progress, selected ->
+                val program = loaded?.takeIf { it.program == progress.program }
                 val unfinished = program?.days?.firstOrNull { day ->
                     day.id !in progress.completedDays && day.sets().any { it.key in progress.completedSets }
                 }
@@ -75,6 +88,8 @@ class WorkoutViewModel @Inject constructor(
     fun selectNext() { selectedId.value = null }
     fun clearError() { _state.value = _state.value.copy(error = null) }
     fun saveMaximums(maxima: Map<String, Double>) = mutate { saveMaxima(maxima) }
+    fun select(program: WorkoutProgram) = mutate { selectProgram(program) }
+    fun saveReturnWeek(week: Int, loads: Map<String, Double>) = mutate { saveReturnLoads(week, loads) }
 
     fun toggleSet(day: WorkoutDay, key: String) = mutate {
         recordSet(day, key, key !in _state.value.progress.completedSets, System.currentTimeMillis())
