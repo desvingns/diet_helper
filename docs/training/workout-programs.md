@@ -77,3 +77,7 @@ column value/row and byte-identical DataStore preferences. Native checks cover
 two independent active sessions, weekly settings, partial finish, bodyweight
 planned-set nulls, selected-program two-file export and forms at 100%/130% fonts.
 Final delivery verification is recorded in STATE.md.
+
+The version 1.2 / code3 APK was delivered to the owner's Telegram Saved Messages
+on 2026-10-20 via tgsend, built from feature commit `6594afa`. It is an update
+installation over 1.1 and does not include emulator data or private intake.

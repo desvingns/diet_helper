@@ -14,7 +14,8 @@
 
 - **Current iteration:** Separate workout programs, version 1.2 (2026-10-20),
   implemented directly at the owner's request without MP.
-- **In progress:** final APK delivery. Source SRC7 and the six-week return block
+- **In progress:** none for this delivery. The version 1.2 APK was sent to the
+  owner's Telegram Saved Messages via tgsend. Source SRC7 and the six-week return block
   now have independent progress, timers, active sessions and journals. Each
   return week requires explicit working weights after review; no automatic
   weight increases or guaranteed six-week strength outcome are implemented.
@@ -25,11 +26,11 @@
   sessions, weekly inputs, partial finish, planned bodyweight sets and scoped
   MD/JSON sharing. New forms are usable at 100%/130% fonts; scale restored to 100%.
 - **Artifact:** `MyDietHelper-training-v1.2-debug.apk`, about 18.3 MiB,
-  versionName 1.2 / versionCode 3. Private intake, starter recommendations and
+  versionName 1.2 / versionCode 3; feature commit `6594afa`. Private intake, starter recommendations and
   emulator QA data remain Git-ignored in `.local/` and are not packaged in it.
 - **Latest product delivery:** two program blocks, a six-week reviewable return
   template, manual working weights for each week and program-scoped logging.
-  Room version5 has an explicit preserving 4→5 migration; old sessions belong
+  Room version 5 has an explicit preserving 4→5 migration; old sessions belong
   to SRC7. JSON schema2 identifies the program. See
   `docs/training/workout-programs.md` for behavior and limits.
 - **Previous product delivery:** version 1.1 factual sets/RPE, preferences,
