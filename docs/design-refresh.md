@@ -35,10 +35,11 @@ provide common screen chrome without changing the Clean Architecture layers.
   Finite values greater than zero and at most 500 kg are accepted.
 - Product search: a clear-query button.
 - Launcher (updated 2026-10-21): adaptive bowl-with-food and dumbbell icon derived
-  from the owner's selected image. The foreground uses a transparent cutout on
-  the existing plum background; Android 13 receives a matching monochrome
-  silhouette. Launch-window and system-bar colors remain aligned with the app
-  palette.
+  from the owner's selected image. The transparent foreground is retained at
+  `app/src/main/res/drawable-nodpi/ic_launcher_art.png` as the no-background
+  alternative. The active icon uses a separate purple gradient background;
+  Android 13 receives a matching monochrome silhouette. Launch-window and
+  system-bar colors remain aligned with the app palette.
 
 ## Verification
 
