@@ -14,12 +14,14 @@
 
 - **Current iteration:** Session timers and dated weight editing, version 1.3 (2026-10-21),
   implemented directly at the owner's request without MP.
-- **In progress:** none for the implemented changes; icon selection is up to the owner.
+- **In progress:** none; the owner selected the bowl-and-dumbbell artwork and
+  its adaptive launcher integration is complete.
 - **Version 1.3:** persistent warm-up/whole-session/cool-down timing; quick planned
   set confirmation; feedback on completion; dated weight entry and transactional
   weight/date edits with collision protection. Room 5→6 preserves historical data.
-  Five generated icon candidates and exact prompts are in `docs/design/icon-variants/`;
-  launcher integration awaits selection. See `docs/training/session-timers-and-weight.md`.
+  Earlier generated icon candidates and exact prompts remain in
+  `docs/design/icon-variants/`; the selected bowl-and-dumbbell image now backs the
+  adaptive launcher icon. See `docs/training/session-timers-and-weight.md`.
 - **Latest tests:** all 459 tests pass without skips, including the delayed
   cooldown-state regression. Native window/form behavior is checked on the emulator;
   that regression uses an in-process dialog renderer because native Dialog sizing

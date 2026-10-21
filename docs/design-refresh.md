@@ -34,8 +34,11 @@ provide common screen chrome without changing the Clean Architecture layers.
   date spacing, handles constant values, and exposes measurements as spoken text.
   Finite values greater than zero and at most 500 kg are accepted.
 - Product search: a clear-query button.
-- Launcher: custom adaptive leaf icon, including an Android 13 themed icon;
-  matching launch-window and system-bar colors.
+- Launcher (updated 2026-10-21): adaptive bowl-with-food and dumbbell icon derived
+  from the owner's selected image. The foreground uses a transparent cutout on
+  the existing plum background; Android 13 receives a matching monochrome
+  silhouette. Launch-window and system-bar colors remain aligned with the app
+  palette.
 
 ## Verification
 
