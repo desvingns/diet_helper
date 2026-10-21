@@ -44,6 +44,30 @@ class WeightEntryDaoTest {
     // ── getAllEntries ─────────────────────────────────────────────────────────
 
     @Test
+    fun `editing changes weight and date without duplicating the record`() = runTest {
+        dao.upsertEntry(WeightEntryEntity(id = 42, date = today, weightKg = 80f))
+        dao.updateEntry(WeightEntryEntity(id = 42, date = yesterday, weightKg = 79.5f))
+        assertNull(dao.getEntryByDate(today))
+        assertEquals(listOf(WeightEntryEntity(42, yesterday, 79.5f)), dao.getAllEntries().first())
+    }
+
+    @Test
+    fun `moving to an occupied date rolls back and preserves both weigh ins`() = runTest {
+        val first = WeightEntryEntity(1, yesterday, 81f)
+        val second = WeightEntryEntity(2, today, 80f)
+        dao.upsertEntry(first)
+        dao.upsertEntry(second)
+        var rejected = false
+        try {
+            dao.updateEntry(first.copy(date = today, weightKg = 77f))
+        } catch (_: IllegalArgumentException) {
+            rejected = true
+        }
+        assertTrue(rejected)
+        assertEquals(listOf(second, first), dao.getAllEntries().first())
+    }
+
+    @Test
     fun `getAllEntries returns entries sorted by date descending`() = runTest {
         dao.upsertEntry(WeightEntryEntity(date = yesterday, weightKg = 81f))
         dao.upsertEntry(WeightEntryEntity(date = today, weightKg = 80f))

@@ -22,7 +22,7 @@ object TrainingJournalJsonCodec {
                 put("cycle", session.cycle)
                 put("day", session.day)
                 put("started_at", Instant.ofEpochMilli(session.startedAt).toString())
-                put("start_basis", "first_logged_set_or_manual_finish")
+                putTimers(session)
                 put("timezone", session.zoneId)
                 val zone = runCatching { ZoneId.of(session.zoneId) }.getOrDefault(ZoneId.of("UTC"))
                 put("local_date", Instant.ofEpochMilli(session.startedAt).atZone(zone).toLocalDate().toString())
@@ -58,5 +58,16 @@ object TrainingJournalJsonCodec {
                 }))
             }
         }))
+    }
+
+    private fun JSONObject.putTimers(session: TrainingSession) {
+        put("start_basis", if (session.warmUpStartedAt == session.startedAt) "warmup_start" else "first_logged_set_or_manual_finish")
+        put("warmup_started_at", session.warmUpStartedAt?.let { Instant.ofEpochMilli(it).toString() } ?: JSONObject.NULL)
+        put("warmup_finished_at", session.warmUpFinishedAt?.let { Instant.ofEpochMilli(it).toString() } ?: JSONObject.NULL)
+        put("cooldown_started_at", session.coolDownStartedAt?.let { Instant.ofEpochMilli(it).toString() } ?: JSONObject.NULL)
+        put("cooldown_finished_at", session.coolDownFinishedAt?.let { Instant.ofEpochMilli(it).toString() } ?: JSONObject.NULL)
+        put("timed_total_seconds", session.finishedAt?.let { session.elapsedMillis(it) / 1000 } ?: JSONObject.NULL)
+        put("warmup_seconds", session.warmUpFinishedAt?.let { session.warmUpMillis(it)?.div(1000) } ?: JSONObject.NULL)
+        put("cooldown_seconds", session.coolDownFinishedAt?.let { session.coolDownMillis(it)?.div(1000) } ?: JSONObject.NULL)
     }
 }

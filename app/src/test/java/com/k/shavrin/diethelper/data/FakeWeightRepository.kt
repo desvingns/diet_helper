@@ -42,4 +42,10 @@ class FakeWeightRepository : WeightRepository {
     override suspend fun deleteEntry(entry: WeightEntry) {
         entries.update { list -> list.filterNot { it.id == entry.id } }
     }
+
+    override suspend fun updateEntry(entry: WeightEntry) {
+        require(entries.value.any { it.id == entry.id })
+        require(entries.value.none { it.date == entry.date && it.id != entry.id }) { "За эту дату уже есть вес" }
+        entries.update { list -> list.map { if (it.id == entry.id) entry else it } }
+    }
 }

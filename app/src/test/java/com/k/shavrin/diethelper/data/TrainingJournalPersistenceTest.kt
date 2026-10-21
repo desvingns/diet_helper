@@ -12,6 +12,8 @@ import androidx.test.core.app.ApplicationProvider
 import com.k.shavrin.diethelper.data.export.TrainingJournalJsonCodec
 import com.k.shavrin.diethelper.data.local.DietHelperDatabase
 import com.k.shavrin.diethelper.data.local.TrainingJournalMigration
+import com.k.shavrin.diethelper.data.local.TrainingTimersMigration
+import com.k.shavrin.diethelper.data.local.WorkoutProgramsMigration
 import com.k.shavrin.diethelper.data.repository.TrainingJournalRepositoryImpl
 import com.k.shavrin.diethelper.data.repository.WorkoutRepositoryImpl
 import com.k.shavrin.diethelper.domain.model.PerformedTrainingSet
@@ -19,9 +21,11 @@ import com.k.shavrin.diethelper.domain.model.RecoveryStatus
 import com.k.shavrin.diethelper.domain.model.TrainingLoadBasis
 import com.k.shavrin.diethelper.domain.model.TrainingOutcome
 import com.k.shavrin.diethelper.domain.model.TrainingSessionFeedback
+import com.k.shavrin.diethelper.domain.model.TrainingTimerAction
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutExercise
 import com.k.shavrin.diethelper.domain.model.WorkoutGroup
+import com.k.shavrin.diethelper.domain.model.WorkoutProgram
 import com.k.shavrin.diethelper.domain.usecase.workout.AnalyzeWorkoutWavesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -58,6 +62,89 @@ class TrainingJournalPersistenceTest {
 
     @After
     fun close() { database.close() }
+
+    @Test
+    fun `warmup starts an empty session and independent timers survive repository recreation`() = runTest {
+        journal.advanceTimer(day, TrainingTimerAction.START_WARMUP, 1000, "UTC")
+        journal.advanceTimer(day, TrainingTimerAction.START_WARMUP, 2000, "UTC")
+        val warming = TrainingJournalRepositoryImpl(database).observeSessions().first().single()
+        assertEquals(1000L, warming.startedAt)
+        assertEquals(1000L, warming.warmUpStartedAt)
+        assertTrue(warming.sets.isEmpty())
+        assertEquals(9000L, warming.warmUpMillis(10000))
+        journal.advanceTimer(day, TrainingTimerAction.FINISH_WARMUP, 11000, "UTC")
+        journal.record(day, set, 0, 12000, "UTC")
+        journal.advanceTimer(day, TrainingTimerAction.START_COOLDOWN, 61000, "UTC")
+        journal.advanceTimer(day, TrainingTimerAction.FINISH_COOLDOWN, 71000, "UTC")
+        journal.finish(day, TrainingSessionFeedback(TrainingOutcome.MODIFIED, notes = "Shortened"), 0, 91000, "UTC")
+        val finished = TrainingJournalRepositoryImpl(database).observeSessions().first().single()
+        assertEquals(71000L, finished.finishedAt)
+        assertEquals(70000L, finished.elapsedMillis(200000))
+        assertEquals(10000L, finished.warmUpMillis(200000))
+        assertEquals(10000L, finished.coolDownMillis(200000))
+        assertEquals(1, finished.sets.size)
+        val exported = TrainingJournalJsonCodec.encode(listOf(finished)).getJSONArray("sessions").getJSONObject(0)
+        assertEquals("warmup_start", exported.getString("start_basis"))
+        assertEquals(70, exported.getInt("timed_total_seconds"))
+        assertEquals(10, exported.getInt("warmup_seconds"))
+    }
+
+    @Test
+    fun `timers stay independent for both programs and cannot steal a day`() = runTest {
+        journal.advanceTimer(day, TrainingTimerAction.START_WARMUP, 1000, "UTC")
+        journal.advanceTimer(day.copy(program = WorkoutProgram.RETURN), TrainingTimerAction.START_WARMUP, 5000, "UTC")
+        assertEquals(2, journal.observeSessions().first().size)
+        var rejected = false
+        try {
+            journal.advanceTimer(day.copy(id = 99), TrainingTimerAction.FINISH_WARMUP, 6000, "UTC")
+        } catch (_: IllegalArgumentException) {
+            rejected = true
+        }
+        assertTrue(rejected)
+        assertTrue(journal.observeSessions().first().all { it.warmUpFinishedAt == null })
+    }
+
+    @Test
+    fun `sets cannot be recorded during warmup or cooldown`() = runTest {
+        journal.advanceTimer(day, TrainingTimerAction.START_WARMUP, 1000, "UTC")
+        var rejected = 0
+        try { journal.record(day, set, 0, 2000, "UTC") } catch (_: IllegalArgumentException) { rejected++ }
+        journal.advanceTimer(day, TrainingTimerAction.FINISH_WARMUP, 3000, "UTC")
+        journal.record(day, set, 0, 4000, "UTC")
+        journal.advanceTimer(day, TrainingTimerAction.START_COOLDOWN, 5000, "UTC")
+        try { journal.record(day, set, 0, 6000, "UTC") } catch (_: IllegalArgumentException) { rejected++ }
+        assertEquals(2, rejected)
+        assertEquals(1, journal.observeSessions().first().single().sets.size)
+    }
+
+    @Test
+    fun `timer migration preserves existing session and set values without inventing timings`() {
+        val helper = FrameworkSQLiteOpenHelperFactory().create(SupportSQLiteOpenHelper.Configuration.builder(context)
+            .callback(object : SupportSQLiteOpenHelper.Callback(5) {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    TrainingJournalMigration.migrate(db)
+                    WorkoutProgramsMigration.migrate(db)
+                }
+                override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = Unit
+            }).build())
+        try {
+            val db = helper.writableDatabase
+            db.execSQL("INSERT INTO training_sessions VALUES ('old', 0, 1, 1, 1000, 'UTC', 3, 1, NULL, 'ACTIVE', NULL, NULL, NULL, 'UNKNOWN', 'Keep note', 'UNKNOWN', '', 'src7')")
+            db.execSQL("INSERT INTO training_sets VALUES ('set', 'old', '0:1:0:0', 'Squat', 'Squat', 70, 3, 65, 3, 'TOTAL_KG', 6, '', 'NEUTRAL', '', 1)")
+            TrainingTimersMigration.migrate(db)
+            db.query("SELECT notes, startedAt, warmUpStartedAt, coolDownFinishedAt FROM training_sessions WHERE id = 'old'").use {
+                assertTrue(it.moveToFirst())
+                assertEquals("Keep note", it.getString(0))
+                assertEquals(1000L, it.getLong(1))
+                assertTrue(it.isNull(2))
+                assertTrue(it.isNull(3))
+            }
+            db.query("SELECT actualWeightKg FROM training_sets WHERE id = 'set'").use {
+                assertTrue(it.moveToFirst())
+                assertEquals(65.0, it.getDouble(0), 0.001)
+            }
+        } finally { helper.close() }
+    }
 
     @Test
     fun `editing actual load preserves the original plan snapshot and set identity`() = runTest {

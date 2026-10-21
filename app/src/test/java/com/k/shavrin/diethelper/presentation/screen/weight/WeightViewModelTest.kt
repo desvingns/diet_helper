@@ -6,6 +6,7 @@ import com.k.shavrin.diethelper.domain.model.WeightEntry
 import com.k.shavrin.diethelper.domain.repository.WeightRepository
 import com.k.shavrin.diethelper.domain.usecase.weight.DeleteWeightEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.GetAllWeightEntriesUseCase
+import com.k.shavrin.diethelper.domain.usecase.weight.UpdateWeightEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.UpsertWeightEntryUseCase
 import com.k.shavrin.diethelper.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,8 +29,53 @@ class WeightViewModelTest {
     private fun createViewModel(repo: WeightRepository): WeightViewModel = WeightViewModel(
         getAllUseCase = GetAllWeightEntriesUseCase(repo),
         upsertUseCase = UpsertWeightEntryUseCase(repo),
-        deleteUseCase = DeleteWeightEntryUseCase(repo)
+        deleteUseCase = DeleteWeightEntryUseCase(repo),
+        updateUseCase = UpdateWeightEntryUseCase(repo)
     )
+
+    @Test
+    fun `save uses a selected past date`() = runTest {
+        val repo = FakeWeightRepository()
+        val vm = createViewModel(repo)
+        val date = LocalDate.now().minusDays(7)
+        vm.selectDate(date)
+        vm.onInputChange("83,4")
+        vm.save()
+        assertEquals(83.4f, repo.getEntryByDate(date)!!.weightKg, 0.001f)
+        assertNull(repo.getEntryByDate(LocalDate.now()))
+    }
+
+    @Test
+    fun `editing moves one stable record and updates its weight`() = runTest {
+        val before = WeightEntry(42, LocalDate.now().minusDays(3), 80f)
+        val repo = FakeWeightRepository().apply { seed(listOf(before)) }
+        val vm = createViewModel(repo)
+        vm.edit(before)
+        vm.selectDate(before.date.minusDays(1))
+        vm.onInputChange("79,8")
+        vm.save()
+        assertNull(repo.getEntryByDate(before.date))
+        assertEquals(before.copy(date = before.date.minusDays(1), weightKg = 79.8f),
+            repo.getEntryByDate(before.date.minusDays(1)))
+        assertTrue(vm.saved.value)
+    }
+
+    @Test
+    fun `conflicting edit preserves both entries and keeps the form open`() = runTest {
+        val first = WeightEntry(1, LocalDate.now().minusDays(2), 80f)
+        val second = WeightEntry(2, first.date.plusDays(1), 81f)
+        val repo = FakeWeightRepository().apply { seed(listOf(first, second)) }
+        val vm = createViewModel(repo)
+        vm.edit(first)
+        vm.selectDate(second.date)
+        vm.onInputChange("77")
+        vm.save()
+        assertNotNull(vm.inputError.value)
+        assertFalse(vm.saved.value)
+        assertEquals(first, repo.getEntryByDate(first.date))
+        assertEquals(second, repo.getEntryByDate(second.date))
+        assertEquals(first, vm.editing.value)
+    }
 
     @Test
     fun `delta is null for the only entry`() = runTest {

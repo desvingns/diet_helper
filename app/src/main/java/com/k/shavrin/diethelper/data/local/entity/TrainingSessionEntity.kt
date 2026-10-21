@@ -29,7 +29,11 @@ data class TrainingSessionEntity(
     val notes: String,
     val nextDayRecovery: String,
     val nextDayNotes: String,
-    @ColumnInfo(defaultValue = "'src7'") val programId: String = "src7"
+    @ColumnInfo(defaultValue = "'src7'") val programId: String = "src7",
+    val warmUpStartedAt: Long? = null,
+    val warmUpFinishedAt: Long? = null,
+    val coolDownStartedAt: Long? = null,
+    val coolDownFinishedAt: Long? = null
 )
 
 @Entity(

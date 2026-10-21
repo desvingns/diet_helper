@@ -86,6 +86,7 @@ import com.k.shavrin.diethelper.R
 import com.k.shavrin.diethelper.domain.model.PerformedTrainingSet
 import com.k.shavrin.diethelper.domain.model.TrainingLoadBasis
 import com.k.shavrin.diethelper.domain.model.TrainingSession
+import com.k.shavrin.diethelper.domain.model.TrainingSessionFeedback
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutExercise
 import com.k.shavrin.diethelper.domain.model.WorkoutProgram
@@ -104,6 +105,15 @@ import java.util.Locale
 import kotlin.math.ceil
 
 private val TrainingAccent = FatSand
+
+internal typealias TrainingFeedbackRenderer = @Composable (
+    allComplete: Boolean,
+    previous: TrainingSession?,
+    saving: Boolean,
+    error: String?,
+    onSave: (TrainingSessionFeedback) -> Unit,
+    onDismiss: () -> Unit
+) -> Unit
 
 @Composable
 fun WorkoutScreen(viewModel: WorkoutViewModel = hiltViewModel()) {
@@ -136,7 +146,8 @@ fun WorkoutScreen(viewModel: WorkoutViewModel = hiltViewModel()) {
     WorkoutContent(state, viewModel::selectDay, viewModel::toggleSet,
         viewModel::saveMaximums, viewModel::timer, viewModel::clearError, journal,
         TrainingJournalActions(journalViewModel::record, journalViewModel::undo, journalViewModel::finish,
-            journalViewModel::followUp, journalViewModel::export, journalViewModel::clearError),
+            journalViewModel::followUp, journalViewModel::export, journalViewModel::clearError,
+            journalViewModel::startWarmUp, journalViewModel::finishWarmUp, journalViewModel::startCoolDown, journalViewModel::finishCoolDown),
         WorkoutProgramActions(viewModel::select, viewModel::saveReturnWeek))
 }
 
@@ -253,14 +264,16 @@ private fun WorkoutPlanContent(
 }
 
 @Composable
-private fun SessionContent(
+internal fun SessionContent(
     day: WorkoutDay,
     state: WorkoutUiState,
     onSet: (WorkoutDay, String) -> Unit,
     onTimer: (Int, Long, Int) -> Unit,
     onConfigure: () -> Unit,
     journal: TrainingJournalUiState,
-    actions: TrainingJournalActions
+    actions: TrainingJournalActions,
+    renderFeedback: TrainingFeedbackRenderer =
+        { complete, previous, saving, error, save, dismiss -> FinishTrainingDialog(complete, previous, saving, error, save, dismiss) }
 ) {
     val progress = state.progress
     val configured = progress.configuredFor(day)
@@ -273,19 +286,26 @@ private fun SessionContent(
     val next = sets.firstOrNull { it.key !in completedKeys }
     val finished = day.id in progress.completedDays
     val editable = state.canEdit(day, journal.saving)
+    val lifting = canRecordTrainingSet(session, editable)
+    val running = configured && !finished
     var editingSet by remember(day.id) { mutableStateOf<WorkoutSet?>(null) }
     var adding by rememberSaveable(day.id) { mutableStateOf(false) }
     var finishing by rememberSaveable(day.id) { mutableStateOf(false) }
     val listState = rememberLazyListState()
     LaunchedEffect(day.id) { listState.scrollToItem(0) }
-    LaunchedEffect(journal.changeVersion) { editingSet = null; adding = false; finishing = false }
+    LaunchedEffect(journal.changeVersion, session?.coolDownFinishedAt, finished) {
+        editingSet = null; adding = false
+        finishing = shouldShowTrainingFeedback(session, finished)
+    }
     LazyColumn(state = listState, contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item {
             TrainingDayHeading(day, completed, sets.size)
         }
-        if (!finished) item { TrainingAdviceCard(journal.advice) }
+        item { TrainingSessionTimerCard(session) }
+        if (running) item { RestTimer(progress, onTimer) }
+        if (!finished) item { TrainingWarmUpCard(day, session, editable, actions) }
         if (day.program == WorkoutProgram.RETURN) item { ReturnWeekSummary(day.cycle, configured, onConfigure) }
-        if (!configured && day.program == WorkoutProgram.SRC7) {
+        if (progress.needsSourceMaxima(day)) {
             item {
                 Card(shape = RoundedCornerShape(24.dp)) {
                     Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -296,18 +316,19 @@ private fun SessionContent(
                     }
                 }
             }
-        } else if (configured && next != null && !finished) {
+        } else if (running && next != null) {
             item {
-                NextTrainingSetCard(day, next, localProgress, completed, editable) { actions.clearError(); editingSet = next }
+                NextTrainingSetCard(day, next, localProgress, completed, lifting) {
+                    actions.record(day, plannedTrainingSet(next, localProgress.maxima))
+                }
             }
         }
-        if (configured && !finished) {
-            item { RestTimer(progress, onTimer) }
+        if (running) {
             item {
-                OutlinedButton(onClick = { actions.clearError(); adding = true }, enabled = editable, modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(onClick = { actions.clearError(); adding = true }, enabled = lifting, modifier = Modifier.fillMaxWidth()) {
                     Text("Добавить свой подход / упражнение")
                 }
-                TrainingAdditionalSets(session, editable, actions.undo)
+                TrainingAdditionalSets(session, lifting, actions.undo)
             }
         }
         item {
@@ -334,7 +355,7 @@ private fun SessionContent(
                     if (expanded || next?.exercise?.id == exercise.id) {
                         exerciseSets.forEachIndexed { index, set ->
                             TrainingPlannedSetRow(index, set, recorded[set.key], localProgress,
-                                set.key in completedKeys, editable) {
+                                set.key in completedKeys, lifting) {
                                 actions.clearError(); editingSet = set
                             }
                         }
@@ -345,6 +366,9 @@ private fun SessionContent(
             }
         }
         item { TrainingDayNotes(day.notes) }
+        if (running) item {
+            TrainingCoolDownCard(day, session, editable, actions)
+        }
         item {
             Button(onClick = { actions.clearError(); finishing = true }, enabled = editable,
                 modifier = Modifier.fillMaxWidth().height(54.dp)) {
@@ -360,8 +384,8 @@ private fun SessionContent(
             onLegacyUndo = { key -> onSet(day, key); editingSet = null },
             onDismiss = { editingSet = null; adding = false })
     }
-    if (finishing) FinishTrainingDialog(next == null, session, journal.saving, journal.error,
-        onSave = { actions.finish(day, it) }, onDismiss = { finishing = false })
+    if (finishing) renderFeedback(next == null, session, journal.saving, journal.error,
+        { actions.finish(day, it) }, { finishing = false })
 }
 
 private fun configurationWeek(tab: Int, cycle: Int, day: WorkoutDay?) = if (tab == 1) cycle else day?.cycle ?: 1
@@ -432,6 +456,8 @@ private fun NextTrainingSetCard(
             Spacer(Modifier.width(8.dp))
             Text("Записать подход", fontWeight = FontWeight.Bold)
         }
+        Text("Запишется показанный вес и повторы. Изменить результат можно в списке подходов ниже.",
+            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -607,6 +633,9 @@ private fun percentText(value: Double): String = "${weightText(value * 100)}%"
 
 private fun WorkoutUiState.canEdit(day: WorkoutDay, journalSaving: Boolean): Boolean =
     progress.configuredFor(day) && day.id !in progress.completedDays && !saving && !journalSaving
+
+private fun WorkoutProgress.needsSourceMaxima(day: WorkoutDay): Boolean =
+    !configuredFor(day) && day.program == WorkoutProgram.SRC7
 
 private fun shareTrainingReport(context: Context, paths: List<String>) {
     val uris = ArrayList(paths.map { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", File(it)) })

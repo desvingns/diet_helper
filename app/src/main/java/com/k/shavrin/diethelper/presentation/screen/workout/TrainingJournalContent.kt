@@ -91,7 +91,7 @@ internal fun TrainingJournalContent(state: TrainingJournalUiState, actions: Trai
             Text("Отчёт содержит записи и личные заметки. Приложение передаст его через выбранное тобой приложение.",
                 style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        item { TrainingAdviceCard(state.advice) }
+        if (state.sessions.firstOrNull()?.outcome != TrainingOutcome.ACTIVE) item { TrainingAdviceCard(state.advice) }
         if (state.sessions.isEmpty()) item {
             Text("Здесь появятся новые занятия после записи подхода. Старые отметки плана сохранены; их фактические веса и даты неизвестны.")
         }
@@ -103,6 +103,12 @@ internal fun TrainingJournalContent(state: TrainingJournalUiState, actions: Trai
                     Text("Цикл ${session.cycle} · день ${session.day} · ${session.outcome.label()}")
                     Text("${session.completedSets.size} записанных подходов · усилие ${session.sessionRpe?.let(::weightText) ?: "—"}/10",
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    if (session.warmUpStartedAt != null) {
+                        Text("По таймеру: ${trainingDuration(session.elapsedMillis(System.currentTimeMillis()))} · " +
+                            "разминка ${session.warmUpMillis(System.currentTimeMillis())?.let(::trainingDuration) ?: "—"} · " +
+                            "заминка ${session.coolDownMillis(System.currentTimeMillis())?.let(::trainingDuration) ?: "—"}",
+                            style = MaterialTheme.typography.bodySmall)
+                    }
                     if (session.gymMinutes != null) Text(
                         "В зале ${session.gymMinutes} мин · разговоры ${session.socialMinutes?.toString() ?: "—"} · " +
                             "тренировка ${session.trainingMinutes?.toString() ?: "—"} мин",

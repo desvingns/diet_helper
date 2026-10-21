@@ -6,6 +6,7 @@ enum class TrainingOutcome { ACTIVE, COMPLETED, MODIFIED, STOPPED }
 enum class RecoveryStatus { UNKNOWN, NORMAL, DISCOMFORT, ILLNESS }
 enum class ExercisePreference { NEUTRAL, LIKED, DISLIKED }
 enum class TrainingLoadBasis { TOTAL_KG, PER_HAND_KG, BODYWEIGHT }
+enum class TrainingTimerAction { START_WARMUP, FINISH_WARMUP, START_COOLDOWN, FINISH_COOLDOWN }
 
 data class TrainingSession(
     val id: String,
@@ -26,10 +27,21 @@ data class TrainingSession(
     val nextDayRecovery: RecoveryStatus = RecoveryStatus.UNKNOWN,
     val nextDayNotes: String = "",
     val sets: List<PerformedTrainingSet> = emptyList(),
-    val program: WorkoutProgram = WorkoutProgram.SRC7
+    val program: WorkoutProgram = WorkoutProgram.SRC7,
+    val warmUpStartedAt: Long? = null,
+    val warmUpFinishedAt: Long? = null,
+    val coolDownStartedAt: Long? = null,
+    val coolDownFinishedAt: Long? = null
 ) {
     val trainingMinutes: Int? get() = gymMinutes?.let { total -> socialMinutes?.let { total - it } }
     val completedSets: List<PerformedTrainingSet> get() = sets.filter { it.completed }
+    fun elapsedMillis(now: Long): Long = ((coolDownFinishedAt ?: finishedAt ?: now) - startedAt).coerceAtLeast(0)
+    fun warmUpMillis(
+        now: Long
+    ): Long? = warmUpStartedAt?.let { ((warmUpFinishedAt ?: finishedAt ?: now) - it).coerceAtLeast(0) }
+    fun coolDownMillis(
+        now: Long
+    ): Long? = coolDownStartedAt?.let { ((coolDownFinishedAt ?: finishedAt ?: now) - it).coerceAtLeast(0) }
 }
 
 data class PerformedTrainingSet(

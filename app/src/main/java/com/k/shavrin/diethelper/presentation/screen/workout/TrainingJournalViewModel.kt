@@ -10,11 +10,15 @@ import com.k.shavrin.diethelper.domain.model.TrainingSessionFeedback
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.model.WorkoutProgram
 import com.k.shavrin.diethelper.domain.usecase.workout.ExportTrainingJournalUseCase
+import com.k.shavrin.diethelper.domain.usecase.workout.FinishTrainingCoolDownUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.FinishTrainingSessionUseCase
+import com.k.shavrin.diethelper.domain.usecase.workout.FinishTrainingWarmUpUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.GetTrainingJournalUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.GetWorkoutProgressUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.RecordTrainingSetUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.SaveTrainingFollowUpUseCase
+import com.k.shavrin.diethelper.domain.usecase.workout.StartTrainingCoolDownUseCase
+import com.k.shavrin.diethelper.domain.usecase.workout.StartTrainingWarmUpUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.SuggestTrainingAdjustmentUseCase
 import com.k.shavrin.diethelper.domain.usecase.workout.UndoTrainingSetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,10 +48,15 @@ data class TrainingJournalActions(
     val finish: (WorkoutDay, TrainingSessionFeedback) -> Unit,
     val followUp: (String, RecoveryStatus, String) -> Unit,
     val export: () -> Unit,
-    val clearError: () -> Unit
+    val clearError: () -> Unit,
+    val startWarmUp: (WorkoutDay) -> Unit = {},
+    val finishWarmUp: (WorkoutDay) -> Unit = {},
+    val startCoolDown: (WorkoutDay) -> Unit = {},
+    val finishCoolDown: (WorkoutDay) -> Unit = {}
 )
 
 @HiltViewModel
+@Suppress("LongParameterList") // One injected use case per action is intentional.
 class TrainingJournalViewModel @Inject constructor(
     getJournal: GetTrainingJournalUseCase,
     private val recordSet: RecordTrainingSetUseCase,
@@ -56,7 +65,11 @@ class TrainingJournalViewModel @Inject constructor(
     private val saveFollowUp: SaveTrainingFollowUpUseCase,
     private val exportJournal: ExportTrainingJournalUseCase,
     private val suggest: SuggestTrainingAdjustmentUseCase,
-    getProgress: GetWorkoutProgressUseCase
+    getProgress: GetWorkoutProgressUseCase,
+    private val startWarmUp: StartTrainingWarmUpUseCase,
+    private val finishWarmUp: FinishTrainingWarmUpUseCase,
+    private val startCoolDown: StartTrainingCoolDownUseCase,
+    private val finishCoolDown: FinishTrainingCoolDownUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(TrainingJournalUiState())
     val state = _state.asStateFlow()
@@ -76,6 +89,10 @@ class TrainingJournalViewModel @Inject constructor(
     }
 
     fun record(day: WorkoutDay, set: PerformedTrainingSet) = mutate { recordSet(day, set) }
+    fun startWarmUp(day: WorkoutDay) = mutate { startWarmUp.invoke(day) }
+    fun finishWarmUp(day: WorkoutDay) = mutate { finishWarmUp.invoke(day) }
+    fun startCoolDown(day: WorkoutDay) = mutate { startCoolDown.invoke(day) }
+    fun finishCoolDown(day: WorkoutDay) = mutate { finishCoolDown.invoke(day) }
     fun undo(set: PerformedTrainingSet) = mutate { undoSet(set) }
     fun finish(day: WorkoutDay, feedback: TrainingSessionFeedback) = mutate {
         finishSession(day, feedback)

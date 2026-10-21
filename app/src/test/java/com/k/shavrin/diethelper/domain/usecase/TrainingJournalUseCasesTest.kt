@@ -96,6 +96,12 @@ class TrainingJournalUseCasesTest {
 private class JournalFake : TrainingJournalRepository {
     val sessions = MutableStateFlow<List<TrainingSession>>(emptyList())
     override fun observeSessions() = sessions
+    override suspend fun advanceTimer(
+        day: WorkoutDay,
+        action: com.k.shavrin.diethelper.domain.model.TrainingTimerAction,
+        now: Long,
+        zoneId: String
+    ) = Unit
     override suspend fun record(
         day: WorkoutDay,
         set: PerformedTrainingSet,

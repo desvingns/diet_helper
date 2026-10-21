@@ -31,4 +31,8 @@ class WeightRepositoryImpl @Inject constructor(
     override suspend fun deleteEntry(entry: WeightEntry) {
         weightEntryDao.deleteEntry(entry.toEntity())
     }
+
+    override suspend fun updateEntry(entry: WeightEntry) {
+        weightEntryDao.updateEntry(entry.toEntity())
+    }
 }

@@ -17,6 +17,9 @@ exhaustive systematic review or a claim to have found a universally best plan.
   and explicit scope limits; delivery verification is in STATE.md.
 - [Separate workout programs, version 1.2](workout-programs.md): independent SRC7
   and return-to-training blocks, weekly working weights and migration details.
+- [Session timers and weight editing, version 1.3](session-timers-and-weight.md):
+  warm-up/total/cool-down timing, quick set recording, end-of-session feedback
+  and dated weight corrections.
 - [Product and coaching design](adaptation-design.md): current implementation,
   proposed behavior, acceptance examples and delivery order.
 - [Session check-in template](templates/session-checkin.md): feedback before,

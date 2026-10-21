@@ -177,7 +177,8 @@ internal fun FinishTrainingForm(
     var outcome by rememberSaveable { mutableStateOf(
         if (allComplete) TrainingOutcome.COMPLETED else TrainingOutcome.MODIFIED
     ) }
-    var gym by rememberSaveable { mutableStateOf(previous?.gymMinutes?.toString().orEmpty()) }
+    var gym by rememberSaveable { mutableStateOf(previous?.gymMinutes?.toString()
+        ?: previous?.warmUpStartedAt?.let { ((previous.elapsedMillis(System.currentTimeMillis()) / 60000).coerceAtLeast(1)).toString() }.orEmpty()) }
     var social by rememberSaveable { mutableStateOf(previous?.socialMinutes?.toString().orEmpty()) }
     var effort by rememberSaveable { mutableStateOf(previous?.sessionRpe?.let(::weightText).orEmpty()) }
     var recovery by rememberSaveable { mutableStateOf(previous?.recovery ?: RecoveryStatus.UNKNOWN) }
@@ -186,7 +187,7 @@ internal fun FinishTrainingForm(
     val breaks = social.toIntOrNull()
     val rpe = effort.number()
     val valid = validSessionInput(gym, social, effort, outcome, notes)
-    TrainingFormLayout(title = { Text("Сохранить занятие") },
+    TrainingFormLayout(title = { Text("Обратная связь после тренировки") },
         text = {
             Column(Modifier.heightIn(max = 520.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("Пропущенные подходы останутся пропущенными. Догонять их не требуется.", style = MaterialTheme.typography.bodySmall)

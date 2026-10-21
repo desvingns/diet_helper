@@ -37,6 +37,13 @@ scope are independent. Room 4→5 assigns previous sessions to SRC7 without losi
 data. JSON schema2 identifies each session's program. Personal intake and starting
 recommendations remain local rather than becoming public app defaults.
 
+The 2026-10-21 [session workflow update](docs/training/session-timers-and-weight.md),
+version 1.3, adds persistent warm-up, whole-session and cool-down timers,
+immediate confirmation of planned sets and feedback after the session.
+Weight entries support date selection and transactional editing of weight/date.
+Room 5→6 preserves historical data. Five launcher icon concepts and their
+generation prompts are available in `docs/design/icon-variants/` for selection.
+
 ---
 
 ## Domain Model

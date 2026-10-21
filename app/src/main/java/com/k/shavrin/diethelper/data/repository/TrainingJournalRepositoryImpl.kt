@@ -9,6 +9,7 @@ import com.k.shavrin.diethelper.domain.model.RecoveryStatus
 import com.k.shavrin.diethelper.domain.model.TrainingOutcome
 import com.k.shavrin.diethelper.domain.model.TrainingSession
 import com.k.shavrin.diethelper.domain.model.TrainingSessionFeedback
+import com.k.shavrin.diethelper.domain.model.TrainingTimerAction
 import com.k.shavrin.diethelper.domain.model.WorkoutDay
 import com.k.shavrin.diethelper.domain.repository.TrainingJournalRepository
 import kotlinx.coroutines.flow.map
@@ -23,9 +24,38 @@ class TrainingJournalRepositoryImpl @Inject constructor(
     private val dao get() = database.trainingJournalDao()
     override fun observeSessions() = dao.observeSessions().map { entries -> entries.map { it.toDomain() } }
 
+    override suspend fun advanceTimer(day: WorkoutDay, action: TrainingTimerAction, now: Long, zoneId: String) {
+        database.withTransaction {
+            val session = if (action == TrainingTimerAction.START_WARMUP) activeOrNew(day, 0, now, zoneId)
+                else requireNotNull(dao.activeSession(day.program.id)?.toDomain()) { "Сначала начните разминку" }
+            require(session.planDayId == day.id)
+            val updated = when (action) {
+                TrainingTimerAction.START_WARMUP -> {
+                    require(session.coolDownStartedAt == null)
+                    session.copy(warmUpStartedAt = session.warmUpStartedAt ?: now)
+                }
+                TrainingTimerAction.FINISH_WARMUP -> {
+                    require(session.warmUpStartedAt != null && session.coolDownStartedAt == null)
+                    session.copy(warmUpFinishedAt = session.warmUpFinishedAt ?: now)
+                }
+                TrainingTimerAction.START_COOLDOWN -> {
+                    require(session.warmUpStartedAt == null || session.warmUpFinishedAt != null) { "Сначала завершите разминку" }
+                    session.copy(coolDownStartedAt = session.coolDownStartedAt ?: now)
+                }
+                TrainingTimerAction.FINISH_COOLDOWN -> {
+                    require(session.coolDownStartedAt != null)
+                    session.copy(coolDownFinishedAt = session.coolDownFinishedAt ?: now)
+                }
+            }
+            dao.saveSession(updated.toEntity())
+        }
+    }
+
     override suspend fun record(day: WorkoutDay, set: PerformedTrainingSet, legacySetCount: Int, now: Long, zoneId: String) {
         database.withTransaction {
             val session = activeOrNew(day, legacySetCount, now, zoneId)
+            require(session.coolDownStartedAt == null) { "Силовая часть завершена; идёт заминка" }
+            require(session.warmUpStartedAt == null || session.warmUpFinishedAt != null) { "Сначала завершите разминку" }
             dao.saveSession(session.copy(legacySetCount = legacySetCount).toEntity())
             val previous = set.planKey?.let { dao.plannedSet(session.id, it) }
             val stable = set.copy(
@@ -52,7 +82,9 @@ class TrainingJournalRepositoryImpl @Inject constructor(
             val session = active?.toDomain() ?: dao.latestForDay(day.id, day.program.id)?.toDomain()
                 ?: activeOrNew(day, legacySetCount, now, zoneId)
             dao.saveSession(session.copy(
-                finishedAt = session.finishedAt ?: now, outcome = feedback.outcome,
+                finishedAt = session.finishedAt ?: session.coolDownFinishedAt ?: now, outcome = feedback.outcome,
+                warmUpFinishedAt = session.warmUpFinishedAt ?: session.warmUpStartedAt?.let { now },
+                coolDownFinishedAt = session.coolDownFinishedAt ?: session.coolDownStartedAt?.let { now },
                 gymMinutes = feedback.gymMinutes, socialMinutes = feedback.socialMinutes,
                 sessionRpe = feedback.sessionRpe, recovery = feedback.recovery, notes = feedback.notes.trim()
             ).toEntity())

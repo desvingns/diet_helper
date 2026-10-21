@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.k.shavrin.diethelper.domain.model.WeightEntry
 import com.k.shavrin.diethelper.domain.usecase.weight.DeleteWeightEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.GetAllWeightEntriesUseCase
+import com.k.shavrin.diethelper.domain.usecase.weight.UpdateWeightEntryUseCase
 import com.k.shavrin.diethelper.domain.usecase.weight.UpsertWeightEntryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class WeightViewModel @Inject constructor(
     getAllUseCase: GetAllWeightEntriesUseCase,
     private val upsertUseCase: UpsertWeightEntryUseCase,
-    private val deleteUseCase: DeleteWeightEntryUseCase
+    private val deleteUseCase: DeleteWeightEntryUseCase,
+    private val updateUseCase: UpdateWeightEntryUseCase
 ) : ViewModel() {
 
     private val _input = MutableStateFlow("")
@@ -34,6 +36,10 @@ class WeightViewModel @Inject constructor(
     val saved: StateFlow<Boolean> = _saved.asStateFlow()
     private val _saving = MutableStateFlow(false)
     val saving: StateFlow<Boolean> = _saving.asStateFlow()
+    private val _selectedDate = MutableStateFlow(LocalDate.now())
+    val selectedDate = _selectedDate.asStateFlow()
+    private val _editing = MutableStateFlow<WeightEntry?>(null)
+    val editing = _editing.asStateFlow()
 
     val uiState: StateFlow<WeightUiState> = getAllUseCase()
         .map { entries ->
@@ -55,16 +61,38 @@ class WeightViewModel @Inject constructor(
             val today = LocalDate.now()
             val entries = getAllUseCase().firstOrNull().orEmpty()
             val todayEntry = entries.firstOrNull { it.date == today }
-            if (todayEntry != null && _input.value.isEmpty()) {
+            if (todayEntry != null && _input.value.isEmpty() && _selectedDate.value == today && _editing.value == null) {
                 _input.value = formatWeightInput(todayEntry.weightKg)
             }
         }
     }
 
     fun onInputChange(value: String) {
+        if (_saving.value) return
         _input.value = value
         _inputError.value = null
         _saved.value = false
+    }
+
+    fun selectDate(date: LocalDate) {
+        if (_saving.value) return
+        _selectedDate.value = date
+        _inputError.value = null
+        _saved.value = false
+    }
+
+    fun edit(entry: WeightEntry) {
+        if (_saving.value) return
+        _editing.value = entry
+        selectDate(entry.date)
+        onInputChange(formatWeightInput(entry.weightKg))
+    }
+
+    fun cancelEdit() {
+        if (_saving.value) return
+        _editing.value = null
+        selectDate(LocalDate.now())
+        onInputChange("")
     }
 
     fun save() {
@@ -77,12 +105,21 @@ class WeightViewModel @Inject constructor(
         }
         _inputError.value = null
         _saving.value = true
+        val date = _selectedDate.value
+        val editingEntry = _editing.value
         viewModelScope.launch {
             try {
-                upsertUseCase(LocalDate.now(), value)
+                if (editingEntry == null) upsertUseCase(date, value)
+                else {
+                    val updated = editingEntry.copy(date = date, weightKg = value)
+                    updateUseCase(updated)
+                    _editing.value = updated
+                }
                 _saved.value = true
             } catch (cancelled: CancellationException) {
                 throw cancelled
+            } catch (error: IllegalArgumentException) {
+                _inputError.value = error.message ?: "Проверьте вес и дату"
             } catch (_: Exception) {
                 _inputError.value = "Не удалось сохранить вес. Попробуйте ещё раз."
             } finally {
@@ -96,7 +133,6 @@ class WeightViewModel @Inject constructor(
     }
 
     private fun formatWeightInput(value: Float): String {
-        val rounded = (value * 10f).toInt() / 10f
-        return if (rounded % 1f == 0f) rounded.toInt().toString() else rounded.toString()
+        return value.toString().removeSuffix(".0")
     }
 }

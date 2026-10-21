@@ -10,13 +10,16 @@ object TrainingJournalMarkdown {
         appendLine("# MyDietHelper — training journal")
         appendLine()
         appendLine("SRC7 and return-to-training have separate progress. Actual sets are separate from the plan.")
-        appendLine("Unknown values are not inferred. Start time is the first logged set or a manual finish, not gym arrival.")
+        appendLine("Unknown values are not inferred. Timed sessions start with warm-up; legacy sessions start at the first log or manual finish.")
         sessions.forEach { session ->
             val zone = runCatching { ZoneId.of(session.zoneId) }.getOrDefault(ZoneId.of("UTC"))
             val date = Instant.ofEpochMilli(session.startedAt).atZone(zone).toLocalDate()
             appendLine()
             appendLine("## $date — ${session.program.title} (${session.program.id}) — cycle ${session.cycle}, day ${session.day} — ${session.outcome}")
             appendLine("ID: ${session.id}; timezone: ${session.zoneId}")
+            if (session.warmUpStartedAt != null) {
+                appendLine(timerLine(session))
+            }
             appendLine("Gym: ${session.gymMinutes ?: "unknown"} min; social: ${session.socialMinutes ?: "unknown"} min; " +
                 "training including set rests: ${session.trainingMinutes ?: "unknown"} min")
             appendLine("Session RPE: ${session.sessionRpe ?: "unknown"}; after: ${session.recovery}; next day: ${session.nextDayRecovery}")
@@ -36,4 +39,9 @@ object TrainingJournalMarkdown {
             if (session.nextDayNotes.isNotBlank()) appendLine("Next-day note: ${session.nextDayNotes}")
         }
     }
+
+    private fun timerLine(session: TrainingSession): String =
+        "Timer seconds — total: ${session.finishedAt?.let { session.elapsedMillis(it) / 1000 } ?: "running"}; " +
+            "warm-up: ${session.warmUpFinishedAt?.let { session.warmUpMillis(it)?.div(1000) } ?: "unknown"}; " +
+            "cool-down: ${session.coolDownFinishedAt?.let { session.coolDownMillis(it)?.div(1000) } ?: "unknown"}"
 }

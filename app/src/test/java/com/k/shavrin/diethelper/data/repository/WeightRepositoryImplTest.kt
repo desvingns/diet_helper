@@ -113,8 +113,10 @@ private class FakeWeightEntryDao : WeightEntryDao {
     override suspend fun getEntryByDate(date: LocalDate): WeightEntryEntity? =
         data.value.firstOrNull { it.date == date }
 
+    override suspend fun getEntryById(id: Long): WeightEntryEntity? = data.value.firstOrNull { it.id == id }
+
     override suspend fun upsertEntry(entry: WeightEntryEntity): Long {
-        val existing = data.value.firstOrNull { it.date == entry.date }
+        val existing = data.value.firstOrNull { it.id == entry.id || it.date == entry.date }
         return if (existing != null) {
             data.update { list -> list.map { if (it.id == existing.id) entry.copy(id = existing.id) else it } }
             existing.id

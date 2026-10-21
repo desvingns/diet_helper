@@ -12,23 +12,43 @@
 
 ## Now
 
-- **Current iteration:** Separate workout programs, version 1.2 (2026-10-20),
+- **Current iteration:** Session timers and dated weight editing, version 1.3 (2026-10-21),
   implemented directly at the owner's request without MP.
-- **In progress:** none for this delivery. The version 1.2 APK was sent to the
+- **In progress:** none for the implemented changes; icon selection is up to the owner.
+- **Version 1.3:** persistent warm-up/whole-session/cool-down timing; quick planned
+  set confirmation; feedback on completion; dated weight entry and transactional
+  weight/date edits with collision protection. Room 5→6 preserves historical data.
+  Five generated icon candidates and exact prompts are in `docs/design/icon-variants/`;
+  launcher integration awaits selection. See `docs/training/session-timers-and-weight.md`.
+- **Latest tests:** all 459 tests pass without skips, including the delayed
+  cooldown-state regression. Native window/form behavior is checked on the emulator;
+  that regression uses an in-process dialog renderer because native Dialog sizing
+  does not become idle in Robolectric. Screenshot verification passes.
+  Detekt, Lint and final debug assembly also pass.
+- **Artifact:** `.local/MyDietHelper-training-v1.3-debug.apk`, about 18.7 MiB,
+  versionName 1.3 / versionCode 4. Icons are also packaged as
+  `.local/MyDietHelper-icon-variants.zip`. No Telegram delivery was requested in
+  this chat. Private profile, QA data and icon concepts are not bundled in the APK.
+- **Latest upgrade check:** emulator version 5→6 preserved all 270 existing rows,
+  all old column values and byte-identical DataStore preferences. Native checks
+  confirm quick set recording without a popup, persistent completed warm-up with
+  continuing total time, automatic feedback after cool-down, past-date weigh-in
+  and stable record editing.
+- **Previous delivery:** the version 1.2 APK was sent to the
   owner's Telegram Saved Messages via tgsend. Source SRC7 and the six-week return block
   now have independent progress, timers, active sessions and journals. Each
   return week requires explicit working weights after review; no automatic
   weight increases or guaranteed six-week strength outcome are implemented.
-- **Latest runtime validation:** all 446 tests pass without skips, screenshot
+- **Previous runtime validation (1.2):** all 446 tests pass without skips, screenshot
   verification, Lint, Detekt and debug assembly pass. A real emulator upgrade
   4→5 preserved all previous rows/column values and byte-identical DataStore
   preferences. Native checks cover switching/resuming independent active
   sessions, weekly inputs, partial finish, planned bodyweight sets and scoped
   MD/JSON sharing. New forms are usable at 100%/130% fonts; scale restored to 100%.
-- **Artifact:** `MyDietHelper-training-v1.2-debug.apk`, about 18.3 MiB,
+- **Previous artifact:** `MyDietHelper-training-v1.2-debug.apk`, about 18.3 MiB,
   versionName 1.2 / versionCode 3; feature commit `6594afa`. Private intake, starter recommendations and
   emulator QA data remain Git-ignored in `.local/` and are not packaged in it.
-- **Latest product delivery:** two program blocks, a six-week reviewable return
+- **Previous product delivery:** two program blocks, a six-week reviewable return
   template, manual working weights for each week and program-scoped logging.
   Room version 5 has an explicit preserving 4→5 migration; old sessions belong
   to SRC7. JSON schema2 identifies the program. See

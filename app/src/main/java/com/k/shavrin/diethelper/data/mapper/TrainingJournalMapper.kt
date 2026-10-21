@@ -19,12 +19,14 @@ fun TrainingSessionEntity.toDomain(sets: List<PerformedTrainingSet> = emptyList(
     gymMinutes, socialMinutes, sessionRpe,
     RecoveryStatus.entries.firstOrNull { it.name == recovery } ?: RecoveryStatus.UNKNOWN,
     notes, RecoveryStatus.entries.firstOrNull { it.name == nextDayRecovery } ?: RecoveryStatus.UNKNOWN,
-    nextDayNotes, sets, WorkoutProgram.fromId(programId)
+    nextDayNotes, sets, WorkoutProgram.fromId(programId),
+    warmUpStartedAt, warmUpFinishedAt, coolDownStartedAt, coolDownFinishedAt
 )
 
 fun TrainingSession.toEntity() = TrainingSessionEntity(
     id, planDayId, cycle, day, startedAt, zoneId, plannedSetCount, legacySetCount, finishedAt,
-    outcome.name, gymMinutes, socialMinutes, sessionRpe, recovery.name, notes, nextDayRecovery.name, nextDayNotes, program.id
+    outcome.name, gymMinutes, socialMinutes, sessionRpe, recovery.name, notes, nextDayRecovery.name, nextDayNotes, program.id,
+    warmUpStartedAt, warmUpFinishedAt, coolDownStartedAt, coolDownFinishedAt
 )
 
 fun TrainingSetEntity.toDomain() = PerformedTrainingSet(
