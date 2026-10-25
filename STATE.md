@@ -12,11 +12,14 @@
 
 ## Now
 
-- **Current iteration:** Session timers and dated weight editing, version 1.3 (2026-10-21),
-  implemented directly at the owner's request without MP.
-- **In progress:** none; the selected bowl-and-dumbbell artwork is active as
-  the adaptive launcher icon over a purple gradient. Its transparent foreground
-  remains available as an alternative.
+- **Current iteration:** Active workout screen, version 1.4 (2026-10-25).
+- **In progress:** final APK delivery to the owner's Telegram Saved Messages.
+- **Version 1.4:** completed warm-up and standalone rest cards are hidden. The
+  next-set card previews one more remaining set of the same exercise and shows
+  elapsed time since the last completed set. Completion timestamps persist in
+  Room; edits preserve them and undone sets do not count. Room 6→7 preserves
+  old data with unknown historical timestamps left null. See
+  `docs/training/active-session-v1.4.md`.
 - **Version 1.3:** persistent warm-up/whole-session/cool-down timing; quick planned
   set confirmation; feedback on completion; dated weight entry and transactional
   weight/date edits with collision protection. Room 5→6 preserves historical data.
@@ -25,16 +28,15 @@
   adaptive launcher icon with a purple gradient background. The transparent art
   is retained at `app/src/main/res/drawable-nodpi/ic_launcher_art.png`. See
   `docs/training/session-timers-and-weight.md`.
-- **Latest tests:** all 459 tests pass without skips, including the delayed
-  cooldown-state regression. Native window/form behavior is checked on the emulator;
-  that regression uses an in-process dialog renderer because native Dialog sizing
-  does not become idle in Robolectric. Screenshot verification passes.
-  Detekt, Lint and final debug assembly also pass.
-- **Artifact:** `.local/MyDietHelper-training-v1.3-debug.apk`, about 18.7 MiB,
-  versionName 1.3 / versionCode 4. Icons are also packaged as
-  `.local/MyDietHelper-icon-variants.zip`. No Telegram delivery was requested in
-  this chat. Private profile, QA data and icon concepts are not bundled in the APK.
-- **Latest upgrade check:** emulator version 5→6 preserved all 270 existing rows,
+- **Latest tests:** all 474 tests pass without skips. Detekt, Lint, screenshot
+  verification and final debug assembly pass. Native emulator checks confirm
+  warm-up disappearance, same-exercise preview, the elapsed-time placeholder,
+  live clock and continuation after force-stop/relaunch. Room 6→7 preserves all 271 existing emulator rows,
+  every prior column value and byte-identical DataStore preferences.
+- **Artifact:** `.local/MyDietHelper-training-v1.4-debug.apk`, versionName 1.4 /
+  versionCode 5. Telegram delivery was explicitly requested. Private profile,
+  QA data and icon concepts are not bundled in the APK.
+- **Previous upgrade check:** emulator version 5→6 preserved all 270 existing rows,
   all old column values and byte-identical DataStore preferences. Native checks
   confirm quick set recording without a popup, persistent completed warm-up with
   continuing total time, automatic feedback after cool-down, past-date weigh-in

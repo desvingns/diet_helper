@@ -20,6 +20,8 @@ exhaustive systematic review or a claim to have found a universally best plan.
 - [Session timers and weight editing, version 1.3](session-timers-and-weight.md):
   warm-up/total/cool-down timing, quick set recording, end-of-session feedback
   and dated weight corrections.
+- [Active workout screen, version 1.4](active-session-v1.4.md): compact next-set
+  preview, hidden completed warm-up and persisted time since the last set.
 - [Product and coaching design](adaptation-design.md): current implementation,
   proposed behavior, acceptance examples and delivery order.
 - [Session check-in template](templates/session-checkin.md): feedback before,

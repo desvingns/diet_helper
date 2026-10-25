@@ -34,10 +34,10 @@ fun TrainingSetEntity.toDomain() = PerformedTrainingSet(
     actualWeightKg, actualReps,
     TrainingLoadBasis.entries.firstOrNull { it.name == loadBasis } ?: TrainingLoadBasis.TOTAL_KG,
     rpe, symptomNote, ExercisePreference.entries.firstOrNull { it.name == preference } ?: ExercisePreference.NEUTRAL,
-    notes, completed
+    notes, completed, completedAt
 )
 
 fun PerformedTrainingSet.toEntity() = TrainingSetEntity(
     id, sessionId, planKey, exerciseName, plannedExerciseName, plannedWeightKg, plannedReps,
-    actualWeightKg, actualReps, loadBasis.name, rpe, symptomNote, preference.name, notes, completed
+    actualWeightKg, actualReps, loadBasis.name, rpe, symptomNote, preference.name, notes, completed, completedAt
 )

@@ -59,7 +59,8 @@ data class TrainingSetEntity(
     val symptomNote: String,
     val preference: String,
     val notes: String,
-    val completed: Boolean
+    val completed: Boolean,
+    val completedAt: Long? = null
 )
 
 data class TrainingSessionWithSets(

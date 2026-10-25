@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -99,5 +100,49 @@ class WorkoutSessionFlowTest {
             TrainingCoolDownCard(day, session.copy(warmUpFinishedAt = null), true, actions)
         } }
         compose.onNodeWithText("Начать заминку").assertIsNotEnabled()
+    }
+
+    @Test
+    fun `active screen combines following set and elapsed placeholder without retired cards`() {
+        val trainingDay = day.copy(exercises = listOf(day.exercises.single().copy(
+            groups = listOf(WorkoutGroup(3, 1, 0.7), WorkoutGroup(2, 1, 0.8))
+        )))
+        showSession(trainingDay)
+        compose.onNodeWithText("Затем: 80 кг × 2").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("С прошлого подхода: —").assertExists()
+        compose.onNodeWithText("Разминка завершена", substring = true).assertDoesNotExist()
+        compose.onNodeWithText("Твоя стандартная разминка").assertDoesNotExist()
+        compose.onNodeWithText("Отдых между подходами").assertDoesNotExist()
+        compose.onNodeWithText("Запишется показанный вес", substring = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun `following preview is absent when the next remaining set belongs to another exercise`() {
+        val exercise = day.exercises.single()
+        val trainingDay = day.copy(exercises = listOf(exercise, exercise.copy(id = 5, name = "Жим", base = "bench")))
+        showSession(trainingDay)
+        compose.onNodeWithText("Записать подход").performScrollTo().assertExists()
+        compose.onNodeWithText("Затем:", substring = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun `warmup card disappears as soon as completion arrives`() {
+        val warming = mutableStateOf(session.copy(warmUpFinishedAt = null))
+        compose.setContent { DietHelperTheme { TrainingWarmUpCard(day, warming.value, true, actions) } }
+        compose.onNodeWithText("Твоя стандартная разминка").assertExists()
+        compose.runOnIdle { warming.value = warming.value.copy(warmUpFinishedAt = 2000) }
+        compose.onNodeWithText("Твоя стандартная разминка").assertDoesNotExist()
+        compose.onNodeWithText("Завершить разминку").assertDoesNotExist()
+        compose.onNodeWithText("Разминка завершена", substring = true).assertDoesNotExist()
+    }
+
+    private fun showSession(trainingDay: WorkoutDay) {
+        compose.setContent { DietHelperTheme {
+            Box(Modifier.fillMaxSize()) {
+                SessionContent(trainingDay, WorkoutUiState(loading = false, selectedDay = trainingDay,
+                    progress = WorkoutProgress(maxima = mapOf("squat" to 100.0, "bench" to 100.0, "deadlift" to 100.0))),
+                    { _, _ -> }, { _, _, _ -> }, {}, TrainingJournalUiState(sessions = listOf(session)), actions)
+            }
+        } }
     }
 }

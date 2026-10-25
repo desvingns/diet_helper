@@ -35,6 +35,7 @@ data class TrainingSession(
 ) {
     val trainingMinutes: Int? get() = gymMinutes?.let { total -> socialMinutes?.let { total - it } }
     val completedSets: List<PerformedTrainingSet> get() = sets.filter { it.completed }
+    val lastCompletedSetAt: Long? get() = completedSets.mapNotNull { it.completedAt }.maxOrNull()
     fun elapsedMillis(now: Long): Long = ((coolDownFinishedAt ?: finishedAt ?: now) - startedAt).coerceAtLeast(0)
     fun warmUpMillis(
         now: Long
@@ -59,7 +60,8 @@ data class PerformedTrainingSet(
     val symptomNote: String = "",
     val preference: ExercisePreference = ExercisePreference.NEUTRAL,
     val notes: String = "",
-    val completed: Boolean = true
+    val completed: Boolean = true,
+    val completedAt: Long? = null
 )
 
 data class TrainingSessionFeedback(

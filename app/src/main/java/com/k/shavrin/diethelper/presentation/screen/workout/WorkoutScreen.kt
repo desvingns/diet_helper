@@ -34,22 +34,16 @@ import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -63,7 +57,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,9 +66,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -99,10 +90,8 @@ import com.k.shavrin.diethelper.presentation.theme.FatSand
 import com.k.shavrin.diethelper.presentation.theme.Ink
 import com.k.shavrin.diethelper.presentation.theme.Lavender
 import com.k.shavrin.diethelper.presentation.theme.Mint
-import kotlinx.coroutines.delay
 import java.io.File
 import java.util.Locale
-import kotlin.math.ceil
 
 private val TrainingAccent = FatSand
 
@@ -279,7 +268,7 @@ internal fun SessionContent(
     val configured = progress.configuredFor(day)
     val localProgress = progress.copy(maxima = progress.loadsFor(day))
     val sets = remember(day) { day.sets() }
-    val session = journal.sessions.firstOrNull { it.planDayId == day.id }
+    val session = journal.sessions.firstOrNull { it.planDayId == day.id && it.program == day.program }
     val recorded = session?.sets.orEmpty().filter { it.planKey != null }.associateBy { requireNotNull(it.planKey) }
     val completedKeys = completedTrainingPlanKeys(progress.completedSets, session?.sets.orEmpty())
     val completed = sets.count { it.key in completedKeys }
@@ -302,8 +291,7 @@ internal fun SessionContent(
             TrainingDayHeading(day, completed, sets.size)
         }
         item { TrainingSessionTimerCard(session) }
-        if (running) item { RestTimer(progress, onTimer) }
-        if (!finished) item { TrainingWarmUpCard(day, session, editable, actions) }
+        if (session.needsWarmUp(finished)) item { TrainingWarmUpCard(day, session, editable, actions) }
         if (day.program == WorkoutProgram.RETURN) item { ReturnWeekSummary(day.cycle, configured, onConfigure) }
         if (progress.needsSourceMaxima(day)) {
             item {
@@ -318,7 +306,7 @@ internal fun SessionContent(
             }
         } else if (running && next != null) {
             item {
-                NextTrainingSetCard(day, next, localProgress, completed, lifting) {
+                NextTrainingSetCard(day, next, followingTrainingSet(sets, completedKeys), session, localProgress, completed, lifting) {
                     actions.record(day, plannedTrainingSet(next, localProgress.maxima))
                 }
             }
@@ -426,11 +414,14 @@ private fun TrainingDayNotes(notes: String) {
 private fun NextTrainingSetCard(
     day: WorkoutDay,
     next: WorkoutSet,
+    following: WorkoutSet?,
+    session: TrainingSession?,
     progress: WorkoutProgress,
     completed: Int,
     editable: Boolean,
     onEdit: () -> Unit
 ) {
+    val now = trainingClock(session)
     Column(Modifier.fillMaxWidth().background(
         Brush.linearGradient(listOf(Color(0xFF3B2A53), Color(0xFF20192D))), RoundedCornerShape(28.dp)
     ).padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -449,6 +440,14 @@ private fun NextTrainingSetCard(
             "${next.exercise.load.lowercase()} нагрузка" +
             if (next.exercise.equipmentMultiplier == 2.0) " · вес одной гантели" else "",
             color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+        following?.let { set ->
+            val load = if (set.exercise.loadBasis == TrainingLoadBasis.BODYWEIGHT) "Свой вес"
+                else "${weightText(set.exercise.weight(progress.maxima, set.group.percent))} кг"
+            Text("Затем: $load × ${set.group.reps}", style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Text("С прошлого подхода: " + (session?.lastCompletedSetAt?.let { trainingDuration(now - it) } ?: "—"),
+            style = MaterialTheme.typography.titleMedium, color = Lavender)
         Button(onClick = { onEdit() }, enabled = editable,
             modifier = Modifier.fillMaxWidth().height(54.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Lavender, contentColor = Ink)) {
@@ -456,8 +455,6 @@ private fun NextTrainingSetCard(
             Spacer(Modifier.width(8.dp))
             Text("Записать подход", fontWeight = FontWeight.Bold)
         }
-        Text("Запишется показанный вес и повторы. Изменить результат можно в списке подходов ниже.",
-            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -519,51 +516,6 @@ private fun TrainingPlannedSetRow(
             else "— кг × ${set.group.reps}", Modifier.weight(1f), fontWeight = FontWeight.Medium)
         Text(percentText(set.group.percent), style = MaterialTheme.typography.labelMedium, color = TrainingAccent)
         Checkbox(checked = checked, onCheckedChange = { onEdit() }, enabled = editable)
-    }
-}
-
-@Composable
-private fun RestTimer(progress: WorkoutProgress, onTimer: (Int, Long, Int) -> Unit) {
-    var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    val haptic = LocalHapticFeedback.current
-    LaunchedEffect(progress.restDeadline) {
-        now = System.currentTimeMillis()
-        val wasRunning = progress.restDeadline > now
-        while (progress.restDeadline > now) {
-            delay(250)
-            now = System.currentTimeMillis()
-        }
-        if (wasRunning) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-    }
-    val remaining = if (progress.restDeadline > now) ceil((progress.restDeadline - now) / 1000.0).toInt()
-        else progress.pausedRestSeconds
-    val running = progress.restDeadline > now
-    Card(shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Timer, null, tint = TrainingAccent)
-                Spacer(Modifier.width(10.dp))
-                Column(Modifier.weight(1f)) {
-                    Text("Отдых между подходами", style = MaterialTheme.typography.titleSmall)
-                    Text(if (remaining > 0) String.format(Locale.ROOT, "%02d:%02d", remaining / 60, remaining % 60)
-                        else if (progress.restDeadline != 0L) "Можно продолжать" else "${progress.restSeconds / 60} мин ${progress.restSeconds % 60} сек",
-                        style = MaterialTheme.typography.titleLarge, color = TrainingAccent)
-                }
-                IconButton(onClick = {
-                    if (running) onTimer(progress.restSeconds, 0, remaining)
-                    else onTimer(progress.restSeconds, System.currentTimeMillis() +
-                        (if (remaining > 0) remaining else progress.restSeconds) * 1000L, 0)
-                }) { Icon(if (running) Icons.Default.Pause else Icons.Default.PlayArrow, if (running) "Пауза" else "Запустить таймер") }
-                IconButton(onClick = { onTimer(progress.restSeconds, 0, 0) }) { Icon(Icons.Default.SkipNext, "Пропустить отдых") }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf(60, 90, 120, 180).forEach { seconds ->
-                    FilterChip(selected = progress.restSeconds == seconds,
-                        onClick = { onTimer(seconds, if (running) System.currentTimeMillis() + seconds * 1000L else 0, 0) },
-                        label = { Text("${seconds}с") })
-                }
-            }
-        }
     }
 }
 
@@ -636,6 +588,9 @@ private fun WorkoutUiState.canEdit(day: WorkoutDay, journalSaving: Boolean): Boo
 
 private fun WorkoutProgress.needsSourceMaxima(day: WorkoutDay): Boolean =
     !configuredFor(day) && day.program == WorkoutProgram.SRC7
+
+private fun TrainingSession?.needsWarmUp(finished: Boolean): Boolean =
+    !finished && this?.warmUpFinishedAt == null
 
 private fun shareTrainingReport(context: Context, paths: List<String>) {
     val uris = ArrayList(paths.map { FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", File(it)) })

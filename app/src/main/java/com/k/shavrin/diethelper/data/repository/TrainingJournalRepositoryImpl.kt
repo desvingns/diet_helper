@@ -62,7 +62,9 @@ class TrainingJournalRepositoryImpl @Inject constructor(
                 id = previous?.id ?: UUID.randomUUID().toString(), sessionId = session.id,
                 plannedWeightKg = previous?.plannedWeightKg ?: set.plannedWeightKg,
                 plannedReps = previous?.plannedReps ?: set.plannedReps,
-                plannedExerciseName = previous?.plannedExerciseName ?: set.plannedExerciseName
+                plannedExerciseName = previous?.plannedExerciseName ?: set.plannedExerciseName,
+                // Editing a completed result must not restart the between-set clock.
+                completedAt = if (!set.completed) null else if (previous?.completed == true) previous.completedAt else now
             )
             dao.saveSet(stable.toEntity())
         }

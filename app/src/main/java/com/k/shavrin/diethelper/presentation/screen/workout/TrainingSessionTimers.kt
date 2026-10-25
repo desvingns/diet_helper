@@ -48,15 +48,15 @@ internal fun TrainingWarmUpCard(
     enabled: Boolean,
     actions: TrainingJournalActions
 ) {
+    if (session?.warmUpFinishedAt != null) return
     val now = trainingClock(session)
     val started = session?.warmUpStartedAt != null
-    val done = session?.warmUpFinishedAt != null
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(if (done) "Разминка завершена ✓" else "Разминка", style = MaterialTheme.typography.titleLarge)
+            Text("Разминка", style = MaterialTheme.typography.titleLarge)
             Text("Твоя стандартная разминка", style = MaterialTheme.typography.bodyMedium)
             Text(session?.warmUpMillis(now)?.let(::trainingDuration) ?: "00:00", style = MaterialTheme.typography.headlineMedium)
-            if (!done && session?.coolDownStartedAt == null) Button(
+            if (session?.coolDownStartedAt == null) Button(
                 onClick = { if (started) actions.finishWarmUp(day) else actions.startWarmUp(day) },
                 enabled = enabled, modifier = Modifier.fillMaxWidth()
             ) { Text(if (started) "Завершить разминку" else "Начать разминку") }
@@ -89,7 +89,7 @@ internal fun TrainingCoolDownCard(
 }
 
 @Composable
-private fun trainingClock(session: TrainingSession?): Long {
+internal fun trainingClock(session: TrainingSession?): Long {
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(session?.id, session?.finishedAt, session?.coolDownFinishedAt) {
         now = System.currentTimeMillis()
@@ -105,6 +105,11 @@ internal fun trainingDuration(millis: Long): String {
     val seconds = millis.coerceAtLeast(0) / 1000
     return if (seconds >= 3600) String.format(Locale.ROOT, "%d:%02d:%02d", seconds / 3600, seconds / 60 % 60, seconds % 60)
         else String.format(Locale.ROOT, "%02d:%02d", seconds / 60, seconds % 60)
+}
+
+internal fun followingTrainingSet(sets: List<WorkoutSet>, completedKeys: Set<String>): WorkoutSet? {
+    val upcoming = sets.asSequence().filter { it.key !in completedKeys }.take(2).toList()
+    return upcoming.getOrNull(1)?.takeIf { it.exercise.id == upcoming.first().exercise.id }
 }
 
 internal fun plannedTrainingSet(set: WorkoutSet, maxima: Map<String, Double>): PerformedTrainingSet {
