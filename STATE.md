@@ -13,7 +13,7 @@
 ## Now
 
 - **Current iteration:** Active workout screen, version 1.4 (2026-10-25).
-- **In progress:** final APK delivery to the owner's Telegram Saved Messages.
+- **In progress:** none.
 - **Version 1.4:** completed warm-up and standalone rest cards are hidden. The
   next-set card previews one more remaining set of the same exercise and shows
   elapsed time since the last completed set. Completion timestamps persist in
@@ -33,9 +33,10 @@
   warm-up disappearance, same-exercise preview, the elapsed-time placeholder,
   live clock and continuation after force-stop/relaunch. Room 6→7 preserves all 271 existing emulator rows,
   every prior column value and byte-identical DataStore preferences.
-- **Artifact:** `.local/MyDietHelper-training-v1.4-debug.apk`, versionName 1.4 /
-  versionCode 5. Telegram delivery was explicitly requested. Private profile,
-  QA data and icon concepts are not bundled in the APK.
+- **Artifact:** `.local/MyDietHelper-training-v1.4-debug.apk`, 22.1 MiB,
+  versionName 1.4 / versionCode 5; feature commit `b9d8ff4`. Sent to the owner's
+  Telegram Saved Messages via tgsend on 2026-10-25. Private profile, QA data and
+  icon concepts are not bundled in the APK.
 - **Previous upgrade check:** emulator version 5→6 preserved all 270 existing rows,
   all old column values and byte-identical DataStore preferences. Native checks
   confirm quick set recording without a popup, persistent completed warm-up with
